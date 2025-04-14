@@ -1,11 +1,9 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
 generator client {
   provider = "prisma-client-js"
-}
-
-enum Role {
-  admin
-  teacher
-  student
+  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -13,13 +11,31 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id                  Int                   @id @default(autoincrement())
-  name                String?
-  mail                String                @unique
-  password            String
-  rol                 Role                  @default(student)
-  createdAt           DateTime              @default(now())
-  updatedAt           DateTime              @updatedAt
+enum UserRole {
+  ADMIN
+  TEACHER
+  STUDENT
 }
 
+model Role {
+  id        Int      @id @default(autoincrement())
+  name      UserRole @default(STUDENT)
+  users     User[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  active    Boolean  @default(true)
+}
+
+model User {
+  id                     Int      @id @default(autoincrement())
+  roleId                 Int      @map("role_id")
+  name                   String?
+  email                  String   @unique
+  password               String
+  identificationNumber   String   @unique @map("identification_number")
+  additionalPersonalInfo String   @db.Text @map("additional_personal_info")
+  role                   Role     @relation(fields: [roleId], references: [id])
+  createdAt              DateTime @default(now()) @map("created_at")
+  updatedAt              DateTime @updatedAt @map("updated_at")
+  active                 Boolean  @default(true)
+}
