@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import { ENV } from './shared';
+import { SwaggerConfig } from './shared/swagger/swagger.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -16,18 +17,12 @@ async function bootstrap() {
     }),
   )
 
-  const config = new DocumentBuilder()
-    .setTitle('Null Pointer')
-    // .setDescription('T')
-    .setVersion('1.0')
-    .build();
-
   const rute = ENV.CONSTANS.SWAGGER_RUTE;
 
   SwaggerModule.setup(
     rute,
     app,
-    SwaggerModule.createDocument(app, config, {
+    SwaggerModule.createDocument(app, SwaggerConfig.config, {
       deepScanRoutes: true,
     }),
   )
