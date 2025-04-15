@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
+import { ENV } from './shared';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -21,16 +22,18 @@ async function bootstrap() {
     .setVersion('1.0')
     .build();
 
+  const rute = ENV.CONSTANS.SWAGGER_RUTE;
+
   SwaggerModule.setup(
-    'api/null-pointers/docs',
+    rute,
     app,
     SwaggerModule.createDocument(app, config, {
       deepScanRoutes: true,
     }),
   )
 
-  const port = process.env.API_PORT || 3000;
-  console.log(process.env.API_PORT);
+  const port = ENV.CONSTANS.API_PORT;
+  console.log(`Swagger running on: localhost:${port}/${rute}`);
 
   await app.listen(port);
 }
