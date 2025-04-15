@@ -1,13 +1,17 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { AuthRepository } from './repository';
 import * as bcrypt from 'bcrypt';
-import { RegisterType } from './types';
+import { LoginType, RegisterType } from './types';
 import { AUTH_MESSAGES } from './constans';
+import { JwtService } from 'src/shared/jwt/jwt.service';
 
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
-  constructor(private readonly authRepository: AuthRepository) { }
+  constructor(
+    private readonly authRepository: AuthRepository,
+    private readonly jwtService: JwtService
+  ) { }
 
   async registerRequest(body: RegisterType): Promise<boolean> {
     const hashedPassword = await this.hashpassword(body.password);
@@ -17,7 +21,16 @@ export class AuthService {
     })
   }
 
-  async hashpassword(password: string): Promise<string> {
+  async login(body: LoginType): Promise<{ token: string }> {
+    const userExist = await this.authRepository.existUser(body.email);
+    const rol = await this.authRepository.getUserRol(body.email);
+
+    const token = this.jwtService.generateToken({ id: userExist, email: body.email, rol });
+
+    return { token };
+  }
+
+  private async hashpassword(password: string): Promise<string> {
     // Hash de la contraseña
     try {
       const salt = await bcrypt.genSalt(10);

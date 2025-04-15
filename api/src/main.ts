@@ -1,11 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import { ENV } from './shared';
 import { SwaggerConfig } from './shared/swagger/swagger.config';
 
 async function bootstrap() {
+  const rute = ENV.CONSTANS.SWAGGER_RUTE;
+  const port = ENV.CONSTANS.API_PORT;
   const app = await NestFactory.create(AppModule);
 
   app.useGlobalPipes(
@@ -17,8 +19,6 @@ async function bootstrap() {
     }),
   )
 
-  const rute = ENV.CONSTANS.SWAGGER_RUTE;
-
   SwaggerModule.setup(
     rute,
     app,
@@ -27,7 +27,6 @@ async function bootstrap() {
     }),
   )
 
-  const port = ENV.CONSTANS.API_PORT;
   console.log(`Swagger running on: localhost:${port}/${rute}`);
 
   await app.listen(port);

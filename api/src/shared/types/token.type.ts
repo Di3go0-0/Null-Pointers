@@ -1,13 +1,13 @@
 
 export type GenerateTokenProps = {
   id: number;
-  mail: string;
+  email: string;
   rol: string;
 }
 
 export type TokenProps = {
   id: number;
-  mail: string;
+  email: string;
   rol: string;
   iat: number;
   exp: number;
