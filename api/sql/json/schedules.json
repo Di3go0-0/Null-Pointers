@@ -1,0 +1,14 @@
+[
+  {
+    "day": "monday",
+    "startTime": 800,
+    "endTime": 1200,
+    "classroom": "13A-2G4"
+  },
+  {
+    "day": "friday",
+    "startTime": 800,
+    "endTime": 1200,
+    "classroom": "13A-2G4"
+  }
+]

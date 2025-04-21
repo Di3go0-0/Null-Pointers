@@ -1,0 +1,12 @@
+[
+  {
+    "parentesco": "padre",
+    "nombre": "pepito",
+    "telefono": "1231231"
+  },
+  {
+    "parentesco": "madre",
+    "nombre": "pepita",
+    "telefono": "1231231"
+  }
+]
