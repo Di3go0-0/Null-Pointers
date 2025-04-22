@@ -1,5 +1,6 @@
--- docker exec -i mysql_container mysql -uroot -proot academy < script.sql
+-- docker exec -i mysql_container mysql -uroot -proot academy < init.sql
 
+CREATE DATABASE IF NOT EXISTS academy;
 USE academy;
 
 -- Tablas existentes (sin cambios estructurales mayores, solo asegurar campos)
