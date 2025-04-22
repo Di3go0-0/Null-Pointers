@@ -5,8 +5,7 @@ USE academy;
 -- Tablas existentes (sin cambios estructurales mayores, solo asegurar campos)
 CREATE TABLE IF NOT EXISTS `Role` (
     `id` INT NOT NULL AUTO_INCREMENT,
-    `roleName` VARCHAR(50) UNIQUE NOT NULL, -- Ajustado tamaño y nombre consistente
-    `description` TEXT,
+    `roleName` ENUM('ADMIN', 'TEACHER', 'STUDENT') DEFAULT 'STUDENT',
     `createdAt` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `updatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `active` TINYINT(1) DEFAULT 1,
@@ -18,19 +17,55 @@ CREATE TABLE IF NOT EXISTS `Users` (
     `roleId` INT,
     `name` VARCHAR(255) NOT NULL,
     `email` VARCHAR(255) UNIQUE NOT NULL,
-    `password` VARCHAR(255) NOT NULL, -- Almacenar HASH, no texto plano
-    `identificationNumber` VARCHAR(50) UNIQUE, -- Ajustado tamaño
-    `birthdate` DATE,
-    `personalInfo` TEXT, -- Campo genérico para info extra (dirección, teléfono, etc.)
+    `password` VARCHAR(255) NOT NULL, 
     `createdAt` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `updatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `active` TINYINT(1) DEFAULT 1,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
+-- Tabla para almacenar tokens temporales por usuario
+CREATE TABLE IF NOT EXISTS `PasswordResetTokens` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `userId` INT NOT NULL,
+    `token` VARCHAR(255) NOT NULL UNIQUE,
+    `expiresAt` DATETIME NOT NULL,
+    `createdAt` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB;
+
+-- Tabla para almacenar el historial de contrasenas 
+CREATE TABLE IF NOT EXISTS `PasswordHistory` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `userId` INT NOT NULL,
+    `passwordHash` VARCHAR(255) NOT NULL, -- El HASH de la contraseña que YA NO está en uso
+    `createdAt` DATETIME DEFAULT CURRENT_TIMESTAMP, -- Fecha en que esta contraseña dejó de ser la activa
+    PRIMARY KEY (`id`),
+    INDEX `idx_PasswordHistory_userId` (`userId`) -- Índice para buscar rápido por usuario
+) ENGINE=InnoDB;
+
+-- Tabla para almacenar la informacion personal
+CREATE TABLE IF NOT EXISTS `PersonalInfo` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `userId` INT,
+    `identificationNumber` VARCHAR(255) UNIQUE NOT NULL,
+    `birthdate` DATE,
+    `address` VARCHAR(255),
+    `phoneNumber` VARCHAR(255),
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB;
+
 CREATE TABLE IF NOT EXISTS `Students` (
     `id` INT NOT NULL, -- Debe ser FK a Users.id
-    `parentInfo` JSON, -- Info de padres/acudientes
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS `ParentsInfo` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `studentId` INT,
+    `relationship` VARCHAR(255) NOT NULL,
+    `name` VARCHAR(255) NOT NULL,
+    `phoneNumber` VARCHAR(255) NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
@@ -108,7 +143,6 @@ CREATE TABLE IF NOT EXISTS `CourseInstances` (
     `semester` VARCHAR(20) NOT NULL, -- Ej: '2025-1', '2025-Summer'
     `groupCode` VARCHAR(20), -- Ej: 'G1', 'A' (si hay varios grupos)
     `maxStudents` INT NOT NULL,
-    `scheduleInfo` JSON, -- [{ "day": "monday", "startTime": 800, "endTime": 1200, "classroom": "13A-2G4" }]
     `status` ENUM('Planned', 'Active', 'Finished', 'Cancelled') DEFAULT 'Planned',
     `createdAt` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `updatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -117,20 +151,16 @@ CREATE TABLE IF NOT EXISTS `CourseInstances` (
     UNIQUE KEY `uq_course_instance` (`courseId`, `semester`, `groupCode`) -- Clave única para una oferta
 ) ENGINE=InnoDB;
 
--- Tabla de Horarios para las Instancias de Cursos
--- CREATE TABLE IF NOT EXISTS `SchedulesCourses` (
---     `id` INT NOT NULL AUTO_INCREMENT,
---     `courseInstanceId` INT NOT NULL, -- A qué oferta de curso pertenece este horario
---     `scheduleInfo` JSON,
---     -- `dayOfWeek` ENUM('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday') NOT NULL,
---     -- `startTime` TIME NOT NULL,
---     -- `endTime` TIME NOT NULL,
---     -- `classroom` VARCHAR(50), -- Salón específico para este bloque (puede diferir del principal)
---     `createdAt` DATETIME DEFAULT CURRENT_TIMESTAMP,
---     `updatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
---     `active` TINYINT(1) DEFAULT 1,
---     PRIMARY KEY (`id`)
--- ) ENGINE=InnoDB;
+-- Tabla para almacenar el horario de los cursos Instanciados
+CREATE TABLE IF NOT EXISTS `SchedulesCoursesInstances`(
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `courseInstanceId` INT NOT NULL,
+    `day` ENUM('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday') NOT NULL,
+    `startTime` TIME NOT NULL,
+    `endTime` TIME NOT NULL,
+    `classroom` VARCHAR(50) NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB;
 
 -- Tabla de Matrículas en Programas Académicos (Sin cambios)
 CREATE TABLE IF NOT EXISTS `EnrollmentsPrograms` (
@@ -157,13 +187,18 @@ CREATE TABLE IF NOT EXISTS `EnrollmentsCourses` (
 -- Tabla de Calificaciones
 CREATE TABLE IF NOT EXISTS `Grades` (
     `id` INT NOT NULL AUTO_INCREMENT,
-    `enrollmentCourseId` INT NOT NULL, -- A qué matrícula de curso pertenece la nota
-    `teacherId` INT, -- Quién registró la nota (opcional, pero útil)
-    `gradeValue` DECIMAL(5, 2), -- Valor numérico (ej: 4.50) o NULL si es conceptual
-    `gradeConcept` VARCHAR(50), -- Valor conceptual (ej: 'Aprobado', 'Reprobado')
-    `gradeType` VARCHAR(100), -- Ej: 'Parcial 1', 'Quiz 2', 'Nota Final'
-    `gradeDate` DATETIME DEFAULT CURRENT_TIMESTAMP,
-    `comments` TEXT, -- Comentarios adicionales del profesor
+    `enrollmentCourseId` INT NOT NULL UNIQUE,
+    `term1_grade` DECIMAL(5, 2) NULL,
+    `term2_grade` DECIMAL(5, 2) NULL,
+    `term3_grade` DECIMAL(5, 2) NULL,
+    `final_grade` DECIMAL(5, 2) GENERATED ALWAYS AS ( 
+        (COALESCE(`term1_grade`, 0) * 0.30) +
+        (COALESCE(`term2_grade`, 0) * 0.30) +
+        (COALESCE(`term3_grade`, 0) * 0.40)
+    ) STORED, 
+    `lastUpdatedByTeacherId` INT NULL, 
+    `createdAt` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `updatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
@@ -174,13 +209,23 @@ CREATE TABLE IF NOT EXISTS `ExtensionCourseInstances` (
     `teacherId` INT, -- FK a Teachers (quién lo dicta ESTA vez)
     `startDate` DATE NOT NULL,
     `endDate` DATE NOT NULL,
-    `scheduleInfo` JSON, -- [{ "day": "monday", "startTime": 800, "endTime": 1200, "classroom": "13A-2G4" },]
     `location` VARCHAR(255), -- Lugar donde se imparte
     `maxStudents` INT,
     `publicationStatus` ENUM('Draft', 'Published', 'Cancelled', 'Completed') DEFAULT 'Draft',
     `createdAt` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `updatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `active` TINYINT(1) DEFAULT 1,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB;
+
+-- Tabla para almacenar el horario de los cursos de extension Instanciados
+CREATE TABLE IF NOT EXISTS `SchedulesExtensionCourseInstances`(
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `extensionCourseInstanceId` INT NOT NULL,
+    `day` ENUM('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday') NOT NULL,
+    `startTime` TIME NOT NULL,
+    `endTime` TIME NOT NULL,
+    `classroom` VARCHAR(50) NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
@@ -218,11 +263,35 @@ ADD CONSTRAINT `fk_Users_roleId_Role_id` -- Nombre consistente: fk_TablaOrigen_C
 FOREIGN KEY (`roleId`) REFERENCES `Role`(`id`)
 ON UPDATE CASCADE ON DELETE RESTRICT; -- RESTRICT es más seguro que SET NULL para roles
 
+-- PasswordResetTokens -> Users
+ALTER TABLE `PasswordResetTokens`
+ADD CONSTRAINT `fk_PasswordResetTokens_userId_Users_id`
+FOREIGN KEY (`userId`) REFERENCES `Users`(`id`)
+ON UPDATE CASCADE ON DELETE CASCADE; -- Si se borra el usuario, sus tokens de reseteo no sirven
+
+-- PasswordHistory -> Users
+ALTER TABLE `PasswordHistory`
+ADD CONSTRAINT `fk_PasswordHistory_userId_Users_id`
+FOREIGN KEY (`userId`) REFERENCES `Users`(`id`)
+ON UPDATE CASCADE ON DELETE CASCADE; -- Si se borra el usuario, borrar su historial tiene sentido
+
+-- Users -> PersonalInfo 
+ALTER TABLE `PersonalInfo`
+ADD CONSTRAINT `fk_PersonalInfo_userId_UserId`
+FOREIGN KEY (`userId`) REFERENCES `Users`(`id`)
+ON UPDATE CASCADE ON DELETE CASCADE; 
+
 -- Students -> Users
 ALTER TABLE `Students`
 ADD CONSTRAINT `fk_Students_id_Users_id`
 FOREIGN KEY (`id`) REFERENCES `Users`(`id`)
 ON UPDATE CASCADE ON DELETE CASCADE; -- Si se borra el usuario, se borra el perfil de estudiante
+
+-- Students -> ParentsInfo 
+ALTER TABLE `ParentsInfo`
+ADD CONSTRAINT `fk_ParentsInfo_studentId_StudentId`
+FOREIGN KEY (`studentId`) REFERENCES `Students`(`id`) -- Asegúrate que referencia Students.id
+ON UPDATE CASCADE ON DELETE CASCADE;
 
 -- Teachers -> Users
 ALTER TABLE `Teachers`
@@ -260,11 +329,11 @@ ADD CONSTRAINT `fk_CourseInstances_teacherId_Teachers_id`
 FOREIGN KEY (`teacherId`) REFERENCES `Teachers`(`id`)
 ON UPDATE CASCADE ON DELETE SET NULL; -- Si se borra el profe, la instancia queda sin profe asignado
 
--- SchedulesCourses -> CourseInstances
--- ALTER TABLE `SchedulesCourses`
--- ADD CONSTRAINT `fk_Schedules_courseInstanceId_CourseInstances_id`
--- FOREIGN KEY (`courseInstanceId`) REFERENCES `CourseInstances`(`id`)
--- ON UPDATE CASCADE ON DELETE CASCADE; -- Si se borra la instancia, se borran sus horarios
+-- SchedulesCoursesInstances -> CourseInstances
+ALTER TABLE `SchedulesCoursesInstances`
+ADD CONSTRAINT `fk_Schedules_CourseInstanceId_CourseInstances_id`
+FOREIGN KEY (`courseInstanceId`) REFERENCES `CourseInstances`(`id`)
+ON UPDATE CASCADE ON DELETE CASCADE; -- Si se borra la instancia, se borran sus horarios
 
 -- EnrollmentsPrograms -> Students
 ALTER TABLE `EnrollmentsPrograms`
@@ -298,15 +367,21 @@ ON UPDATE CASCADE ON DELETE CASCADE; -- Si se borra la matrícula, se borran las
 
 -- Grades -> Teachers (Opcional)
 ALTER TABLE `Grades`
-ADD CONSTRAINT `fk_Grades_teacherId_Teachers_id`
-FOREIGN KEY (`teacherId`) REFERENCES `Teachers`(`id`)
-ON UPDATE CASCADE ON DELETE SET NULL; -- Si se borra el profe, la nota queda sin registrador asociado
+ADD CONSTRAINT `fk_Grades_lastUpdatedByTeacherId_T_id`
+FOREIGN KEY (`lastUpdatedByTeacherId`) REFERENCES `Teachers`(`id`)
+ON UPDATE CASCADE ON DELETE SET NULL;
 
 -- ExtensionCourseInstances -> ExtensionCourses (Definición)
 ALTER TABLE `ExtensionCourseInstances`
 ADD CONSTRAINT `fk_ExtCourseInst_extCourseId_ExtCourses_id`
 FOREIGN KEY (`extensionCourseId`) REFERENCES `ExtensionCourses`(`id`)
 ON UPDATE CASCADE ON DELETE RESTRICT; -- No borrar definición si hay instancias
+
+-- SchedulesExtensionCoursesInstances -> ExtensionCourseInstances
+ALTER TABLE `SchedulesExtensionCourseInstances`
+ADD CONSTRAINT `fk_Schedules_extensionCourseInstanceId_ExtensionCourseInstanceId`
+FOREIGN KEY (`extensionCourseInstanceId`) REFERENCES `ExtensionCourseInstances`(`id`)
+ON UPDATE CASCADE ON DELETE CASCADE; -- Si se borra la instancia, se borran sus horarios
 
 -- ExtensionCourseInstances -> Teachers
 ALTER TABLE `ExtensionCourseInstances`
