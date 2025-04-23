@@ -3,7 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
+  output   = "../generated/prisma" // Ajusta esta ruta si es necesario
 }
 
 datasource db {
@@ -11,31 +11,389 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum UserRole {
+// ------------- ENUMS -------------
+
+enum RoleName {
   ADMIN
   TEACHER
   STUDENT
 }
 
-model Role {
-  id        Int      @id @default(autoincrement())
-  name      UserRole @default(STUDENT)
-  users     User[]
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  active    Boolean  @default(true)
+enum CourseInstanceStatus {
+  Planned
+  Active
+  Finished
+  Cancelled
 }
 
+enum DayOfWeek {
+  Monday
+  Tuesday
+  Wednesday
+  Thursday
+  Friday
+  Saturday
+  Sunday
+}
+
+enum ProgramEnrollmentStatus {
+  Enrolled
+  Graduated
+  Withdrawn
+  Inactive
+}
+
+enum CourseEnrollmentStatus {
+  Enrolled
+  Dropped
+  Completed
+  Failed
+}
+
+enum ExtensionPublicationStatus {
+  Draft
+  Published
+  Cancelled
+  Completed
+}
+
+enum ExtensionEnrollmentStatus {
+  Enrolled
+  Cancelled
+  Completed
+}
+
+
+// ------------- MODELS -------------
+
+model Role {
+  id        Int       @id @default(autoincrement())
+  roleName  RoleName  @default(STUDENT)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  active    Boolean   @default(true) @db.TinyInt
+
+  users     User[] // Back-relation to Users
+
+  @@map("Role") // Maps to the 'Role' table
+}
+
+
 model User {
+  id           Int    @id @default(autoincrement())
+  roleId       Int    
+  name         String @db.VarChar(255)
+  email        String @unique @db.VarChar(255)
+  password     String @db.VarChar(255)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  active       Boolean  @default(true) @db.TinyInt
+
+  role                Role?                  @relation(fields: [roleId], references: [id], onDelete: Restrict, onUpdate: Cascade) // Relation to Role
+
+  // Back-relations
+  passwordResetTokens PasswordResetToken[]
+  passwordHistory     PasswordHistory[]
+  personalInfo        PersonalInfo?       // One-to-one back-relation
+  student             Student?              // One-to-one back-relation
+  teacher             Teacher?              // One-to-one back-relation
+
+  @@map("Users") // Maps to the 'Users' table
+}
+
+model PasswordResetToken {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  token     String   @unique @db.VarChar(255)
+  expiresAt DateTime @db.DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade) // Relation to User
+
+  @@map("PasswordResetTokens")
+}
+
+model PasswordHistory {
+  id           Int      @id @default(autoincrement())
+  userId       Int
+  passwordHash String   @db.VarChar(255)
+  createdAt    DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade) // Relation to User
+
+  @@index([userId], map: "idx_PasswordHistory_userId")
+  @@map("PasswordHistory")
+}
+
+model PersonalInfo {
+  id                   Int       @id @default(autoincrement())
+  userId               Int?      @unique // Unique makes it effectively 1-to-1 with User if not nullable
+  identificationNumber String    @unique @db.VarChar(255)
+  birthdate            DateTime? @db.Date
+  address              String?   @db.VarChar(255)
+  phoneNumber          String?   @db.VarChar(255)
+
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade) // Relation to User
+
+  @@map("PersonalInfo")
+}
+
+model Student {
+  id Int @id // This is the PK and FK referencing User.id
+
+  user User @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade) // Relation to User (1-to-1)
+
+  // Back-relations
+  parentsInfo                ParentsInfo[]
+  enrollmentsPrograms        EnrollmentProgram[]
+  enrollmentsCourses         EnrollmentCourse[]
+  extensionCourseEnrollments ExtensionCourseEnrollment[]
+
+  @@map("Students")
+}
+
+model ParentsInfo {
+  id           Int    @id @default(autoincrement())
+  studentId    Int?   // Made optional to align with potential SET NULL/RESTRICT, though SQL implies NOT NULL via FK. Adjust if needed.
+  relationship String @db.VarChar(255)
+  name         String @db.VarChar(255)
+  phoneNumber  String @db.VarChar(255)
+
+  student Student? @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade) // Relation to Student
+
+  @@map("ParentsInfo")
+}
+
+model ContractType {
+  id                    Int       @id @default(autoincrement())
+  typeName              String    @unique @db.VarChar(100)
+  description           String?   @db.Text
+  allowsExtensionCourse Boolean   @default(true) @map("allowsExtensionCourse") @db.TinyInt
+  affectsSalary         Boolean   @default(false) @map("affectsSalary") @db.TinyInt
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  active                Boolean   @default(true) @db.TinyInt
+
+  teachers Teacher[] // Back-relation to Teachers
+
+  @@map("ContractTypes")
+}
+
+model Teacher {
+  id             Int      @id // This is the PK and FK referencing User.id
+  contractTypeId Int?     // Optional based on potential RESTRICT/SET NULL on FK
+  specialty      String?  @db.VarChar(255)
+  experience     String?  @db.Text
+  baseSalary     Decimal? @map("baseSalary") @db.Decimal(10, 2)
+
+  user         User          @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade) // Relation to User (1-to-1)
+  contractType ContractType? @relation(fields: [contractTypeId], references: [id], onDelete: Restrict, onUpdate: Cascade) // Relation to ContractTypes
+
+  // Back-relations
+  courseInstances          CourseInstance[]          @relation("TeacherCourseInstances")
+  gradesUpdated            Grade[]                   @relation("GradesUpdatedByTeacher")
+  extensionCourseInstances ExtensionCourseInstance[] @relation("TeacherExtensionCourseInstances")
+
+  @@map("Teachers")
+}
+
+model AcademicProgram {
+  id          Int     @id @default(autoincrement())
+  programName String  @unique @db.VarChar(255) @map("programName")
+  programCode String? @unique @db.VarChar(50) @map("programCode")
+  description String? @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  active      Boolean  @default(true) @db.TinyInt
+
+  // Back-relations
+  courses             Course[]
+  extensionCourses    ExtensionCourse[]
+  enrollmentsPrograms EnrollmentProgram[]
+
+  @@map("AcademicPrograms")
+}
+
+model Course {
+  id          Int     @id @default(autoincrement())
+  programId   Int
+  courseName  String  @db.VarChar(255) @map("courseName")
+  courseCode  String  @unique @db.VarChar(50) @map("courseCode") // Unique constraint on the column itself
+  description String? @db.Text
+  credits     Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  active      Boolean  @default(true) @db.TinyInt
+
+  program AcademicProgram @relation(fields: [programId], references: [id], onDelete: Cascade, onUpdate: Cascade) // Relation to AcademicPrograms
+
+  // Back-relation
+  courseInstances CourseInstance[]
+
+  @@unique([programId, courseCode], map: "uq_course_program") // Composite unique key
+  @@map("Courses")
+}
+
+model ExtensionCourse {
+  id            Int       @id @default(autoincrement())
+  programId     Int?      // Optional FK based on SET NULL
+  courseName    String    @db.VarChar(255) @map("courseName")
+  courseCode    String?   @unique @db.VarChar(50) @map("courseCode")
+  description   String?   @db.Text
+  durationHours Int?      @map("durationHours")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  active        Boolean   @default(true) @db.TinyInt
+
+  program AcademicProgram? @relation(fields: [programId], references: [id], onDelete: SetNull, onUpdate: Cascade) // Relation to AcademicPrograms
+
+  // Back-relation
+  extensionCourseInstances ExtensionCourseInstance[]
+
+  @@map("ExtensionCourses")
+}
+
+model CourseInstance {
+  id          Int                  @id @default(autoincrement())
+  courseId    Int
+  teacherId   Int?                 // Optional FK based on SET NULL
+  semester    String               @db.VarChar(20)
+  groupCode   String?              @db.VarChar(20) @map("groupCode")
+  maxStudents Int                  @map("maxStudents")
+  status      CourseInstanceStatus @default(Planned)
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+  active      Boolean              @default(true) @db.TinyInt
+
+  course  Course   @relation(fields: [courseId], references: [id], onDelete: Restrict, onUpdate: Cascade) // Relation to Courses
+  teacher Teacher? @relation("TeacherCourseInstances", fields: [teacherId], references: [id], onDelete: SetNull, onUpdate: Cascade) // Relation to Teachers
+
+  // Back-relations
+  schedules   ScheduleCourseInstance[]
+  enrollments EnrollmentCourse[]
+
+  @@unique([courseId, semester, groupCode], map: "uq_course_instance") // Composite unique key
+  @@map("CourseInstances")
+}
+
+model ScheduleCourseInstance {
+  id               Int            @id @default(autoincrement())
+  courseInstanceId Int
+  day              DayOfWeek
+  startTime        DateTime       @db.Time @map("startTime")
+  endTime          DateTime       @db.Time @map("endTime")
+  classroom        String         @db.VarChar(50)
+
+  courseInstance CourseInstance @relation(fields: [courseInstanceId], references: [id], onDelete: Cascade, onUpdate: Cascade) // Relation to CourseInstances
+
+  @@map("SchedulesCoursesInstances")
+}
+
+model EnrollmentProgram {
+  id                Int                     @id @default(autoincrement())
+  studentId         Int
+  academicProgramId Int
+  enrollmentDate    DateTime                @default(now()) @map("enrollmentDate")
+  status            ProgramEnrollmentStatus @default(Enrolled)
+
+  student         Student         @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade) // Relation to Students
+  academicProgram AcademicProgram @relation(fields: [academicProgramId], references: [id], onDelete: Cascade, onUpdate: Cascade) // Relation to AcademicPrograms
+
+  @@unique([studentId, academicProgramId], map: "uq_student_program") // Composite unique key
+  @@map("EnrollmentsPrograms")
+}
+
+model EnrollmentCourse {
+  id               Int                    @id @default(autoincrement())
+  studentId        Int
+  courseInstanceId Int
+  enrollmentDate   DateTime               @default(now()) @map("enrollmentDate")
+  status           CourseEnrollmentStatus @default(Enrolled)
+
+  student        Student        @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade) // Relation to Students
+  courseInstance CourseInstance @relation(fields: [courseInstanceId], references: [id], onDelete: Cascade, onUpdate: Cascade) // Relation to CourseInstances
+
+  grade Grade? // Back-relation (1-to-1)
+
+  @@unique([studentId, courseInstanceId], map: "uq_student_course_instance") // Composite unique key
+  @@map("EnrollmentsCourses")
+}
+
+model Grade {
   id                     Int      @id @default(autoincrement())
-  roleId                 Int      @map("role_id")
-  name                   String?
-  email                  String   @unique
-  password               String
-  identificationNumber   String   @unique @map("identification_number")
-  additionalPersonalInfo String   @db.Text @map("additional_personal_info")
-  role                   Role     @relation(fields: [roleId], references: [id])
-  createdAt              DateTime @default(now()) @map("created_at")
-  updatedAt              DateTime @updatedAt @map("updated_at")
-  active                 Boolean  @default(true)
+  enrollmentCourseId     Int      @unique @map("enrollmentCourseId")
+  term1_grade            Decimal? @db.Decimal(5, 2)
+  term2_grade            Decimal? @db.Decimal(5, 2)
+  term3_grade            Decimal? @db.Decimal(5, 2)
+  // final_grade Decimal? // Omitido: Es un campo GENERATED en MySQL. Prisma no lo maneja directamente. Debe calcularse en la aplicación o leerse tal cual de la DB.
+  lastUpdatedByTeacherId Int?     @map("lastUpdatedByTeacherId")
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  enrollmentCourse     EnrollmentCourse @relation(fields: [enrollmentCourseId], references: [id], onDelete: Cascade, onUpdate: Cascade) // Relation to EnrollmentsCourses
+  lastUpdatedByTeacher Teacher?         @relation("GradesUpdatedByTeacher", fields: [lastUpdatedByTeacherId], references: [id], onDelete: SetNull, onUpdate: Cascade) // Relation to Teachers
+
+  @@map("Grades")
+}
+
+model ExtensionCourseInstance {
+  id                  Int                        @id @default(autoincrement())
+  extensionCourseId   Int                        @map("extensionCourseId")
+  teacherId           Int?                       // Optional FK based on SET NULL
+  startDate           DateTime                   @db.Date @map("startDate")
+  endDate             DateTime                   @db.Date @map("endDate")
+  location            String?                    @db.VarChar(255)
+  maxStudents         Int?                       @map("maxStudents")
+  publicationStatus   ExtensionPublicationStatus @default(Draft) @map("publicationStatus")
+  createdAt           DateTime                   @default(now())
+  updatedAt           DateTime                   @updatedAt
+  active              Boolean                    @default(true) @db.TinyInt
+
+  extensionCourse ExtensionCourse @relation(fields: [extensionCourseId], references: [id], onDelete: Restrict, onUpdate: Cascade) // Relation to ExtensionCourses
+  teacher         Teacher?        @relation("TeacherExtensionCourseInstances", fields: [teacherId], references: [id], onDelete: SetNull, onUpdate: Cascade) // Relation to Teachers
+
+  // Back-relations
+  schedules   ScheduleExtensionCourseInstance[]
+  enrollments ExtensionCourseEnrollment[]
+
+  @@map("ExtensionCourseInstances")
+}
+
+model ScheduleExtensionCourseInstance {
+  id                        Int                     @id @default(autoincrement())
+  extensionCourseInstanceId Int                     @map("extensionCourseInstanceId")
+  day                       DayOfWeek
+  startTime                 DateTime                @db.Time @map("startTime")
+  endTime                   DateTime                @db.Time @map("endTime")
+  classroom                 String                  @db.VarChar(50)
+
+  extensionCourseInstance ExtensionCourseInstance @relation(fields: [extensionCourseInstanceId], references: [id], onDelete: Cascade, onUpdate: Cascade) // Relation to ExtensionCourseInstances
+
+  @@map("SchedulesExtensionCourseInstances")
+}
+
+model ExtensionCourseEnrollment {
+  id                        Int                       @id @default(autoincrement())
+  studentId                 Int
+  extensionCourseInstanceId Int                       @map("extensionCourseInstanceId")
+  enrollmentDate            DateTime                  @default(now()) @map("enrollmentDate")
+  status                    ExtensionEnrollmentStatus @default(Enrolled)
+
+  student                 Student                 @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade) // Relation to Students
+  extensionCourseInstance ExtensionCourseInstance @relation(fields: [extensionCourseInstanceId], references: [id], onDelete: Cascade, onUpdate: Cascade) // Relation to ExtensionCourseInstances
+
+  @@unique([studentId, extensionCourseInstanceId], map: "uq_student_ext_course_instance") // Composite unique key
+  @@map("ExtensionCourseEnrollments")
+}
+
+model Faq {
+  id        Int      @id @default(autoincrement())
+  question  String   @db.Text
+  answer    String   @db.Text
+  category  String?  @db.VarChar(100)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  active    Boolean  @default(true) @db.TinyInt
+
+  @@map("Faqs")
 }
