@@ -7,8 +7,8 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { JwtService } from '../jwt/jwt.service';
-import { PrismaService } from '../../prisma/prisma.service';
 import { TokenProps } from '../types/token.type';
+import { PrismaService } from '../prisma/prisma.service';
 
 declare module 'express' {
   interface Request {
