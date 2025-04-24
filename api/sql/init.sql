@@ -401,3 +401,13 @@ ALTER TABLE `ExtensionCourseEnrollments`
 ADD CONSTRAINT `fk_ExtCourseEnroll_extCourseInstId_ECI_id`
 FOREIGN KEY (`extensionCourseInstanceId`) REFERENCES `ExtensionCourseInstances`(`id`)
 ON UPDATE CASCADE ON DELETE CASCADE; -- Si se cancela/borra la instancia, se borran las matrículas
+
+-- ===============================
+-- 4. Datos iniciales (ROLES)
+-- ===============================
+
+-- Insertar roles básicos del sistema
+INSERT INTO `Role` (`roleName`, `active`) VALUES 
+('ADMIN', 1),
+('TEACHER', 1),
+('STUDENT', 1);
