@@ -13,12 +13,14 @@ export class AuthService {
     private readonly jwtService: JwtService
   ) { }
 
-  async registerRequest(body: RegisterType): Promise<boolean> {
+  async registerStudentRequest(body: RegisterType): Promise<boolean> {
     const hashedPassword = await this.hashpassword(body.password);
-    return this.authRepository.registerRequest({
+
+    return await this.authRepository.registerStudentRequest({
       ...body,
       password: hashedPassword
     })
+
   }
 
   async login(body: LoginType): Promise<{ token: string }> {
