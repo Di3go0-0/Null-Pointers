@@ -46,13 +46,13 @@ export class RegisterDto {
   @Match('password', { message: 'Las contraseñas no coinciden' })
   confirmPassword: string;
 
-  @ApiProperty({
-    type: Number,
-    example: 12345678,
-    required: true,
-    description: 'Número de identificación del usuario',
-  })
-  @IsNotEmpty({ message: 'El número de identificación es requerido' })
-  @IsInt({ message: 'El número de identificación debe ser un número entero' })
-  identificationNumber: number;
+  // @ApiProperty({
+  //   type: Number,
+  //   example: 12345678,
+  //   required: true,
+  //   description: 'Número de identificación del usuario',
+  // })
+  // @IsNotEmpty({ message: 'El número de identificación es requerido' })
+  // @IsInt({ message: 'El número de identificación debe ser un número entero' })
+  // identificationNumber: number;
 }

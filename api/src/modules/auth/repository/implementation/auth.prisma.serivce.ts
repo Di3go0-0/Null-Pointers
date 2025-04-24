@@ -1,8 +1,8 @@
 import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common";
 import { AuthRepository } from "../auth.repository";
-import { PrismaService } from "src/prisma/prisma.service";
 import { RegisterType } from "../../types";
 import { AUTH_MESSAGES } from "../../constans";
+import { PrismaService } from "src/shared/prisma/prisma.service";
 
 @Injectable()
 export class AuthPrismaSerivce implements AuthRepository {
@@ -11,16 +11,16 @@ export class AuthPrismaSerivce implements AuthRepository {
 
   public async registerRequest(body: RegisterType): Promise<boolean> {
     try {
-      const { name, email, password, identificationNumber } = body;
+      const { name, email, password } = body;
 
       // Buscar el rol de STUDENT o crearlo si no existe
       const studentRole = await this.prisma.role.findFirst({
-        where: { name: 'STUDENT' }
+        where: { roleName: 'STUDENT' }
       });
 
       const roleId = studentRole ? studentRole.id :
         (await this.prisma.role.create({
-          data: { name: 'STUDENT' }
+          data: { roleName: 'STUDENT' }
         })).id;
 
       await this.prisma.user.create({
@@ -28,9 +28,9 @@ export class AuthPrismaSerivce implements AuthRepository {
           name,
           email,
           password,
-          identificationNumber: String(identificationNumber),
+          // identificationNumber: String(identificationNumber),
           roleId,
-          additionalPersonalInfo: '', // Campo requerido según el esquema
+          // additionalPersonalInfo: '', // Campo requerido según el esquema
         },
       });
 
@@ -69,7 +69,7 @@ export class AuthPrismaSerivce implements AuthRepository {
         where: { email }
       });
 
-      if (!user) {
+      if (!user || !user.roleId) {
         throw new HttpException(AUTH_MESSAGES.ERROR.USER_NOT_FOUNT, HttpStatus.NOT_FOUND);
       }
 
@@ -81,7 +81,7 @@ export class AuthPrismaSerivce implements AuthRepository {
         throw new HttpException(AUTH_MESSAGES.ERROR.NOT_FOUNT, HttpStatus.NOT_FOUND);
       }
 
-      return rol.name
+      return rol.roleName;
 
     } catch (error) {
       this.logger.error(`Error al registrar usuario: ${error.message}`);
