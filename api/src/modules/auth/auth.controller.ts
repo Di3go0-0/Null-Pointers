@@ -10,9 +10,14 @@ export class AuthController {
     private readonly authService: AuthService,
   ) { }
 
-  @Post('registerStudent')
-  async registerRequest(@Body() body: RegisterDto): Promise<boolean> {
+  @Post('register/student')
+  async registerStudentRequest(@Body() body: RegisterDto): Promise<boolean> {
     return this.authService.registerStudentRequest(body);
+  }
+
+  @Post('register/teacher')
+  async registerTeacherRequest(@Body() body: RegisterDto): Promise<boolean> {
+    return this.authService.registerTeacherRequest(body);
   }
 
   @Post('login')

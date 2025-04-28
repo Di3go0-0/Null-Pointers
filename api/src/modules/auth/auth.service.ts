@@ -23,6 +23,16 @@ export class AuthService {
 
   }
 
+  async registerTeacherRequest(body: RegisterType): Promise<boolean> {
+    const hashedPassword = await this.hashpassword(body.password);
+
+    return await this.authRepository.registerTeacherRequest({
+      ...body,
+      password: hashedPassword
+    })
+
+  }
+
   async login(body: LoginType): Promise<{ token: string }> {
     const userExist = await this.authRepository.existUser(body.email);
     const rol = await this.authRepository.getUserRol(body.email);

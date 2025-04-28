@@ -2,6 +2,7 @@ export const AUTH_MESSAGES = {
   ERROR: {
     HASED_PASSWORD: 'Error hassing the password',
     USER_NOT_FOUNT: 'Error User not fount',
+    REGISTER_ERROR: 'Error registering user',
     USER_EXIST: 'Error User already exist',
     ROLE_NOT_FOUNT: 'Error Role not fount',
     NOT_FOUNT: 'Error not fount',

@@ -16,7 +16,7 @@ export class AuthPrismaSerivce implements AuthRepository {
       const registered = await this.registerUser(body, roleId);
 
       if (!registered) {
-        return false; // Si el usuario ya existe, retornamos false directamente
+        throw new HttpException(AUTH_MESSAGES.ERROR.REGISTER_ERROR, HttpStatus.BAD_REQUEST);
       }
 
       this.logger.log(`Estudiante registrado exitosamente: ${body.email}`);
@@ -24,7 +24,25 @@ export class AuthPrismaSerivce implements AuthRepository {
     }
     catch (error) {
       this.logger.error(`Error al registrar Estudiante: ${error.message}`);
-      return false;
+      throw new HttpException(AUTH_MESSAGES.ERROR.REGISTER_ERROR, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  public async registerTeacherRequest(body: RegisterType): Promise<boolean> {
+    try {
+      const roleId = await this.searchRole('TEACHER');
+      const registered = await this.registerUser(body, roleId);
+
+      if (!registered) {
+        throw new HttpException(AUTH_MESSAGES.ERROR.REGISTER_ERROR, HttpStatus.BAD_REQUEST);
+      }
+
+      this.logger.log(`Teacher registered successfully: ${body.email}`);
+      return true;
+    }
+    catch (error) {
+      this.logger.error(`Error al registrar Estudiante: ${error.message}`);
+      throw new HttpException(AUTH_MESSAGES.ERROR.REGISTER_ERROR, HttpStatus.BAD_REQUEST);
     }
   }
 
