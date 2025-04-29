@@ -11,12 +11,12 @@ export class AuthController {
   ) { }
 
   @Post('register/student')
-  async registerStudentRequest(@Body() body: RegisterDto): Promise<boolean> {
+  async registerStudentRequest(@Body() body: RegisterDto): Promise<number> {
     return this.authService.registerStudentRequest(body);
   }
 
   @Post('register/teacher')
-  async registerTeacherRequest(@Body() body: RegisterDto): Promise<boolean> {
+  async registerTeacherRequest(@Body() body: RegisterDto): Promise<number> {
     return this.authService.registerTeacherRequest(body);
   }
 

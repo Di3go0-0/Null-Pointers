@@ -10,7 +10,7 @@ export class AuthPrismaSerivce implements AuthRepository {
   private readonly logger = new Logger(AuthPrismaSerivce.name);
   constructor(private prisma: PrismaService) { }
 
-  public async registerStudentRequest(body: RegisterType): Promise<boolean> {
+  public async registerStudentRequest(body: RegisterType): Promise<number> {
     try {
       const roleId = await this.searchRole('STUDENT');
       const registered = await this.registerUser(body, roleId);
@@ -20,7 +20,7 @@ export class AuthPrismaSerivce implements AuthRepository {
       }
 
       this.logger.log(`Estudiante registrado exitosamente: ${body.email}`);
-      return true;
+      return registered;
     }
     catch (error) {
       this.logger.error(`Error al registrar Estudiante: ${error.message}`);
@@ -28,7 +28,7 @@ export class AuthPrismaSerivce implements AuthRepository {
     }
   }
 
-  public async registerTeacherRequest(body: RegisterType): Promise<boolean> {
+  public async registerTeacherRequest(body: RegisterType): Promise<number> {
     try {
       const roleId = await this.searchRole('TEACHER');
       const registered = await this.registerUser(body, roleId);
@@ -38,7 +38,7 @@ export class AuthPrismaSerivce implements AuthRepository {
       }
 
       this.logger.log(`Teacher registered successfully: ${body.email}`);
-      return true;
+      return registered;
     }
     catch (error) {
       this.logger.error(`Error al registrar Estudiante: ${error.message}`);
@@ -91,26 +91,22 @@ export class AuthPrismaSerivce implements AuthRepository {
     }
   }
 
-  private async registerUser(body: RegisterType, roleId: number): Promise<boolean> {
+  private async registerUser(body: RegisterType, roleId: number): Promise<number> {
+    const { name, email, password } = body;
+
+    // Verificar si el usuario existe sin lanzar excepción
     try {
-      const { name, email, password } = body;
+      const userExist = await this.prisma.user.findFirst({
+        where: { email }
+      });
 
-      // Verificar si el usuario existe sin lanzar excepción
-      try {
-        const userExist = await this.prisma.user.findFirst({
-          where: { email }
-        });
-
-        if (userExist) {
-          this.logger.warn(`El usuario con email ${email} ya existe`);
-          return false;
-        }
-      } catch (error) {
-        // Si hay un error al buscar, continuamos con el registro
-        this.logger.warn(`Error al verificar usuario existente: ${error.message}`);
+      if (userExist) {
+        this.logger.warn(`El usuario con email ${email} ya existe`);
+        throw new HttpException(AUTH_MESSAGES.ERROR.REGISTER_ERROR, HttpStatus.BAD_REQUEST);
       }
 
-      await this.prisma.user.create({
+
+      const user = await this.prisma.user.create({
         data: {
           name,
           email,
@@ -122,11 +118,11 @@ export class AuthPrismaSerivce implements AuthRepository {
       });
 
       this.logger.log(`Usuario registrado exitosamente: ${email}`);
-      return true;
+      return user.id
     }
     catch (error) {
       this.logger.error(`Error al registrar Usuario: ${error.message}`);
-      return false;
+      throw new HttpException(AUTH_MESSAGES.ERROR.REGISTER_ERROR, HttpStatus.BAD_REQUEST);
     }
   }
 

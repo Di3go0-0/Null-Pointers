@@ -13,7 +13,7 @@ export class AuthService {
     private readonly jwtService: JwtService
   ) { }
 
-  async registerStudentRequest(body: RegisterType): Promise<boolean> {
+  async registerStudentRequest(body: RegisterType): Promise<number> {
     const hashedPassword = await this.hashpassword(body.password);
 
     return await this.authRepository.registerStudentRequest({
@@ -23,7 +23,7 @@ export class AuthService {
 
   }
 
-  async registerTeacherRequest(body: RegisterType): Promise<boolean> {
+  async registerTeacherRequest(body: RegisterType): Promise<number> {
     const hashedPassword = await this.hashpassword(body.password);
 
     return await this.authRepository.registerTeacherRequest({
