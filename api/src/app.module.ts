@@ -7,8 +7,9 @@ import { SharedModule } from './shared/shared.module';
   imports: [
     ConfigModule.forRoot({ isGlobal: true, }),
     ModulesModule,
-    SharedModule
+    SharedModule,
   ],
   providers: [],
+  controllers: [],
 })
 export class AppModule { }
