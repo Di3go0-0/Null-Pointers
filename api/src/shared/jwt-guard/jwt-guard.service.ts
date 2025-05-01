@@ -9,10 +9,19 @@ import { Request } from 'express';
 import { JwtService } from '../jwt/jwt.service';
 import { TokenProps } from '../types/token.type';
 import { PrismaService } from '../prisma/prisma.service';
+import { $Enums } from 'generated/prisma';
 
 declare module 'express' {
   interface Request {
-    user?: TokenProps | any;
+    user?: TokenProps | {
+      id: number;
+      roleId: number;
+      name: string;
+      email: string;
+      role: {
+        roleName: $Enums.RoleName;
+      } | null;
+    } | null
   }
 }
 
@@ -30,12 +39,8 @@ export class JwtGuardService implements CanActivate {
     const token = this.extractTokenFromHeader(request);
 
     if (!token) {
-      this.logger.warn('No se encontró token en la cabecera Authorization');
-      throw new UnauthorizedException('Se requiere token de autenticación.');
-    }
-    if (!token) {
-      this.logger.warn('No se encontró token en la cabecera Authorization');
-      throw new UnauthorizedException('Se requiere token de autenticación.');
+      this.logger.warn('No token found in Authorization header');
+      throw new UnauthorizedException('Authentication token required.');
     }
 
     try {
@@ -47,36 +52,31 @@ export class JwtGuardService implements CanActivate {
           email: payload.email,
           active: true,
         },
-        include: { role: true }
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          roleId: true,
+          role: {
+            select: {
+              roleName: true
+            }
+          }
+        }
       });
 
-      this.logger.debug(`user ${payload.id}, ${payload.email}, ${payload.rol}.`);
-
       if (!user) {
-        this.logger.warn(`Usuario con ID ${payload.id} del token no encontrado o inactivo.`);
-        throw new UnauthorizedException('Usuario no autorizado.');
+        this.logger.warn(`User with ID ${payload.id} from token not found or inactive.`);
+        throw new UnauthorizedException('Unauthorized user.');
       }
-
-      const userRol = await this.prismaService.role.findFirst({
-        where: {
-          id: user.role?.id
-        },
-      })
-
       request.user = user;
-      request.user.rolName = userRol
-
-      this.logger.log(`Usuario ID ${user.id} autenticado exitosamente.`); // Opcional
-
     } catch (error) {
-      this.logger.error(`Error de autenticación: ${error.message}`);
-
+      this.logger.error(`Authentication error: ${error.message}`);
       if (error instanceof UnauthorizedException) {
-        throw error; // Re-lanzar si ya es UnauthorizedException
+        throw error;
       }
-      throw new UnauthorizedException('Token inválido o expirado.');
+      throw new UnauthorizedException('Invalid or expired token.');
     }
-
     return true;
   }
 

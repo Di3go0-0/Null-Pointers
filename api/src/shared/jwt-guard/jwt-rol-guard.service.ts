@@ -1,4 +1,3 @@
-
 import {
   Injectable,
   CanActivate,
@@ -7,21 +6,17 @@ import {
   Logger,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { RoleName } from 'generated/prisma';
+import { $Enums, RoleName } from 'generated/prisma';
 import { ROLES_KEY } from '../decorators';
 
 interface UserWithRole {
   id: number;
+  roleId: number;
+  name: string;
   email: string;
-  active: boolean;
   role: {
-    id: number;
-    name: RoleName;
-  };
-}
-
-interface RoleI {
-  roleName: string
+    roleName: $Enums.RoleName;
+  } | null;
 }
 
 @Injectable()
@@ -38,28 +33,26 @@ export class RolesGuard implements CanActivate {
       context.getClass(),
     ]);
 
-    if (!requiredRoles || requiredRoles.length === 0) {
-      this.logger.verbose('No se requieren roles específicos para esta ruta.');
+    if (!requiredRoles?.length) {
+      this.logger.verbose('No specific roles required for this route.');
       return true;
     }
 
     const request = context.switchToHttp().getRequest();
     const user = request.user as UserWithRole;
-    const nameRol = request.user.roleName as RoleI;
-    console.log(nameRol)
-    if (!user || !nameRol) {
-      this.logger.warn('Intento de acceso a ruta con roles sin usuario válido adjunto.');
-      throw new ForbiddenException('No tienes permiso para acceder a este recurso (usuario no encontrado).');
+
+    if (!user?.role?.roleName) {
+      this.logger.warn('User without a valid role or not authenticated.');
+      throw new ForbiddenException('Access denied: invalid user or missing role.');
     }
 
-    const hasRequiredRole = requiredRoles.some((role) => nameRol.roleName === role);
+    const hasRequiredRole = requiredRoles.includes(user.role.roleName);
 
     if (hasRequiredRole) {
-      this.logger.log(`Acceso permitido para usuario ${user.email} con rol ${nameRol.roleName}.`);
+      this.logger.log(`Access granted: ${user.email} - Role: ${user.role.roleName}`);
       return true;
-    } else {
-      this.logger.warn(`Acceso denegado para usuario ${user.email} con rol ${user.role.name}.Roles requeridos: ${requiredRoles.join(', ')}`);
-      throw new ForbiddenException('No tienes los permisos necesarios para realizar esta acción.');
     }
+    this.logger.warn(`Access denied: ${user.email} - Role: ${user.role.roleName}. Required roles: ${requiredRoles.join(', ')}`);
+    throw new ForbiddenException('You do not have sufficient permissions.');
   }
 }
