@@ -44,17 +44,27 @@ export class JwtGuardService implements CanActivate {
       const user = await this.prismaService.user.findUnique({
         where: {
           id: payload.id,
+          email: payload.email,
           active: true,
         },
-        // include: { role: true } 
+        include: { role: true }
       });
+
+      this.logger.debug(`user ${payload.id}, ${payload.email}, ${payload.rol}.`);
 
       if (!user) {
         this.logger.warn(`Usuario con ID ${payload.id} del token no encontrado o inactivo.`);
         throw new UnauthorizedException('Usuario no autorizado.');
       }
 
+      const userRol = await this.prismaService.role.findFirst({
+        where: {
+          id: user.role?.id
+        },
+      })
+
       request.user = user;
+      request.user.rolName = userRol
 
       this.logger.log(`Usuario ID ${user.id} autenticado exitosamente.`); // Opcional
 
