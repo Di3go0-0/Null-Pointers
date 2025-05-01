@@ -10,38 +10,33 @@ export class AuthPrismaSerivce implements AuthRepository {
   private readonly logger = new Logger(AuthPrismaSerivce.name);
   constructor(private prisma: PrismaService) { }
 
-  public async registerStudentRequest(body: RegisterType): Promise<number> {
-    try {
-      const roleId = await this.searchRole('STUDENT');
-      const registered = await this.registerUser(body, roleId);
+  public async registerUser(body: RegisterType, roleId: number): Promise<number> {
+    const { name, email, password } = body;
 
-      if (!registered) {
+    try {
+      const userExist = await this.prisma.user.findFirst({
+        where: { email }
+      });
+
+      if (userExist) {
+        this.logger.warn(`El usuario con email ${email} ya existe`);
         throw new HttpException(AUTH_MESSAGES.ERROR.REGISTER_ERROR, HttpStatus.BAD_REQUEST);
       }
 
-      this.logger.log(`Estudiante registrado exitosamente: ${body.email}`);
-      return registered;
+      const user = await this.prisma.user.create({
+        data: {
+          name,
+          email,
+          password,
+          roleId,
+        },
+      });
+
+      this.logger.log(`Usuario registrado exitosamente: ${email}`);
+      return user.id
     }
     catch (error) {
-      this.logger.error(`Error al registrar Estudiante: ${error.message}`);
-      throw new HttpException(AUTH_MESSAGES.ERROR.REGISTER_ERROR, HttpStatus.BAD_REQUEST);
-    }
-  }
-
-  public async registerTeacherRequest(body: RegisterType): Promise<number> {
-    try {
-      const roleId = await this.searchRole('TEACHER');
-      const registered = await this.registerUser(body, roleId);
-
-      if (!registered) {
-        throw new HttpException(AUTH_MESSAGES.ERROR.REGISTER_ERROR, HttpStatus.BAD_REQUEST);
-      }
-
-      this.logger.log(`Teacher registered successfully: ${body.email}`);
-      return registered;
-    }
-    catch (error) {
-      this.logger.error(`Error al registrar Estudiante: ${error.message}`);
+      this.logger.error(`Error al registrar Usuario: ${error.message}`);
       throw new HttpException(AUTH_MESSAGES.ERROR.REGISTER_ERROR, HttpStatus.BAD_REQUEST);
     }
   }
@@ -91,42 +86,7 @@ export class AuthPrismaSerivce implements AuthRepository {
     }
   }
 
-  private async registerUser(body: RegisterType, roleId: number): Promise<number> {
-    const { name, email, password } = body;
-
-    // Verificar si el usuario existe sin lanzar excepción
-    try {
-      const userExist = await this.prisma.user.findFirst({
-        where: { email }
-      });
-
-      if (userExist) {
-        this.logger.warn(`El usuario con email ${email} ya existe`);
-        throw new HttpException(AUTH_MESSAGES.ERROR.REGISTER_ERROR, HttpStatus.BAD_REQUEST);
-      }
-
-
-      const user = await this.prisma.user.create({
-        data: {
-          name,
-          email,
-          password,
-          // identificationNumber: String(identificationNumber),
-          roleId,
-          // additionalPersonalInfo: '', // Campo requerido según el esquema
-        },
-      });
-
-      this.logger.log(`Usuario registrado exitosamente: ${email}`);
-      return user.id
-    }
-    catch (error) {
-      this.logger.error(`Error al registrar Usuario: ${error.message}`);
-      throw new HttpException(AUTH_MESSAGES.ERROR.REGISTER_ERROR, HttpStatus.BAD_REQUEST);
-    }
-  }
-
-  private async searchRole(roleName: RoleName): Promise<number> {
+  public async searchRole(roleName: RoleName): Promise<number> {
     try {
       // Buscar el rol de STUDENT o crearlo si no existe
       const role = await this.prisma.role.findFirst({
@@ -144,5 +104,4 @@ export class AuthPrismaSerivce implements AuthRepository {
       throw new HttpException(AUTH_MESSAGES.ERROR.PRISMA_ERROR, HttpStatus.BAD_REQUEST);
     }
   }
-
 }

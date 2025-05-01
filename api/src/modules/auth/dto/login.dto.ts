@@ -4,7 +4,7 @@ import { IsEmail, IsNotEmpty } from "class-validator";
 export class LoginDto {
   @ApiProperty({
     type: String,
-    example: 'usuario@correo.com',
+    example: 'pepito@correo.com',
     required: true,
     description: 'Correo electrónico del usuario',
   })
@@ -20,5 +20,4 @@ export class LoginDto {
   })
   @IsNotEmpty({ message: 'La contraseña es requerida' })
   password: string;
-
 }
