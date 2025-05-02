@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common";
 import { AuthRepository } from "../auth.repository";
-import { RegisterType } from "../../types";
+import { PatchPersonalInfoType, PostPersonalInfoType, RegisterType } from "../../types";
 import { AUTH_MESSAGES } from "../../constans";
 import { RoleName } from "generated/prisma";
 import { PrismaService } from "src/shared/prisma/prisma.service";
@@ -100,6 +100,41 @@ export class AuthPrismaSerivce implements AuthRepository {
       return role.id;
 
     } catch (error) {
+      this.logger.error(`Error al registrar usuario: ${error.message}`);
+      throw new HttpException(AUTH_MESSAGES.ERROR.PRISMA_ERROR, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  public async postPersonalInfo(userId: number, body: PostPersonalInfoType): Promise<number> {
+    const { identificationNumber, birthdate, address, phoneNumber } = body
+    try {
+      const personalInfo = await this.prisma.personalInfo.create({
+        data: {
+          id: userId,
+          identificationNumber,
+          address,
+          birthdate,
+          phoneNumber,
+        }
+      })
+      return personalInfo.id
+    } catch (error) {
+      this.logger.error(`Error al registrar usuario: ${error.message}`);
+      throw new HttpException(AUTH_MESSAGES.ERROR.PRISMA_ERROR, HttpStatus.BAD_REQUEST);
+    }
+
+  }
+
+  public async patchPersonalInfo(userId: number, body: PatchPersonalInfoType): Promise<number> {
+    try {
+      const updated = await this.prisma.personalInfo.update({
+        where: { id: userId },
+        data: { ...body }
+      })
+
+      return updated.id
+    }
+    catch (error) {
       this.logger.error(`Error al registrar usuario: ${error.message}`);
       throw new HttpException(AUTH_MESSAGES.ERROR.PRISMA_ERROR, HttpStatus.BAD_REQUEST);
     }

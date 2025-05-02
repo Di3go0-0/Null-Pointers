@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { AuthRepository } from './repository';
-import { LoginType, RegisterType } from './types';
+import { LoginType, PatchPersonalInfoType, PostPersonalInfoType, RegisterType } from './types';
 import { JwtService } from 'src/shared/jwt/jwt.service';
 import { hashpassword } from './helpers';
 
@@ -26,5 +26,11 @@ export class AuthService {
     return { token };
   }
 
-  // async getUserRol(
+  async postPersonalInfo(userId: number, body: PostPersonalInfoType): Promise<number> {
+    return this.authRepository.postPersonalInfo(userId, body);
+  }
+  async patchPersonalInfo(userId: number, body: PatchPersonalInfoType): Promise<number> {
+    return this.authRepository.patchPersonalInfo(userId, body);
+  }
+
 }

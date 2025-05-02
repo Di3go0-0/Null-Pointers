@@ -126,14 +126,13 @@ model PasswordHistory {
 }
 
 model PersonalInfo {
-  id                   Int       @id @default(autoincrement())
-  userId               Int?      @unique // Unique makes it effectively 1-to-1 with User if not nullable
+  id                   Int       @id // This is both PK and FK referencing User.id
   identificationNumber String    @unique @db.VarChar(255)
   birthdate            DateTime? @db.Date
   address              String?   @db.VarChar(255)
   phoneNumber          String?   @db.VarChar(255)
 
-  user User? @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade) // Relation to User
+  user User @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade) // 1-to-1 relation with User
 
   @@map("PersonalInfo")
 }
