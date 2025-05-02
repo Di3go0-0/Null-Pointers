@@ -1,4 +1,4 @@
-import { Body, Controller, Param, ParseIntPipe, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto, PatchPersonalInfoDto, PostPersonalInfoDto, RegisterDto } from './dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -23,6 +23,12 @@ export class AuthController {
   @Roles('ADMIN')
   async registerUserDefault(@Body() body: RegisterDto): Promise<number> {
     return this.authService.registerUser(body);
+  }
+
+  @UseGuards(JwtGuardService)
+  @Get('personalInfo/:id')
+  async getPersonalInfo(@Param('id', ParseIntPipe) userId: number) {
+    return this.authService.getPersonalInfo(userId)
   }
 
   @UseGuards(JwtGuardService)

@@ -26,6 +26,10 @@ export class AuthService {
     return { token };
   }
 
+  async getPersonalInfo(userId: number) {
+    return this.authRepository.getPersonalInfo(userId);
+  }
+
   async postPersonalInfo(userId: number, body: PostPersonalInfoType): Promise<number> {
     return this.authRepository.postPersonalInfo(userId, body);
   }

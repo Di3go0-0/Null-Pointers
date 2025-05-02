@@ -5,7 +5,7 @@ export const AUTH_MESSAGES = {
     REGISTER_ERROR: 'Error registering user',
     USER_EXIST: 'Error User already exists',
     ROLE_NOT_FOUNT: 'Error Role not found',
-    NOT_FOUNT: 'Error not found',
+    NOT_FOUND: 'Error not found',
     CREATE_PRODUCT: 'Error creating product',
     PRISMA_ERROR: 'Database error',
     PERSONAL_INFO_POST: 'Error uploading personal information'

@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common";
 import { AuthRepository } from "../auth.repository";
-import { PatchPersonalInfoType, PostPersonalInfoType, RegisterType } from "../../types";
+import { PatchPersonalInfoType, PersonalInfoType, PostPersonalInfoType, RegisterType } from "../../types";
 import { AUTH_MESSAGES } from "../../constans";
 import { RoleName } from "generated/prisma";
 import { PrismaService } from "src/shared/prisma/prisma.service";
@@ -75,7 +75,7 @@ export class AuthPrismaSerivce implements AuthRepository {
       })
 
       if (!rol) {
-        throw new HttpException(AUTH_MESSAGES.ERROR.NOT_FOUNT, HttpStatus.NOT_FOUND);
+        throw new HttpException(AUTH_MESSAGES.ERROR.NOT_FOUND, HttpStatus.NOT_FOUND);
       }
 
       return rol.roleName;
@@ -96,10 +96,28 @@ export class AuthPrismaSerivce implements AuthRepository {
       if (!role) {
         throw new HttpException(AUTH_MESSAGES.ERROR.USER_NOT_FOUNT, HttpStatus.NOT_FOUND);
       }
-
       return role.id;
 
     } catch (error) {
+      this.logger.error(`Error al registrar usuario: ${error.message}`);
+      throw new HttpException(AUTH_MESSAGES.ERROR.PRISMA_ERROR, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  public async getPersonalInfo(userId: number): Promise<PersonalInfoType[]> {
+    try {
+      const personalInfo = await this.prisma.personalInfo.findMany({
+        where: {
+          id: userId
+        }
+      })
+
+      if (!personalInfo) {
+        throw new HttpException(AUTH_MESSAGES.ERROR.NOT_FOUND, HttpStatus.NOT_FOUND);
+      }
+      return personalInfo
+    }
+    catch (error) {
       this.logger.error(`Error al registrar usuario: ${error.message}`);
       throw new HttpException(AUTH_MESSAGES.ERROR.PRISMA_ERROR, HttpStatus.BAD_REQUEST);
     }
