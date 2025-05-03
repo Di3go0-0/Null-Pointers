@@ -26,8 +26,8 @@ export class TeacherMapper {
   public static toDomain(teacherData: TeacherWithRelations): TeacherEntity {
     return {
       id: teacherData.id,
-      name: teacherData.user?.name ?? 'Usuario no disponible',
-      email: teacherData.user?.email ?? 'email@no.disponible',
+      name: teacherData.user?.name ?? '',
+      email: teacherData.user?.email ?? '',
       contract: teacherData.contractType ? {
         id: teacherData.contractType.id,
         typeName: teacherData.contractType.typeName,

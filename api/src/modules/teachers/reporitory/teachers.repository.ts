@@ -1,7 +1,9 @@
 import { TeacherEntity } from "../entities";
-import { AddContractType } from "../types";
+import { PatchTeacherType } from "../types";
+import { PostTeacherType } from "../types/post.teacher.type";
 
 export abstract class TeachersRepository {
   abstract getTeachers(): Promise<TeacherEntity[]>;
-  abstract AddContractsType(id: number, body: AddContractType): Promise<number>;
+  abstract postTeacher(userId: number, body: PostTeacherType): Promise<number>;
+  abstract patchTeacher(userId: number, body: PatchTeacherType): Promise<number>;
 }

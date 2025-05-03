@@ -1,1 +1,3 @@
-export * from './add.teacher.contract-type.dto'
+export * from './post.teacher.dto'
+export * from './patch.teacher.dto'
+

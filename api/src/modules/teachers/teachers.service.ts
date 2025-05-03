@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { TeachersRepository } from './reporitory/teachers.repository';
-import { AddContractType } from './types';
+import { PatchTeacherType, PostTeacherType } from './types';
 import { TeacherEntity } from './entities';
 
 @Injectable()
@@ -10,7 +10,12 @@ export class TeachersService {
   async getTeachers(): Promise<TeacherEntity[]> {
     return this.teachersRepository.getTeachers();
   }
-  async AddContractsType(id: number, body: AddContractType): Promise<number> {
-    return this.teachersRepository.AddContractsType(id, body);
+
+  async postTeacher(userId: number, body: PostTeacherType): Promise<number> {
+    return this.teachersRepository.postTeacher(userId, body);
+  }
+
+  async patchTeacher(userId: number, body: PatchTeacherType): Promise<number> {
+    return this.teachersRepository.patchTeacher(userId, body);
   }
 }

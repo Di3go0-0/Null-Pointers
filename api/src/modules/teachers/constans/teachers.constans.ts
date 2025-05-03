@@ -1,7 +1,11 @@
 export const TEACHERS = {
   ERROR: {
-    GET_TEACHER: 'Error al obtener al docente',
-    ADD_CONTRACT_TYPE: 'Error al agregar tipo de contrato',
-    DONT_EXIST_CONTRACT_TYPE: 'Tipo de contrato no existe',
+    GET_TEACHER: 'Error getting the teacher',
+    ADD_CONTRACT_TYPE: 'Error adding contract type',
+    UPDATED_ROL: 'Error updating rol',
+    UPDATED_TEACHER: 'Error updating rol',
+    CREATE_TEACHER: 'Error creating teacher',
+    USER_NOT_FOUND: 'User not found',
+    DONT_EXIST_CONTRACT_TYPE: 'Contract type does not exist',
   },
 };
