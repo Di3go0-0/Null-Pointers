@@ -107,6 +107,7 @@ model PasswordResetToken {
   token     String   @unique @db.VarChar(255)
   expiresAt DateTime @db.DateTime
   createdAt DateTime @default(now())
+  active       Boolean  @default(true) @db.TinyInt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade) // Relation to User
 

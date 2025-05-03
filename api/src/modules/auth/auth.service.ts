@@ -3,8 +3,9 @@ import { AuthRepository } from './repository';
 import { LoginType, PatchPersonalInfoType, PostPersonalInfoType, RegisterType } from './types';
 import { JwtService } from 'src/shared/jwt/jwt.service';
 import { comparePassword, hashpassword } from './helpers';
-import { ChangePasswordWithOldType } from './types/change-password-with-old.type';
+import { ChangePassworType } from './types/change-password.type';
 import { AUTH_MESSAGES } from './constans';
+import { ChangePasswordTokenType } from './types/change-password-token';
 
 @Injectable()
 export class AuthService {
@@ -44,9 +45,18 @@ export class AuthService {
     return this.authRepository.patchPersonalInfo(userId, body);
   }
 
-  async chagePasswordWithOld(userId: number, body: ChangePasswordWithOldType): Promise<number> {
+  async chagePasswordWithOld(userId: number, body: ChangePassworType): Promise<number> {
     const hashedPassword = await hashpassword(body.password);
     return this.authRepository.chagePasswordWithOld(userId, { password: hashedPassword, oldPassword: body.oldPassword })
+  }
+
+  async requestPasswordToken(userId: number): Promise<boolean> {
+    return !!this.authRepository.requestPasswordToken(userId);
+  }
+
+  async changePasswordWithToken(userId: number, token: string, body: ChangePasswordTokenType): Promise<number> {
+    const password = await hashpassword(body.password);
+    return this.authRepository.changePasswordWithToken(userId, token, { password });
   }
 
 }

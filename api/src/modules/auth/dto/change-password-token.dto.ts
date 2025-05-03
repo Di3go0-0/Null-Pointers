@@ -2,16 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty } from "class-validator";
 import { Match } from "src/shared";
 
-export class ChangePasswordWithOldDto {
-  @ApiProperty({
-    type: String,
-    example: 'Password123!',
-    required: true,
-    description: 'Contraseña del usuario',
-  })
-  @IsNotEmpty({ message: 'La contraseña es requerida' })
-  oldPassword: string;
-
+export class ChangePasswordTokenDto {
   @ApiProperty({
     type: String,
     example: 'Password1234!',

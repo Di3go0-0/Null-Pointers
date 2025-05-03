@@ -1,6 +1,7 @@
 import { RoleName } from "generated/prisma";
 import { PatchPersonalInfoType, PersonalInfoType, PostPersonalInfoType, RegisterType, UserType } from "../types";
-import { ChangePasswordWithOldType } from "../types/change-password-with-old.type";
+import { ChangePassworType } from "../types/change-password.type";
+import { ChangePasswordTokenType } from "../types/change-password-token";
 
 export abstract class AuthRepository {
   abstract registerUser(body: RegisterType, roleId: number): Promise<number>;
@@ -10,5 +11,7 @@ export abstract class AuthRepository {
   abstract existUser(email: string): Promise<UserType>;
   abstract getUserRol(email: string): Promise<string>;
   abstract searchRole(roleName: RoleName): Promise<number>;
-  abstract chagePasswordWithOld(userId: number, body: ChangePasswordWithOldType): Promise<number>;
+  abstract chagePasswordWithOld(userId: number, body: ChangePassworType): Promise<number>;
+  abstract requestPasswordToken(userId: number): Promise<string>;
+  abstract changePasswordWithToken(userId: number, token: string, body: ChangePasswordTokenType): Promise<number>;
 }

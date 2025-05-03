@@ -11,5 +11,8 @@ export const AUTH_MESSAGES = {
     PERSONAL_INFO_POST: 'Error uploading personal information',
     CHANGE_PASSWORD: 'Error changering password',
     PASSWORD_NOT_MATCH: 'Error password not match',
+    REQUEST_TOKEN: 'Error Generating token',
+    VALIDATE_REQUEST_TOKEN: 'Error validating request token',
+    REQUEST_TOKEN_EXPIRED: 'Error token not valid',
   },
 };

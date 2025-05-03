@@ -5,6 +5,10 @@ import { TeachersModule } from './teachers/teachers.module';
 
 @Module({
 
-  imports: [AuthModule, ContractsTypeModule, TeachersModule]
+  imports: [
+    AuthModule,
+    TeachersModule,
+    ContractsTypeModule,
+  ]
 })
 export class ModulesModule { }

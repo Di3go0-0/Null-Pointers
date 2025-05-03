@@ -3,10 +3,16 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ContractsTypeService } from './contracts-type.service';
 import { CreateContractsTypesDto, PatchContractsTypesDto } from './dtos';
 import { JwtGuardService } from 'src/shared/jwt-guard/jwt-guard.service';
+import { RolesGuard } from 'src/shared/jwt-guard/jwt-rol-guard.service';
+import { Roles } from 'src/shared';
 
 @ApiTags('Contracts Type')
 @ApiBearerAuth('Token')
-@UseGuards(JwtGuardService)
+@UseGuards(
+  JwtGuardService,
+  RolesGuard
+)
+@Roles('ADMIN')
 @Controller('contracts-type')
 export class ContractsTypeController {
   constructor(private readonly contractsTypeService: ContractsTypeService) { }
