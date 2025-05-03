@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, UseGuards, Request } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LoginDto, PatchPersonalInfoDto, PostPersonalInfoDto, RegisterDto } from './dto';
+import { ChangePasswordWithOldDto, LoginDto, PatchPersonalInfoDto, PostPersonalInfoDto, RegisterDto } from './dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtGuardService } from 'src/shared/jwt-guard/jwt-guard.service';
 import { RolesGuard } from 'src/shared/jwt-guard/jwt-rol-guard.service';
@@ -42,4 +42,11 @@ export class AuthController {
   async patchPersonalInfo(@Param('id', ParseIntPipe) userId: number, @Body() body: PatchPersonalInfoDto) {
     return this.authService.patchPersonalInfo(userId, body);
   }
+
+  @UseGuards(JwtGuardService)
+  @Patch('chagePasswordWithOld')
+  async chagePasswordWithOld(@Body() body: ChangePasswordWithOldDto, @Request() req: any) {
+    return this.authService.chagePasswordWithOld(req.user.id, body)
+  }
+
 }

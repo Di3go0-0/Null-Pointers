@@ -8,6 +8,8 @@ export const AUTH_MESSAGES = {
     NOT_FOUND: 'Error not found',
     CREATE_PRODUCT: 'Error creating product',
     PRISMA_ERROR: 'Database error',
-    PERSONAL_INFO_POST: 'Error uploading personal information'
+    PERSONAL_INFO_POST: 'Error uploading personal information',
+    CHANGE_PASSWORD: 'Error changering password',
+    PASSWORD_NOT_MATCH: 'Error password not match',
   },
 };

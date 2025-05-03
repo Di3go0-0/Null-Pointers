@@ -3,4 +3,4 @@ export * from './post.personal-info.type'
 export * from './patch.personal-info.type'
 export * from './login.type'
 export * from './personal-info'
-
+export * from './user.type'

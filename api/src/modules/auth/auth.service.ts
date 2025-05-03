@@ -1,8 +1,10 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { AuthRepository } from './repository';
 import { LoginType, PatchPersonalInfoType, PostPersonalInfoType, RegisterType } from './types';
 import { JwtService } from 'src/shared/jwt/jwt.service';
-import { hashpassword } from './helpers';
+import { comparePassword, hashpassword } from './helpers';
+import { ChangePasswordWithOldType } from './types/change-password-with-old.type';
+import { AUTH_MESSAGES } from './constans';
 
 @Injectable()
 export class AuthService {
@@ -21,8 +23,13 @@ export class AuthService {
 
   async login(body: LoginType): Promise<{ token: string }> {
     const userExist = await this.authRepository.existUser(body.email);
+    const passwordMatch = await comparePassword(body.password, userExist.password)
+    if (!passwordMatch) {
+      this.logger.error(`Login Error, Password Not match: `);
+      throw new HttpException(AUTH_MESSAGES.ERROR.PASSWORD_NOT_MATCH, HttpStatus.BAD_REQUEST);
+    }
     const rol = await this.authRepository.getUserRol(body.email);
-    const token = this.jwtService.generateToken({ id: userExist, email: body.email, rol });
+    const token = this.jwtService.generateToken({ id: userExist.id, email: body.email, rol });
     return { token };
   }
 
@@ -35,6 +42,11 @@ export class AuthService {
   }
   async patchPersonalInfo(userId: number, body: PatchPersonalInfoType): Promise<number> {
     return this.authRepository.patchPersonalInfo(userId, body);
+  }
+
+  async chagePasswordWithOld(userId: number, body: ChangePasswordWithOldType): Promise<number> {
+    const hashedPassword = await hashpassword(body.password);
+    return this.authRepository.chagePasswordWithOld(userId, { password: hashedPassword, oldPassword: body.oldPassword })
   }
 
 }

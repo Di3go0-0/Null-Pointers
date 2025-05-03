@@ -1,9 +1,11 @@
 import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common";
 import { AuthRepository } from "../auth.repository";
-import { PatchPersonalInfoType, PersonalInfoType, PostPersonalInfoType, RegisterType } from "../../types";
+import { PatchPersonalInfoType, PersonalInfoType, PostPersonalInfoType, RegisterType, UserType } from "../../types";
 import { AUTH_MESSAGES } from "../../constans";
 import { RoleName } from "generated/prisma";
 import { PrismaService } from "src/shared/prisma/prisma.service";
+import { ChangePasswordWithOldType } from "../../types/change-password-with-old.type";
+import { comparePassword } from "../../helpers";
 
 @Injectable()
 export class AuthPrismaSerivce implements AuthRepository {
@@ -41,7 +43,7 @@ export class AuthPrismaSerivce implements AuthRepository {
     }
   }
 
-  public async existUser(email: string): Promise<number> {
+  public async existUser(email: string): Promise<UserType> {
     try {
       const user = await this.prisma.user.findFirst({
         where: {
@@ -54,8 +56,7 @@ export class AuthPrismaSerivce implements AuthRepository {
         throw new HttpException(AUTH_MESSAGES.ERROR.USER_NOT_FOUNT, HttpStatus.NOT_FOUND);
       }
 
-      return user.id;
-
+      return user;
     } catch (error) {
       this.logger.error(`Error al registrar usuario: ${error.message}`);
       throw new HttpException(AUTH_MESSAGES.ERROR.PRISMA_ERROR, HttpStatus.BAD_REQUEST);
@@ -163,6 +164,50 @@ export class AuthPrismaSerivce implements AuthRepository {
     catch (error) {
       this.logger.error(`Error al registrar usuario: ${error.message}`);
       throw new HttpException(AUTH_MESSAGES.ERROR.PRISMA_ERROR, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  public async chagePasswordWithOld(userId: number, body: ChangePasswordWithOldType): Promise<number> {
+    try {
+      const user = await this.prisma.user.findFirst({
+        where: {
+          id: userId,
+          active: true,
+        }
+      })
+
+      if (!user) throw new HttpException(AUTH_MESSAGES.ERROR.NOT_FOUND, HttpStatus.BAD_REQUEST);
+      console.log(user.password)
+
+      const match = await comparePassword(body.oldPassword, user.password)
+      console.log(match)
+
+      if (!match) {
+        throw new HttpException(AUTH_MESSAGES.ERROR.PASSWORD_NOT_MATCH, HttpStatus.BAD_REQUEST);
+      }
+
+      await this.prisma.passwordHistory.create({
+        data: {
+          userId,
+          passwordHash: user.password
+        }
+      })
+
+      const userUpdated = await this.prisma.user.update({
+        where: {
+          id: userId,
+          active: true,
+        },
+        data: {
+          password: body.password,
+        }
+      })
+
+      return userUpdated.id
+    }
+    catch (error) {
+      this.logger.error(`Error al registrar usuario: ${error.message}`);
+      throw new HttpException(AUTH_MESSAGES.ERROR.CHANGE_PASSWORD, HttpStatus.BAD_REQUEST);
     }
   }
 }
