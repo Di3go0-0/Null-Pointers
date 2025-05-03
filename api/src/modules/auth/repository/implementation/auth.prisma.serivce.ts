@@ -44,7 +44,10 @@ export class AuthPrismaSerivce implements AuthRepository {
   public async existUser(email: string): Promise<number> {
     try {
       const user = await this.prisma.user.findFirst({
-        where: { email }
+        where: {
+          email,
+          active: true
+        }
       });
 
       if (!user) {
@@ -63,7 +66,10 @@ export class AuthPrismaSerivce implements AuthRepository {
   public async getUserRol(email: string): Promise<string> {
     try {
       const user = await this.prisma.user.findFirst({
-        where: { email }
+        where: {
+          email,
+          active: true
+        }
       });
 
       if (!user || !user.roleId) {
@@ -71,7 +77,7 @@ export class AuthPrismaSerivce implements AuthRepository {
       }
 
       const rol = await this.prisma.role.findFirst({
-        where: { id: user.roleId }
+        where: { id: user.roleId, active: true }
       })
 
       if (!rol) {
@@ -88,9 +94,8 @@ export class AuthPrismaSerivce implements AuthRepository {
 
   public async searchRole(roleName: RoleName): Promise<number> {
     try {
-      // Buscar el rol de STUDENT o crearlo si no existe
       const role = await this.prisma.role.findFirst({
-        where: { roleName: roleName }
+        where: { roleName: roleName, active: true }
       });
 
       if (!role) {
@@ -108,7 +113,10 @@ export class AuthPrismaSerivce implements AuthRepository {
     try {
       const personalInfo = await this.prisma.personalInfo.findMany({
         where: {
-          id: userId
+          id: userId,
+          user: {
+            active: true
+          }
         }
       })
 
