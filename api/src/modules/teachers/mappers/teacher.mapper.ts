@@ -1,7 +1,6 @@
 import { TeacherEntity } from '../entities';
 import { Decimal } from '@prisma/client/runtime/library';
 
-// Definimos un tipo para los datos que vienen de Prisma con sus relaciones
 type TeacherWithRelations = {
   id: number;
   specialty: string | null;
@@ -21,6 +20,7 @@ type TeacherWithRelations = {
 
 export class TeacherMapper {
   /**
+   * @mapper
    * Convierte un teacher de Prisma con sus relaciones a una entidad de dominio
    */
   public static toDomain(teacherData: TeacherWithRelations): TeacherEntity {
