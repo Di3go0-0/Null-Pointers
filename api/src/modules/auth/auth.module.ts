@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { AuthPrismaSerivce, AuthRepository } from './repository';
-import { JwtModule } from '../../shared/jwt/jwt.module';
+import { JwtGuardModule } from 'src/shared/jwt-guard/jwt-guard.module';
 
 @Module({
-  imports: [JwtModule],
+  imports: [JwtGuardModule],
   providers: [
     AuthService,
     {

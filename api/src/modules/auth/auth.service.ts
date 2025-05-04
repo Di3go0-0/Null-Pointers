@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { AuthRepository } from './repository';
-import { LoginType, PatchPersonalInfoType, PostPersonalInfoType, RegisterType } from './types';
+import { LoginType, RegisterType } from './types';
 import { JwtService } from 'src/shared/jwt/jwt.service';
 import { comparePassword, hashpassword } from './helpers';
 import { ChangePassworType } from './types/change-password.type';
@@ -32,17 +32,6 @@ export class AuthService {
     const rol = await this.authRepository.getUserRol(body.email);
     const token = this.jwtService.generateToken({ id: userExist.id, email: body.email, rol });
     return { token };
-  }
-
-  async getPersonalInfo(userId: number) {
-    return this.authRepository.getPersonalInfo(userId);
-  }
-
-  async postPersonalInfo(userId: number, body: PostPersonalInfoType): Promise<number> {
-    return this.authRepository.postPersonalInfo(userId, body);
-  }
-  async patchPersonalInfo(userId: number, body: PatchPersonalInfoType): Promise<number> {
-    return this.authRepository.patchPersonalInfo(userId, body);
   }
 
   async chagePasswordWithOld(userId: number, body: ChangePassworType): Promise<number> {
