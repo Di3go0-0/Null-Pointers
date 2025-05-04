@@ -1,40 +1,38 @@
 import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common";
 import { ContractsTypeRepository } from "../contracts-type.repository";
 import { PrismaService } from "src/shared/prisma/prisma.service";
-import { CreateContractsTypesType, ContractTypesType, PatchContractsTypesType } from "../../types";
+import { CreateContractsTypesType, PatchContractsTypesType } from "../../types";
 import { CONTRACTS_TYPE } from "../../constans";
+import { ContractTypesEntity } from "../../entities";
 
 @Injectable()
 export class ContractsTypePrismaService implements ContractsTypeRepository {
   private readonly logger = new Logger(ContractsTypePrismaService.name);
   constructor(private prisma: PrismaService) { }
 
-  public async getContractsTypeById(id: number): Promise<ContractTypesType[]> {
+  public async getContractsTypeById(id: number): Promise<ContractTypesEntity> {
     try {
-      const contract = await this.prisma.contractType.findMany({
+      const contract = await this.prisma.contractType.findFirst({
         where: {
           id,
-          active: true
+          active: true,
         },
-        select: {
-          id: true,
-          typeName: true,
-          description: true,
-          allowsExtensionCourse: true,
-          affectsSalary: true
-        }
-
       })
 
-      return contract;
+      if (!contract) {
+        throw new HttpException(CONTRACTS_TYPE.SUCESSFUL.CONTRACT_NOT_FOUND, HttpStatus.NOT_FOUND);
+      }
+
+      return contract
     }
     catch (error) {
-      this.logger.error(`Error al obtener tipo de contrato: ${error.message}`);
+      this.logger.error(`Error getting contract-type by id: ${error.message}`);
       throw new HttpException(CONTRACTS_TYPE.ERROR.GET_CONTRACT_TYPE, HttpStatus.BAD_REQUEST);
     }
   }
 
-  public async getAllContractsType(): Promise<ContractTypesType[]> {
+
+  public async getAllContractsType(): Promise<ContractTypesEntity[]> {
     try {
       const contracts = await this.prisma.contractType.findMany({
         where: {
@@ -79,7 +77,7 @@ export class ContractsTypePrismaService implements ContractsTypeRepository {
     }
   }
 
-  public async patchContractsType(id: number, body: PatchContractsTypesType): Promise<ContractTypesType> {
+  public async patchContractsType(id: number, body: PatchContractsTypesType): Promise<number> {
     const { typeName, description, allowsExtensionCourse, affectsSalary } = body
 
     try {
@@ -103,7 +101,7 @@ export class ContractsTypePrismaService implements ContractsTypeRepository {
 
       })
 
-      return updatedContractstype;
+      return updatedContractstype.id;
     }
     catch (error) {
       this.logger.error(`Error al crear tipo de contrato: ${error.message}`);

@@ -1,17 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { ContractsTypeRepository } from './reporitory/contracts-type.repository';
 import { CreateContractsTypesType, ContractTypesType, PatchContractsTypesType } from './types';
+import { ContractTypesEntity } from './entities';
 
 @Injectable()
 export class ContractsTypeService {
 
   constructor(private readonly contractsTypeRepository: ContractsTypeRepository) { }
 
-  async getContractsTypeById(id: number): Promise<ContractTypesType[]> {
+  async getContractsTypeById(id: number): Promise<ContractTypesEntity> {
     return this.contractsTypeRepository.getContractsTypeById(id);
   }
 
-  async getAllContractsType(): Promise<ContractTypesType[]> {
+  async getAllContractsType(): Promise<ContractTypesEntity[]> {
     return this.contractsTypeRepository.getAllContractsType();
   }
 
@@ -19,7 +20,7 @@ export class ContractsTypeService {
     return this.contractsTypeRepository.postContractsType(body);
   }
 
-  async patchContractsType(id: number, body: PatchContractsTypesType): Promise<ContractTypesType> {
+  async patchContractsType(id: number, body: PatchContractsTypesType): Promise<number> {
     return this.contractsTypeRepository.patchContractsType(id, body);
   }
 

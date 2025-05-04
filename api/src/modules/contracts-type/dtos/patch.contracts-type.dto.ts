@@ -4,9 +4,9 @@ import { IsBoolean, IsNumber, IsOptional, IsString } from "class-validator";
 export class PatchContractsTypesDto {
   @ApiProperty({
     type: String,
-    example: 'Contrato Termino Fijo',
+    example: 'Fixed Term Contract',
     required: false,
-    description: 'Tipo De Contrato',
+    description: 'Contract Type',
   })
   @IsOptional()
   @IsString()
@@ -14,9 +14,9 @@ export class PatchContractsTypesDto {
 
   @ApiProperty({
     type: String,
-    example: 'Descripcion del contrato',
+    example: 'Contract description',
     required: false,
-    description: 'Descripcion del contrato',
+    description: 'Contract description',
   })
   @IsOptional()
   @IsString()
@@ -26,7 +26,7 @@ export class PatchContractsTypesDto {
     type: Boolean,
     example: true,
     required: false,
-    description: 'Habilitado para curso de extension',
+    description: 'Enabled for extension course',
   })
   @IsOptional()
   @IsBoolean()
@@ -36,7 +36,7 @@ export class PatchContractsTypesDto {
     type: Boolean,
     example: true,
     required: false,
-    description: 'Afecta salario base?',
+    description: 'Affects base salary?',
   })
   @IsOptional()
   @IsBoolean()

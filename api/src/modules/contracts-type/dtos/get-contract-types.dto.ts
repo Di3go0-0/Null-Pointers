@@ -8,11 +8,11 @@ export class GetContractTypesDto {
     minimum: 1,
     maximum: 999999999,
     required: false,
-    description: 'Id del tipo de contrato',
+    description: 'Contract type id',
   })
   @IsOptional()
-  @IsInt({ message: 'El id del typo de dontrato ser un número entero' })
-  @Min(1, { message: 'El id de la area funcional debe ser mayor a 0' })
-  @Max(999999999, { message: 'El id de la area funcional debe ser menor a 1000000000' })
+  @IsInt({ message: 'Contract type id must be an integer' })
+  @Min(1, { message: 'Contract type id must be greater than 0' })
+  @Max(999999999, { message: 'Contract type id must be less than 1000000000' })
   id: number;
 }

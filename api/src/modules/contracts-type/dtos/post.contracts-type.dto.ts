@@ -4,19 +4,19 @@ import { IsBoolean, IsNotEmpty, IsString } from "class-validator";
 export class CreateContractsTypesDto {
   @ApiProperty({
     type: String,
-    example: 'Contrato Termino Fijo',
+    example: 'Fixed Term Contract',
     required: true,
-    description: 'Tipo De Contrato',
+    description: 'Contract Type',
   })
-  @IsNotEmpty({ message: 'El nombre es requerido' })
+  @IsNotEmpty({ message: 'Name is required' })
   @IsString()
   typeName: string;
 
   @ApiProperty({
     type: String,
-    example: 'Descripcion del contrato',
+    example: 'Contract description',
     required: true,
-    description: 'Descripcion del contrato',
+    description: 'Contract description',
   })
   @IsNotEmpty()
   @IsString()
@@ -26,7 +26,7 @@ export class CreateContractsTypesDto {
     type: Boolean,
     example: true,
     required: true,
-    description: 'Habilitado para curso de extension',
+    description: 'Enables extension course',
   })
   @IsNotEmpty()
   @IsBoolean()
@@ -36,7 +36,7 @@ export class CreateContractsTypesDto {
     type: Boolean,
     example: true,
     required: true,
-    description: 'Afecta salario base?',
+    description: 'Affects base salary?',
   })
   @IsNotEmpty()
   @IsBoolean()
