@@ -21,7 +21,7 @@ export class PasswordsPrismaSerivce implements PasswordsRepository {
 
       if (!user) {
         this.logger.debug('Error user Not found');
-        throw new HttpException(PASSWORDS_MESSAGES.ERROR.USER_NOT_FOUNT, HttpStatus.BAD_REQUEST);
+        throw new HttpException(PASSWORDS_MESSAGES.ERROR.USER_NOT_FOUNT, HttpStatus.NOT_FOUND);
       }
 
       return user
@@ -44,7 +44,7 @@ export class PasswordsPrismaSerivce implements PasswordsRepository {
 
       if (!tokenCreated) {
         this.logger.debug('Error creating token');
-        throw new HttpException(PASSWORDS_MESSAGES.ERROR.REQUEST_TOKEN, HttpStatus.BAD_REQUEST);
+        throw new HttpException(PASSWORDS_MESSAGES.ERROR.REQUEST_TOKEN, HttpStatus.FORBIDDEN);
       }
 
       return tokenCreated
@@ -61,7 +61,7 @@ export class PasswordsPrismaSerivce implements PasswordsRepository {
 
       if (!match) {
         this.logger.debug('Passwords dont match');
-        throw new HttpException(PASSWORDS_MESSAGES.ERROR.PASSWORD_NOT_MATCH, HttpStatus.BAD_REQUEST);
+        throw new HttpException(PASSWORDS_MESSAGES.ERROR.PASSWORD_NOT_MATCH, HttpStatus.LOCKED);
       }
     }
     catch (error) {
@@ -85,7 +85,7 @@ export class PasswordsPrismaSerivce implements PasswordsRepository {
 
       if (!user) {
         this.logger.debug('Error changing password');
-        throw new HttpException(PASSWORDS_MESSAGES.ERROR.CHANGE_PASSWORD, HttpStatus.BAD_REQUEST);
+        throw new HttpException(PASSWORDS_MESSAGES.ERROR.CHANGE_PASSWORD, HttpStatus.FORBIDDEN);
       }
 
       return user
@@ -112,11 +112,11 @@ export class PasswordsPrismaSerivce implements PasswordsRepository {
 
       if (!tokenFind) {
         this.logger.debug('Error token Not found');
-        throw new HttpException(PASSWORDS_MESSAGES.ERROR.NOT_FOUND, HttpStatus.BAD_REQUEST);
+        throw new HttpException(PASSWORDS_MESSAGES.ERROR.NOT_FOUND, HttpStatus.NOT_FOUND);
       }
 
       if (tokenFind.expiresAt.getTime() < Date.now()) {
-        throw new HttpException(PASSWORDS_MESSAGES.ERROR.REQUEST_TOKEN_EXPIRED, HttpStatus.BAD_REQUEST);
+        throw new HttpException(PASSWORDS_MESSAGES.ERROR.REQUEST_TOKEN_EXPIRED, HttpStatus.LOCKED);
       }
 
       return tokenFind
@@ -138,7 +138,7 @@ export class PasswordsPrismaSerivce implements PasswordsRepository {
 
       if (!passwordHistory) {
         this.logger.debug('Error creating password history');
-        throw new HttpException(PASSWORDS_MESSAGES.ERROR.CHANGE_PASSWORD, HttpStatus.BAD_REQUEST);
+        throw new HttpException(PASSWORDS_MESSAGES.ERROR.CHANGE_PASSWORD, HttpStatus.FORBIDDEN);
       }
     }
 
