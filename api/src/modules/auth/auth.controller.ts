@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Patch, Post, UseGuards, Request, Query } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { ChangePasswordDto, ChangePasswordTokenDto, LoginDto, RegisterDto } from './dto';
+import { LoginDto, RegisterDto } from './dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtGuardService } from 'src/shared/jwt-guard/jwt-guard.service';
 import { RolesGuard } from 'src/shared/jwt-guard/jwt-rol-guard.service';
@@ -23,24 +23,6 @@ export class AuthController {
   @Roles('ADMIN')
   async registerUserDefault(@Body() body: RegisterDto): Promise<number> {
     return this.authService.registerUser(body);
-  }
-
-  @UseGuards(JwtGuardService)
-  @Patch('chagePasswordWithOld')
-  async chagePasswordWithOld(@Body() body: ChangePasswordDto, @Request() req: any) {
-    return this.authService.chagePasswordWithOld(req.user.id, body)
-  }
-
-  @UseGuards(JwtGuardService)
-  @Get('requestPasswordToken')
-  async requestPasswordToken(@Request() req: any) {
-    return this.authService.requestPasswordToken(req.user.id)
-  }
-
-  @UseGuards(JwtGuardService)
-  @Patch('changePasswordWithToken')
-  async changePasswordWithToken(@Request() req: any, @Body() body: ChangePasswordTokenDto, @Query('token') token: string) {
-    return this.authService.changePasswordWithToken(req.user.id, token, body)
   }
 
 }

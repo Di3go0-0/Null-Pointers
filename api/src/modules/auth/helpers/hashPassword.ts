@@ -3,7 +3,6 @@ import * as bcrypt from 'bcrypt';
 import { AUTH_MESSAGES } from '../constans';
 
 export const hashpassword = async (password: string): Promise<string> => {
-  // Hash de la contraseña
   const logger = new Logger('HashPassword');
   try {
     const salt = await bcrypt.genSalt(10);
@@ -19,10 +18,10 @@ export const comparePassword = async (plainPassword: string, hashedPassword: str
   const logger = new Logger('ComparePassword');
   try {
     const isMatch = await bcrypt.compare(plainPassword, hashedPassword);
-    return isMatch;
 
+    return isMatch;
   } catch (error) {
-    logger.error(`Error durante la comparación de contraseñas: ${error.message}`);
+    logger.error(`Error comparing passwords: ${error.message}`);
     throw new HttpException(
       AUTH_MESSAGES.ERROR.PASSWORD_NOT_MATCH,
       HttpStatus.INTERNAL_SERVER_ERROR

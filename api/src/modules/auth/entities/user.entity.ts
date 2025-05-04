@@ -1,4 +1,4 @@
-export type UserType = {
+export type UserEntity = {
   id: number;
   roleId: number;
   name: string;
@@ -8,4 +8,3 @@ export type UserType = {
   updatedAt: Date;
   active: boolean;
 }
-

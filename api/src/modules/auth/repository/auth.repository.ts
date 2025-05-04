@@ -1,14 +1,7 @@
-import { RoleName } from "generated/prisma";
-import { RegisterType, UserType } from "../types";
-import { ChangePassworType } from "../types/change-password.type";
-import { ChangePasswordTokenType } from "../types/change-password-token";
+import { UserEntity } from "../entities";
+import { RegisterType } from "../types";
 
 export abstract class AuthRepository {
-  abstract registerUser(body: RegisterType, roleId: number): Promise<number>;
-  abstract existUser(email: string): Promise<UserType>;
-  abstract getUserRol(email: string): Promise<string>;
-  abstract searchRole(roleName: RoleName): Promise<number>;
-  abstract chagePasswordWithOld(userId: number, body: ChangePassworType): Promise<number>;
-  abstract requestPasswordToken(userId: number): Promise<string>;
-  abstract changePasswordWithToken(userId: number, token: string, body: ChangePasswordTokenType): Promise<number>;
+  abstract registerUser(body: RegisterType): Promise<number>;
+  abstract getUserByEmail(email: string): Promise<UserEntity>;
 }
