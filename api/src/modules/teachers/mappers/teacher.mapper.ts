@@ -21,28 +21,25 @@ type TeacherWithRelations = {
 export class TeacherMapper {
   /**
    * @mapper
-   * Convierte un teacher de Prisma con sus relaciones a una entidad de dominio
    */
   public static toDomain(teacherData: TeacherWithRelations): TeacherEntity {
     return {
       id: teacherData.id,
       name: teacherData.user?.name ?? '',
       email: teacherData.user?.email ?? '',
-      contract: teacherData.contractType ? {
-        id: teacherData.contractType.id,
-        typeName: teacherData.contractType.typeName,
-        allowsExtensionCourse: teacherData.contractType.allowsExtensionCourse,
-        affectsSalary: teacherData.contractType.affectsSalary,
-      } : null,
-      specialty: teacherData.specialty,
-      experience: teacherData.experience,
-      baseSalary: teacherData.baseSalary ? teacherData.baseSalary.toNumber() : null,
+      contractName: teacherData.contractType?.typeName ?? '',
+      specialty: teacherData.specialty ?? '',
+      experience: teacherData.experience ?? '',
+      baseSalary: teacherData.baseSalary?.toNumber() ?? 0,
     };
   }
 
-  /**
-   * Convierte una lista de teachers de Prisma a entidades de dominio
-   */
+  public static toDomainOne(teachersData: TeacherWithRelations[]): TeacherEntity[] {
+    return teachersData
+      .filter(teacher => teacher.user !== null)
+      .map(this.toDomain);
+  }
+
   public static toDomainList(teachersData: TeacherWithRelations[]): TeacherEntity[] {
     return teachersData
       .filter(teacher => teacher.user !== null)

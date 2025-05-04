@@ -1,7 +1,6 @@
 export const TEACHERS = {
   ERROR: {
     GET_TEACHER: 'Error getting the teacher',
-    ADD_CONTRACT_TYPE: 'Error adding contract type',
     UPDATED_ROL: 'Error updating rol',
     UPDATED_TEACHER: 'Error updating rol',
     CREATE_TEACHER: 'Error creating teacher',

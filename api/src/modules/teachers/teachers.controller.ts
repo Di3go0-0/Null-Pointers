@@ -3,10 +3,13 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtGuardService } from 'src/shared/jwt-guard/jwt-guard.service';
 import { TeachersService } from './teachers.service';
 import { PatchTeacherDTO, PostTeacherDTO } from './dtos';
+import { Roles } from 'src/shared';
+import { RolesGuard } from 'src/shared/jwt-guard/jwt-rol-guard.service';
 
 @ApiTags('Teachers')
 @ApiBearerAuth('Token')
-@UseGuards(JwtGuardService)
+@UseGuards(JwtGuardService, RolesGuard)
+@Roles('ADMIN', 'TEACHER')
 @Controller('teachers')
 export class TeachersController {
   constructor(private readonly teachersService: TeachersService) { }
@@ -14,6 +17,10 @@ export class TeachersController {
   @Get()
   async getTeachers() {
     return this.teachersService.getTeachers();
+  }
+  @Get('/:id')
+  async getTeacherById(@Param('id', ParseIntPipe) id: number) {
+    return this.teachersService.getTeacherById(id)
   }
 
   @Post(':id')

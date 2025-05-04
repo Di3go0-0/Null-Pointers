@@ -12,6 +12,44 @@ export class TeachersPrismaService implements TeachersRepository {
   private readonly logger = new Logger(TeachersPrismaService.name);
   constructor(private prisma: PrismaService) { }
 
+  public async getTeacherById(id: number): Promise<TeacherEntity[]> {
+    try {
+      const teacherData = await this.prisma.teacher.findMany({
+        select: {
+          id: true,
+          specialty: true,
+          experience: true,
+          baseSalary: true,
+          user: {
+            select: {
+              name: true,
+              email: true,
+            },
+          },
+          contractType: {
+            select: {
+              id: true,
+              typeName: true,
+              allowsExtensionCourse: true,
+              affectsSalary: true,
+            },
+          },
+        },
+        where: {
+          user: {
+            id,
+            active: true,
+          },
+        },
+      });
+
+      return TeacherMapper.toDomainList(teacherData);
+    } catch (error) {
+      this.logger.error(`Error to find teacher by id: ${error.message}`);
+      throw new HttpException(TEACHERS.ERROR.GET_TEACHER, HttpStatus.BAD_REQUEST);
+    }
+  }
+
   public async getTeachers(): Promise<TeacherEntity[]> {
     try {
       const teachersData = await this.prisma.teacher.findMany({
@@ -43,25 +81,14 @@ export class TeachersPrismaService implements TeachersRepository {
       });
 
       return TeacherMapper.toDomainList(teachersData);
-    }
-    catch (error) {
-      this.logger.error(`Error al crear tipo de contrato: ${error.message}`);
+    } catch (error) {
+      this.logger.error(`Error finding teachers: ${error.message}`);
       throw new HttpException(TEACHERS.ERROR.GET_TEACHER, HttpStatus.BAD_REQUEST);
     }
-
   }
 
   public async postTeacher(userId: number, body: PostTeacherType): Promise<number> {
     try {
-      const roleId = await this.searchRole('TEACHER');
-      await this.existUser(userId)
-
-      const updatedRol = await this.updateUserRol(userId, roleId);
-
-      if (!updatedRol) {
-        throw new HttpException(TEACHERS.ERROR.CREATE_TEACHER, HttpStatus.BAD_REQUEST);
-      }
-
       const createdTeacher = await this.prisma.teacher.create({
         data: {
           id: userId,
@@ -77,7 +104,6 @@ export class TeachersPrismaService implements TeachersRepository {
         throw new HttpException(TEACHERS.ERROR.CREATE_TEACHER, HttpStatus.BAD_REQUEST);
       }
 
-      this.logger.log(`Teacher registered successfully: ${createdTeacher.user.email}`);
       return createdTeacher.id;
     }
     catch (error) {
@@ -88,8 +114,6 @@ export class TeachersPrismaService implements TeachersRepository {
 
   public async patchTeacher(userId: number, body: PatchTeacherType): Promise<number> {
     try {
-      await this.existUser(userId);
-
       const updatedTeacher = await this.prisma.teacher.update({
         where: {
           id: userId,
@@ -112,7 +136,7 @@ export class TeachersPrismaService implements TeachersRepository {
 
   }
 
-  private async searchRole(roleName: RoleName): Promise<number> {
+  public async searchRole(roleName: RoleName): Promise<number> {
     try {
       // Buscar el rol de STUDENT o crearlo si no existe
       const role = await this.prisma.role.findFirst({
@@ -131,7 +155,7 @@ export class TeachersPrismaService implements TeachersRepository {
     }
   }
 
-  private async existUser(userId: number): Promise<boolean> {
+  public async existUser(userId: number): Promise<boolean> {
     try {
       const user = await this.prisma.user.findUnique({
         where: {
@@ -152,7 +176,7 @@ export class TeachersPrismaService implements TeachersRepository {
     }
   }
 
-  private async updateUserRol(userId: number, rolId: number): Promise<boolean> {
+  public async updateUserRol(userId: number, rolId: number): Promise<boolean> {
     try {
       const updatedRol = await this.prisma.user.update({
         where: {
@@ -173,6 +197,28 @@ export class TeachersPrismaService implements TeachersRepository {
       this.logger.error(`Error al verificar existencia del usuario ${userId}: ${error.message}`);
       throw new HttpException(TEACHERS.ERROR.UPDATED_ROL, HttpStatus.BAD_REQUEST);
     }
+  }
 
+  public async existTeacher(userId: number): Promise<boolean> {
+    try {
+      const user = await this.prisma.teacher.findUnique({
+        where: {
+          id: userId,
+          user: {
+            active: true
+          }
+        },
+        select: {
+          id: true
+        }
+      })
+      if (!user) {
+        throw new HttpException(TEACHERS.ERROR.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
+      }
+      return !!user
+    } catch (error) {
+      this.logger.error(`Error al verificar existencia del usuario ${userId}: ${error.message}`);
+      throw new HttpException(TEACHERS.ERROR.USER_NOT_FOUND, HttpStatus.BAD_REQUEST);
+    }
   }
 }
