@@ -80,7 +80,7 @@ export class AuthPrismaSerivce implements AuthRepository {
 
       if (user) {
         this.logger.error('Error user alrady exist');
-        throw new HttpException(AUTH_MESSAGES.ERROR.USER_EXIST, HttpStatus.BAD_REQUEST);
+        throw new HttpException(AUTH_MESSAGES.ERROR.USER_EXIST, HttpStatus.LOCKED);
       }
 
     } catch (error) {
