@@ -1,8 +1,6 @@
-
 export type GenerateTokenProps = {
   id: number;
   email: string;
-  rol: string;
 }
 
 export type TokenProps = {
