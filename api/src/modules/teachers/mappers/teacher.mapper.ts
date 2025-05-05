@@ -34,12 +34,6 @@ export class TeacherMapper {
     };
   }
 
-  public static toDomainOne(teachersData: TeacherWithRelations[]): TeacherEntity[] {
-    return teachersData
-      .filter(teacher => teacher.user !== null)
-      .map(this.toDomain);
-  }
-
   public static toDomainList(teachersData: TeacherWithRelations[]): TeacherEntity[] {
     return teachersData
       .filter(teacher => teacher.user !== null)

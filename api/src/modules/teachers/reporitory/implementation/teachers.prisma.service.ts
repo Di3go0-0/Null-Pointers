@@ -138,7 +138,6 @@ export class TeachersPrismaService implements TeachersRepository {
 
   public async searchRole(roleName: RoleName): Promise<number> {
     try {
-      // Buscar el rol de STUDENT o crearlo si no existe
       const role = await this.prisma.role.findFirst({
         where: { roleName: roleName, active: true }
       });
@@ -150,7 +149,7 @@ export class TeachersPrismaService implements TeachersRepository {
       return role.id;
 
     } catch (error) {
-      this.logger.error(`Error al registrar usuario: ${error.message}`);
+      this.logger.error(`Error searching role: ${error.message}`);
       throw new HttpException(TEACHERS.ERROR.CREATE_TEACHER, HttpStatus.BAD_REQUEST);
     }
   }
@@ -171,7 +170,7 @@ export class TeachersPrismaService implements TeachersRepository {
       }
       return !!user
     } catch (error) {
-      this.logger.error(`Error al verificar existencia del usuario ${userId}: ${error.message}`);
+      this.logger.error(`Error searching user ${userId}: ${error.message}`);
       throw new HttpException(TEACHERS.ERROR.USER_NOT_FOUND, HttpStatus.BAD_REQUEST);
     }
   }
@@ -194,7 +193,7 @@ export class TeachersPrismaService implements TeachersRepository {
 
       return true
     } catch (error) {
-      this.logger.error(`Error al verificar existencia del usuario ${userId}: ${error.message}`);
+      this.logger.error(`Error updating user rol ${userId}: ${error.message}`);
       throw new HttpException(TEACHERS.ERROR.UPDATED_ROL, HttpStatus.BAD_REQUEST);
     }
   }
@@ -217,7 +216,7 @@ export class TeachersPrismaService implements TeachersRepository {
       }
       return !!user
     } catch (error) {
-      this.logger.error(`Error al verificar existencia del usuario ${userId}: ${error.message}`);
+      this.logger.error(`Error searching teacher ${userId}: ${error.message}`);
       throw new HttpException(TEACHERS.ERROR.USER_NOT_FOUND, HttpStatus.BAD_REQUEST);
     }
   }
