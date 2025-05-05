@@ -12,7 +12,7 @@ export class TeachersPrismaService implements TeachersRepository {
   private readonly logger = new Logger(TeachersPrismaService.name);
   constructor(private prisma: PrismaService) { }
 
-  public async getTeacherById(id: number): Promise<TeacherEntity[]> {
+  public async getTeacherById(id: number, roleId: number): Promise<TeacherEntity[]> {
     try {
       const teacherData = await this.prisma.teacher.findMany({
         select: {
@@ -39,6 +39,7 @@ export class TeachersPrismaService implements TeachersRepository {
           user: {
             id,
             active: true,
+            roleId
           },
         },
       });
@@ -50,7 +51,7 @@ export class TeachersPrismaService implements TeachersRepository {
     }
   }
 
-  public async getTeachers(): Promise<TeacherEntity[]> {
+  public async getTeachers(roleId: number): Promise<TeacherEntity[]> {
     try {
       const teachersData = await this.prisma.teacher.findMany({
         select: {
@@ -76,6 +77,7 @@ export class TeachersPrismaService implements TeachersRepository {
         where: {
           user: {
             active: true,
+            roleId
           },
         },
       });
@@ -211,7 +213,7 @@ export class TeachersPrismaService implements TeachersRepository {
           id: true
         }
       })
-      if (!user) {
+      if (user) {
         throw new HttpException(TEACHERS.ERROR.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
       }
       return !!user

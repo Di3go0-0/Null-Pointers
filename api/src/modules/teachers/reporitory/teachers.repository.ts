@@ -4,8 +4,8 @@ import { PatchTeacherType } from "../types";
 import { PostTeacherType } from "../types/post.teacher.type";
 
 export abstract class TeachersRepository {
-  abstract getTeacherById(id: number): Promise<TeacherEntity[]>;
-  abstract getTeachers(): Promise<TeacherEntity[]>;
+  abstract getTeacherById(id: number, roleId: number): Promise<TeacherEntity[]>;
+  abstract getTeachers(roleId: number): Promise<TeacherEntity[]>;
   abstract postTeacher(userId: number, body: PostTeacherType): Promise<number>;
   abstract patchTeacher(userId: number, body: PatchTeacherType): Promise<number>;
   abstract searchRole(roleName: RoleName): Promise<number>;
