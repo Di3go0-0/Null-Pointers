@@ -4,6 +4,7 @@ import { ContractsTypeModule } from './contracts-type/contracts-type.module';
 import { TeachersModule } from './teachers/teachers.module';
 import { PersonalInfoModule } from './personal-info/personal-info.module';
 import { PasswordsModule } from './passwords/passwords.module';
+import { StudentsModule } from './students/students.module';
 
 @Module({
 
@@ -12,6 +13,7 @@ import { PasswordsModule } from './passwords/passwords.module';
     PersonalInfoModule,
     PasswordsModule,
     TeachersModule,
+    StudentsModule,
     ContractsTypeModule,
   ]
 })
