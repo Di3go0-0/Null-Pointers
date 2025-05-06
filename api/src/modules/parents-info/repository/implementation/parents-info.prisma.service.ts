@@ -2,10 +2,8 @@ import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common";
 import { ParentsInfoRepository } from "../parents-info.repository";
 import { PrismaService } from "src/shared/prisma/prisma.service";
 import { PARENTS_INFO } from "../../constans";
-import { send } from "process";
 import { ParentsInfoEntity } from "../../entities";
 import { PatchParentsInfoType, PostParentsInfoType } from "../../types";
-import { async } from "rxjs";
 
 @Injectable()
 export class ParentsInfoPrismaService implements ParentsInfoRepository {
