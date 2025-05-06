@@ -4,6 +4,7 @@ import { PrismaService } from "src/shared/prisma/prisma.service";
 import { AcademicProgramEntity } from "../../entities";
 import { ACADEMIC_PROGRAMS } from "../../constanst";
 import { PatchAcademicProgramType, PostAcademicProgramType } from "../../types";
+import { TeacherMapper } from "../../mappers/academic-programs.mapper";
 
 @Injectable()
 export class AcademicProgramsPrismaService implements AcademicProgramsRepository {
@@ -18,7 +19,7 @@ export class AcademicProgramsPrismaService implements AcademicProgramsRepository
         }
       })
 
-      return academicPrograms
+      return TeacherMapper.toDomainList(academicPrograms)
     } catch (error) {
       this.logger.error(`Error getting academic-programs: ${error.message}`);
       throw new HttpException(ACADEMIC_PROGRAMS.ERROR.GET_ACADEMIC_PROGRAMS, HttpStatus.BAD_REQUEST);
@@ -34,7 +35,7 @@ export class AcademicProgramsPrismaService implements AcademicProgramsRepository
         }
       })
 
-      return academicProgram
+      return TeacherMapper.toDomainList(academicProgram)
     } catch (error) {
       this.logger.error(`Error getting academic-programs by id: ${error.message}`);
       throw new HttpException(ACADEMIC_PROGRAMS.ERROR.GET_ACADEMIC_PROGRAMS, HttpStatus.BAD_REQUEST);
