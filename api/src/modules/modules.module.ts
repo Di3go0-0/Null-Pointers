@@ -7,6 +7,7 @@ import { PasswordsModule } from './passwords/passwords.module';
 import { StudentsModule } from './students/students.module';
 import { ParentsInfoModule } from './parents-info/parents-info.module';
 import { AcademicProgramsModule } from './academic-programs/academic-programs.module';
+import { CoursesModule } from './courses/courses.module';
 
 @Module({
 
@@ -19,6 +20,7 @@ import { AcademicProgramsModule } from './academic-programs/academic-programs.mo
     ContractsTypeModule,
     ParentsInfoModule,
     AcademicProgramsModule,
+    CoursesModule,
   ]
 })
 export class ModulesModule { }

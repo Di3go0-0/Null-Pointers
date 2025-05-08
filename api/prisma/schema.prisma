@@ -219,8 +219,8 @@ model Course {
   programId   Int
   courseName  String  @db.VarChar(255) @map("courseName")
   courseCode  String  @unique @db.VarChar(50) @map("courseCode") // Unique constraint on the column itself
-  description String? @db.Text
-  credits     Int?
+  description String @db.Text
+  credits     Int
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   active      Boolean  @default(true) @db.TinyInt
