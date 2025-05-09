@@ -1,9 +1,9 @@
 import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common";
 import { CoursesRepository } from "../courses.repository";
 import { PrismaService } from "src/shared/prisma/prisma.service";
-import { CourseEntity } from "../../entities";
-import { PatchCousrsesType, PostCoursesType } from "../../types";
+import { CourseType, PatchCousrsesType, PostCoursesType } from "../../types";
 import { COURSES } from "../../constanst";
+import { CourseMapper } from "../../mappers/academic-programs.mapper";
 
 @Injectable()
 export class CoursesProgramsPrismaService implements CoursesRepository {
@@ -11,7 +11,7 @@ export class CoursesProgramsPrismaService implements CoursesRepository {
   constructor(private prisma: PrismaService) { }
 
 
-  public async findCourseByAcademicProgram(programId: number): Promise<CourseEntity[]> {
+  public async findCourseByAcademicProgram(programId: number): Promise<CourseType[]> {
     try {
       const course = await this.prisma.course.findMany({
         where: {
@@ -20,14 +20,14 @@ export class CoursesProgramsPrismaService implements CoursesRepository {
         }
       })
 
-      return course;
+      return CourseMapper.toDomainList(course);
     }
     catch (error) {
       this.logger.error(`Error getting course: ${error.message}`);
       throw new HttpException(COURSES.ERROR.GET_COURSES, HttpStatus.BAD_REQUEST);
     }
   }
-  public async findCourses(): Promise<CourseEntity[]> {
+  public async findCourses(): Promise<CourseType[]> {
     try {
       const courses = await this.prisma.course.findMany({
         where: {
@@ -35,14 +35,14 @@ export class CoursesProgramsPrismaService implements CoursesRepository {
         }
       })
 
-      return courses
+      return CourseMapper.toDomainList(courses)
     } catch (error) {
       this.logger.error(`Error getting course: ${error.message}`);
       throw new HttpException(COURSES.ERROR.GET_COURSES, HttpStatus.BAD_REQUEST);
     }
   }
 
-  public async findCourseById(id: number): Promise<CourseEntity[]> {
+  public async findCourseById(id: number): Promise<CourseType[]> {
     try {
       const courses = await this.prisma.course.findMany({
         where: {
@@ -51,7 +51,7 @@ export class CoursesProgramsPrismaService implements CoursesRepository {
         }
       })
 
-      return courses
+      return CourseMapper.toDomainList(courses)
     } catch (error) {
       this.logger.error(`Error getting course: ${error.message}`);
       throw new HttpException(COURSES.ERROR.GET_COURSES, HttpStatus.BAD_REQUEST);

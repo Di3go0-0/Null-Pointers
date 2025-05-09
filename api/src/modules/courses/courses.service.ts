@@ -1,22 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { CoursesRepository } from './repository';
-import { CourseEntity } from './entities';
-import { PatchCousrsesType, PostCoursesType } from './types';
+import { CourseType, PatchCousrsesType, PostCoursesType } from './types';
 
 @Injectable()
 export class CoursesService {
   constructor(private readonly coursesRepository: CoursesRepository) { }
 
-  async findCourseByAcademicProgram(programId: number): Promise<CourseEntity[]> {
+  async findCourseByAcademicProgram(programId: number): Promise<CourseType[]> {
     await this.coursesRepository.validateAcademicProgram(programId);
     return this.coursesRepository.findCourseByAcademicProgram(programId);
   }
 
-  async findCourses(): Promise<CourseEntity[]> {
+  async findCourses(): Promise<CourseType[]> {
     return this.coursesRepository.findCourses();
   }
 
-  async findCourseById(id: number): Promise<CourseEntity[]> {
+  async findCourseById(id: number): Promise<CourseType[]> {
     await this.coursesRepository.existCourse(id);
     return this.coursesRepository.findCourseById(id);
   }
