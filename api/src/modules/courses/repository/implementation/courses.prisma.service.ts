@@ -3,7 +3,7 @@ import { CoursesRepository } from "../courses.repository";
 import { PrismaService } from "src/shared/prisma/prisma.service";
 import { CourseType, PatchCousrsesType, PostCoursesType } from "../../types";
 import { COURSES } from "../../constanst";
-import { CourseMapper } from "../../mappers/academic-programs.mapper";
+import { CourseMapper } from "../../mappers/course.mapper";
 
 @Injectable()
 export class CoursesProgramsPrismaService implements CoursesRepository {
