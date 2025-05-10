@@ -343,15 +343,15 @@ model ExtensionCourseInstance {
   groupCode          String                     @db.VarChar(20) @map("groupCode") // Required
   startDate           DateTime                   @db.Date @map("startDate")
   endDate             DateTime                   @db.Date @map("endDate")
-  location            String?                    @db.VarChar(255)
-  maxStudents         Int?                       @map("maxStudents")
+  location            String                    @db.VarChar(255)
+  maxStudents         Int                       @map("maxStudents")
   publicationStatus   ExtensionPublicationStatus @default(Draft) @map("publicationStatus")
   createdAt           DateTime                   @default(now())
   updatedAt           DateTime                   @updatedAt
   active              Boolean                    @default(true) @db.TinyInt
 
   extensionCourse ExtensionCourse @relation(fields: [extensionCourseId], references: [id], onDelete: Restrict, onUpdate: Cascade) // Relation to ExtensionCourses
-  teacher         Teacher?        @relation("TeacherExtensionCourseInstances", fields: [teacherId], references: [id], onDelete: SetNull, onUpdate: Cascade) // Relation to Teachers
+  teacher         Teacher         @relation("TeacherExtensionCourseInstances", fields: [teacherId], references: [id], onDelete: Restrict, onUpdate: Cascade) // Relation to Teachers
 
   // Back-relations
   schedules   ScheduleExtensionCourseInstance[]
