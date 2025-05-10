@@ -50,7 +50,7 @@ export class AuthPrismaSerivce implements AuthRepository {
       return user;
     } catch (error) {
       this.logger.error(`Error searching user: ${error.message}`);
-      throw new HttpException(AUTH_MESSAGES.ERROR.PRISMA_ERROR, HttpStatus.BAD_REQUEST);
+      throw new HttpException(AUTH_MESSAGES.ERROR.USER_NOT_FOUNT, HttpStatus.NOT_FOUND);
     }
 
   }
