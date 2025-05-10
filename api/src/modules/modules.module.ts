@@ -8,6 +8,7 @@ import { StudentsModule } from './students/students.module';
 import { ParentsInfoModule } from './parents-info/parents-info.module';
 import { AcademicProgramsModule } from './academic-programs/academic-programs.module';
 import { CoursesModule } from './courses/courses.module';
+import { ExtensionCoursesModule } from './extension-courses/extension-courses.module';
 
 @Module({
 
@@ -21,6 +22,7 @@ import { CoursesModule } from './courses/courses.module';
     ParentsInfoModule,
     AcademicProgramsModule,
     CoursesModule,
+    ExtensionCoursesModule,
   ]
 })
 export class ModulesModule { }

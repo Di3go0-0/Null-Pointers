@@ -236,11 +236,11 @@ model Course {
 
 model ExtensionCourse {
   id            Int       @id @default(autoincrement())
-  programId     Int?      // Optional FK based on SET NULL
+  programId     Int       // Now required
   courseName    String    @db.VarChar(255) @map("courseName")
-  courseCode    String?   @unique @db.VarChar(50) @map("courseCode")
-  description   String?   @db.Text
-  durationHours Int?      @map("durationHours")
+  courseCode    String    @unique @db.VarChar(50) @map("courseCode")
+  description   String    @db.Text
+  durationHours Int       @map("durationHours")
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   active        Boolean   @default(true) @db.TinyInt
