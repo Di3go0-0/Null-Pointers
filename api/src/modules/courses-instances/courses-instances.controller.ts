@@ -1,7 +1,15 @@
-import { Controller, Get, Post, Body, Param, Delete, Query, Patch } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Query, Patch, UseGuards } from '@nestjs/common';
 import { CoursesInstancesService } from './courses-instances.service';
 import { GetByStatusCoursesInstancesDto, PatchCourseInstanceDto, PostCourseInstanceDto } from './dtos';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { Roles } from 'src/shared';
+import { JwtGuardService } from 'src/shared/jwt-guard/jwt-guard.service';
+import { RolesGuard } from 'src/shared/jwt-guard/jwt-rol-guard.service';
 
+@ApiTags('Courses Instances')
+@ApiBearerAuth('Token')
+@UseGuards(JwtGuardService, RolesGuard)
+@Roles('ADMIN')
 @Controller('courses-instances')
 export class CoursesInstancesController {
   constructor(private readonly coursesInstancesService: CoursesInstancesService) { }
