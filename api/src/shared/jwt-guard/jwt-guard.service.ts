@@ -9,7 +9,7 @@ import { Request } from 'express';
 import { JwtService } from '../jwt/jwt.service';
 import { TokenProps } from '../types/token.type';
 import { PrismaService } from '../prisma/prisma.service';
-import { $Enums } from 'generated/prisma';
+import { $Enums } from '@prisma/client';
 
 declare module 'express' {
   interface Request {

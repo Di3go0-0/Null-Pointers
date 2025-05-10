@@ -5,7 +5,7 @@ import { PatchTeacherType, PostTeacherType } from "../../types";
 import { TEACHERS } from "../../constans";
 import { TeacherEntity } from "../../entities";
 import { TeacherMapper } from "../../mappers/teacher.mapper";
-import { RoleName } from "generated/prisma";
+import { RoleName } from "@prisma/client";
 
 @Injectable()
 export class TeachersPrismaService implements TeachersRepository {

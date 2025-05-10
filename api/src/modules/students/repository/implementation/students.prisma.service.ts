@@ -4,7 +4,7 @@ import { PrismaService } from "src/shared/prisma/prisma.service";
 import { StudentEntity } from "../../entities";
 import { STUDENTS } from "../../constans";
 import { StudentMapper } from "../../mappers/student.mapper";
-import { RoleName } from "generated/prisma";
+import { RoleName } from "@prisma/client";
 
 @Injectable()
 export class StudentsPrismaService implements StudentsRepository {

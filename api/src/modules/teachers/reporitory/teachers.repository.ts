@@ -1,4 +1,4 @@
-import { RoleName } from "generated/prisma";
+import { RoleName } from "@prisma/client";
 import { TeacherEntity } from "../entities";
 import { PatchTeacherType } from "../types";
 import { PostTeacherType } from "../types/post.teacher.type";

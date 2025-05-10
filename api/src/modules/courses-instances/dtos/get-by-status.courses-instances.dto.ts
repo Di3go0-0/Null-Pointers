@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { CourseInstanceStatus } from "generated/prisma";
+import { CourseInstanceStatus } from "@prisma/client";
 
 export class GetByStatusCoursesInstancesDto {
   @ApiProperty({

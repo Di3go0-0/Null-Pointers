@@ -6,8 +6,8 @@ import {
   Logger,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { $Enums, RoleName } from 'generated/prisma';
 import { ROLES_KEY } from '../decorators';
+import { $Enums, RoleName } from '@prisma/client';
 
 interface UserWithRole {
   id: number;

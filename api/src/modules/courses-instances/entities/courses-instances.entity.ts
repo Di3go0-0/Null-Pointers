@@ -1,4 +1,4 @@
-import { CourseInstanceStatus } from "generated/prisma";
+import { CourseInstanceStatus } from "@prisma/client";
 
 export type CourseInstanceEntity = {
   id: number;

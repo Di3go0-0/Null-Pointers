@@ -1,4 +1,4 @@
-import { RoleName } from "generated/prisma";
+import { RoleName } from "@prisma/client";
 import { StudentEntity } from "../entities/student.entity";
 
 export abstract class StudentsRepository {

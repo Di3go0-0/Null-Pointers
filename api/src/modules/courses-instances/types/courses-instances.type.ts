@@ -1,4 +1,4 @@
-import { CourseInstanceStatus } from "generated/prisma";
+import { CourseInstanceStatus } from "@prisma/client";
 
 export type CourseInstanceType = {
   id: number;

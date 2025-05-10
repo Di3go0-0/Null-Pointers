@@ -2,9 +2,9 @@ import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common";
 import { AuthRepository } from "../auth.repository";
 import { RegisterType } from "../../types";
 import { AUTH_MESSAGES } from "../../constans";
-import { RoleName } from "generated/prisma";
 import { PrismaService } from "src/shared/prisma/prisma.service";
 import { UserEntity } from "../../entities";
+import { RoleName } from "@prisma/client";
 
 @Injectable()
 export class AuthPrismaSerivce implements AuthRepository {

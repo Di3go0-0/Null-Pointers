@@ -1,4 +1,4 @@
-import { CourseInstanceStatus } from "generated/prisma";
+import { CourseInstanceStatus } from "@prisma/client";
 import { PostCourseInstanceType } from "./post.courses-instances.type";
 
 export type PatchCourseInstanceType = Partial<PostCourseInstanceType> & {
