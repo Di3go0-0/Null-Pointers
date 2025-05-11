@@ -1,7 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsString, IsNumber } from "class-validator";
+import { RegisterDto } from "src/modules/auth/dto";
 
-export class PostTeacherDTO {
+export class PostTeacherDTO
+// extends RegisterDto
+{
   @ApiProperty({
     type: Number,
     example: 1,
