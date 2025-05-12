@@ -162,7 +162,7 @@ export class CoursesInstancesPrismaService implements CoursesInstancesRepository
 
     } catch (error) {
       this.logger.error(`Error Deleting course: ${error.message}`);
-      throw new HttpException(COURSES.ERROR.DELETE_COURSES, HttpStatus.BAD_REQUEST);
+      throw new HttpException(COURSES.ERROR.VALIDATE_COURSES, HttpStatus.BAD_REQUEST);
     }
   }
 

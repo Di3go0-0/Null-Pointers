@@ -23,8 +23,8 @@ import { CoursesInstancesModule } from './courses-instances/courses-instances.mo
     ParentsInfoModule,
     AcademicProgramsModule,
     CoursesModule,
-    ExtensionCoursesModule,
     CoursesInstancesModule,
+    ExtensionCoursesModule,
   ]
 })
 export class ModulesModule { }

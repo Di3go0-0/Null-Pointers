@@ -6,6 +6,9 @@ export type CourseInstanceEntity = {
   teacherId: number;
   semester: string;
   groupCode: string;
+  startDate: Date;
+  endDate: Date;
+  minStudents: number;
   maxStudents: number;
   status: CourseInstanceStatus;
   createdAt: Date;

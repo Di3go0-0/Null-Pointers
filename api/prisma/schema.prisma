@@ -257,8 +257,11 @@ model CourseInstance {
   id          Int                  @id @default(autoincrement())
   courseId    Int
   teacherId   Int                  // Required - a course instance must have a teacher
-  semester    String               @db.VarChar(20)
+  semester    String               @db.VarChar(20) @map("semester")
   groupCode   String               @db.VarChar(20) @map("groupCode")
+  startDate   DateTime             @db.Date @map("startDate")
+  endDate     DateTime             @db.Date @map("endDate")
+  minStudents Int                  @default(1) @map("minStudents")
   maxStudents Int                  @map("maxStudents")
   status      CourseInstanceStatus @default(Planned)
   createdAt   DateTime             @default(now())
@@ -272,7 +275,7 @@ model CourseInstance {
   schedules   ScheduleCourseInstance[]
   enrollments EnrollmentCourse[]
 
-  @@unique([courseId, semester, groupCode], map: "uq_course_instance") // Composite unique key
+  @@unique([courseId, semester, groupCode], map: "uq_course_instance") 
   @@map("CourseInstances")
 }
 

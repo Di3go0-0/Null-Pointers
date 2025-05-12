@@ -16,34 +16,34 @@ export class CoursesInstancesService {
   }
 
   async findCoursesByTeacher(teacherId: number): Promise<CourseInstanceType[]> {
-    this.coursesInstancesRepository.existTeacher(teacherId);
     return this.coursesInstancesRepository.findCoursesByTeacher(teacherId);
   }
 
   async findCoursesByCourseId(courseId: number): Promise<CourseInstanceType[]> {
-    this.coursesInstancesRepository.existCourse(courseId);
     return this.coursesInstancesRepository.findCoursesByCourseId(courseId);
   }
 
   async findCoursesById(id: number): Promise<CourseInstanceType[]> {
-    this.coursesInstancesRepository.existCourseInstance(id);
     return this.coursesInstancesRepository.findCoursesById(id);
   }
 
   async saveCourseInstance(body: PostCourseInstanceType): Promise<number> {
-    this.coursesInstancesRepository.verifyGroupCode(body.groupCode, body.semester);
+    await this.coursesInstancesRepository.existTeacher(body.teacherId);
+    await this.coursesInstancesRepository.existCourse(body.courseId);
+    await this.coursesInstancesRepository.verifyGroupCode(body.groupCode, body.semester);
     return this.coursesInstancesRepository.saveCourseInstance(body);
   }
 
   async updateCourseInstance(id: number, body: PatchCourseInstanceType): Promise<number> {
-    this.coursesInstancesRepository.existCourseInstance(id);
-    if (body.groupCode) this.coursesInstancesRepository.verifyGroupCodeOwner(id, body.groupCode)
-    return this.coursesInstancesRepository.updateCourseInstance(id, body);
+    await this.coursesInstancesRepository.existCourseInstance(id);
+    if (body.teacherId) await this.coursesInstancesRepository.existTeacher(body.teacherId)
+    if (body.groupCode) await this.coursesInstancesRepository.verifyGroupCodeOwner(id, body.groupCode);
 
+    return this.coursesInstancesRepository.updateCourseInstance(id, body);
   }
 
   async deleteCourseInstance(id: number): Promise<number> {
-    this.coursesInstancesRepository.existCourseInstance(id);
+    await this.coursesInstancesRepository.existCourseInstance(id);
     return this.coursesInstancesRepository.deleteCourseInstance(id);
   }
 }

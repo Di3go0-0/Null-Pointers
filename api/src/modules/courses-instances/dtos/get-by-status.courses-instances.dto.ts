@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { CourseInstanceStatus } from "@prisma/client";
+import { IsString } from "class-validator";
 
 export class GetByStatusCoursesInstancesDto {
   @ApiProperty({
@@ -8,5 +9,6 @@ export class GetByStatusCoursesInstancesDto {
     required: true,
     example: CourseInstanceStatus.Active
   })
+  @IsString()
   status: CourseInstanceStatus;
 }

@@ -14,6 +14,9 @@ export class CourseInstanceMapper {
       teacherId: data.teacherId,
       semester: data.semester,
       groupCode: data.groupCode,
+      startDate: data.startDate,
+      endDate: data.endDate,
+      minStudents: data.minStudents,
       maxStudents: data.maxStudents,
       status: data.status,
     };
