@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Logger } from "@nestjs/common";
+import { HttpException, HttpStatus, Logger, Injectable } from "@nestjs/common";
 import { PrismaService } from "src/shared/prisma/prisma.service";
 import { CoursesInstancesRepository } from "../courses-instances.repository";
 import { CourseInstanceType } from "../../types/courses-instances.type";
@@ -7,6 +7,7 @@ import { PostCourseInstanceType, PatchCourseInstanceType, GetByStatusCoursesInst
 import { CourseInstanceMapper } from "../../mappers/course.mapper";
 
 
+@Injectable()
 export class CoursesInstancesPrismaService implements CoursesInstancesRepository {
   private readonly logger = new Logger(CoursesInstancesPrismaService.name);
   constructor(private prisma: PrismaService) { }
@@ -27,12 +28,12 @@ export class CoursesInstancesPrismaService implements CoursesInstancesRepository
     }
   }
 
-  public async findCoursesByStatus({ status }: GetByStatusCoursesInstancesType): Promise<CourseInstanceType[]> {
+  public async findCoursesByStatus(query: GetByStatusCoursesInstancesType): Promise<CourseInstanceType[]> {
     try {
       const courses = await this.prisma.courseInstance.findMany({
         where: {
           active: true,
-          status,
+          ...query,
         }
       })
 

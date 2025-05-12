@@ -15,17 +15,17 @@ export class CoursesInstancesService {
     return this.coursesInstancesRepository.findCoursesByStatus({ status })
   }
 
-  async findCoursesByTeacher(teacherId: number): Promise<CourseInstanceType[]> {
-    return this.coursesInstancesRepository.findCoursesByTeacher(teacherId);
-  }
-
-  async findCoursesByCourseId(courseId: number): Promise<CourseInstanceType[]> {
-    return this.coursesInstancesRepository.findCoursesByCourseId(courseId);
-  }
-
-  async findCoursesById(id: number): Promise<CourseInstanceType[]> {
-    return this.coursesInstancesRepository.findCoursesById(id);
-  }
+  // async findCoursesByTeacher(teacherId: number): Promise<CourseInstanceType[]> {
+  //   return this.coursesInstancesRepository.findCoursesByTeacher(teacherId);
+  // }
+  //
+  // async findCoursesByCourseId(courseId: number): Promise<CourseInstanceType[]> {
+  //   return this.coursesInstancesRepository.findCoursesByCourseId(courseId);
+  // }
+  //
+  // async findCoursesById(id: number): Promise<CourseInstanceType[]> {
+  //   return this.coursesInstancesRepository.findCoursesById(id);
+  // }
 
   async saveCourseInstance(body: PostCourseInstanceType): Promise<number> {
     await this.coursesInstancesRepository.existTeacher(body.teacherId);

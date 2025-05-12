@@ -19,24 +19,9 @@ export class CoursesInstancesController {
     return this.coursesInstancesService.findCoursesInstances();
   }
 
-  @Get('status')
+  @Get('search')
   findCoursesByStatus(@Query() status: GetByStatusCoursesInstancesDto) {
     return this.coursesInstancesService.findCoursesByStatus(status);
-  }
-
-  @Get('teacher')
-  findCoursesByTeacher(@Query('teacherId') teacherId: number) {
-    return this.coursesInstancesService.findCoursesByTeacher(teacherId);
-  }
-
-  @Get('course')
-  findCoursesByCourseId(@Query('courseId') courseId: number) {
-    return this.coursesInstancesService.findCoursesByCourseId(courseId);
-  }
-
-  @Get(':id')
-  findCoursesById(@Param('id') id: number) {
-    return this.coursesInstancesService.findCoursesById(id);
   }
 
   @Post()
