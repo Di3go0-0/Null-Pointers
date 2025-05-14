@@ -10,6 +10,7 @@ import { AcademicProgramsModule } from './academic-programs/academic-programs.mo
 import { CoursesModule } from './courses/courses.module';
 import { ExtensionCoursesModule } from './extension-courses/extension-courses.module';
 import { CoursesInstancesModule } from './courses-instances/courses-instances.module';
+import { SchedulesCoursesInstancesModule } from './schedules-courses-instances/schedules-courses-instances.module';
 
 @Module({
 
@@ -25,6 +26,7 @@ import { CoursesInstancesModule } from './courses-instances/courses-instances.mo
     CoursesModule,
     CoursesInstancesModule,
     ExtensionCoursesModule,
+    SchedulesCoursesInstancesModule,
   ]
 })
 export class ModulesModule { }
