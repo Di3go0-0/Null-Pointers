@@ -8,6 +8,6 @@ export abstract class SchedulesCoursesInstancesRepository {
   abstract findSearch(params: GetScheduleType): Promise<ScheduleEntity[]>;
   abstract save(body: PostScheduleType): Promise<number>;
   abstract update(id: number, body: PatchScheduleType): Promise<number>;
-  abstract schedulesCrossing(props: partialSchedules);
+  abstract schedulesCrossing(props: partialSchedules): Promise<void>;
   abstract courseInstanceId(scheuleId: number): Promise<number>;
 }

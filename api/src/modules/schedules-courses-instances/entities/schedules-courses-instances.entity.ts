@@ -4,7 +4,7 @@ export type ScheduleEntity = {
   id: number;
   courseInstanceId: number;
   day: $Enums.DayOfWeek;
-  startTime: Date;
-  endTime: Date;
+  startTime: number;
+  endTime: number;
   classroom: string;
 }

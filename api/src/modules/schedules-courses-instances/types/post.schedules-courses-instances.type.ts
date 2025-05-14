@@ -3,7 +3,7 @@ import { DayOfWeek } from "@prisma/client";
 export type PostScheduleType = {
   courseInstanceId: number;
   day: DayOfWeek;
-  startTime: Date;
-  endTime: Date;
+  startTime: number;
+  endTime: number;
   classroom: string;
 }

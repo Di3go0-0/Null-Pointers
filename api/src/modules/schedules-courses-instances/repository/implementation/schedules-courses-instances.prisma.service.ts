@@ -5,8 +5,6 @@ import { ScheduleEntity } from "../../entities";
 import { GetScheduleType, partialSchedules, PatchScheduleType, PostScheduleType } from "../../types";
 import { SCHEDULES } from "../../constans";
 
-
-
 @Injectable()
 export class SchedulesCoursesInstancesPrismaService implements SchedulesCoursesInstancesRepository {
   private readonly logger = new Logger(SchedulesCoursesInstancesPrismaService.name);
@@ -24,10 +22,15 @@ export class SchedulesCoursesInstancesPrismaService implements SchedulesCoursesI
   }
 
   public async findSearch(params: GetScheduleType): Promise<ScheduleEntity[]> {
+    const { semester, ...params1 } = params
+
     try {
       const schedules = await this.prisma.scheduleCourseInstance.findMany({
         where: {
-          ...params
+          ...params1,
+          courseInstance: {
+            semester
+          }
         }
       })
       return schedules
@@ -71,7 +74,7 @@ export class SchedulesCoursesInstancesPrismaService implements SchedulesCoursesI
   }
 
 
-  public async schedulesCrossing(props: partialSchedules) {
+  public async schedulesCrossing(props: partialSchedules): Promise<void> {
     const { courseInstanceId, classroom, day, startTime, endTime } = props
     try {
       const courseInstance = await this.prisma.courseInstance.findFirst({
@@ -90,13 +93,16 @@ export class SchedulesCoursesInstancesPrismaService implements SchedulesCoursesI
           courseInstance: {
             semester: courseInstance.semester,
           },
-          // Validar cruce de horarios
           AND: [
             { startTime: { lt: endTime } },
             { endTime: { gt: startTime } },
           ],
         },
       });
+
+      if (overlappingSchedule?.courseInstanceId === courseInstanceId) {
+        throw new HttpException(SCHEDULES.ERROR.CLASSROOM_OCUPED, HttpStatus.LOCKED);
+      }
 
       if (overlappingSchedule) {
         throw new HttpException(SCHEDULES.ERROR.CLASSROOM_CROSSING, HttpStatus.CONFLICT);

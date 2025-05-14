@@ -19,7 +19,7 @@ export class SchedulesCoursesInstancesController {
     return this.schedulesCoursesInstancesService.find()
   }
 
-  @Get()
+  @Get('search')
   async GetSearchSchedules(@Query() querys: GetScheduleDto) {
     return this.schedulesCoursesInstancesService.findSearch(querys)
   }

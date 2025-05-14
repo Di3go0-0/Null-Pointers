@@ -283,8 +283,8 @@ model ScheduleCourseInstance {
   id               Int            @id @default(autoincrement())
   courseInstanceId Int
   day              DayOfWeek
-  startTime        DateTime       @db.Time @map("startTime")
-  endTime          DateTime       @db.Time @map("endTime")
+  startTime        Int            @map("startTime")
+  endTime          Int            @map("endTime")
   classroom        String         @db.VarChar(50)
 
   courseInstance CourseInstance @relation(fields: [courseInstanceId], references: [id], onDelete: Cascade, onUpdate: Cascade) // Relation to CourseInstances
@@ -367,8 +367,8 @@ model ScheduleExtensionCourseInstance {
   id                        Int                     @id @default(autoincrement())
   extensionCourseInstanceId Int                     @map("extensionCourseInstanceId")
   day                       DayOfWeek
-  startTime                 DateTime                @db.Time @map("startTime")
-  endTime                   DateTime                @db.Time @map("endTime")
+  startTime                 Int                     @map("startTime")
+  endTime                   Int                     @map("endTime")
   classroom                 String                  @db.VarChar(50)
 
   extensionCourseInstance ExtensionCourseInstance @relation(fields: [extensionCourseInstanceId], references: [id], onDelete: Cascade, onUpdate: Cascade) // Relation to ExtensionCourseInstances

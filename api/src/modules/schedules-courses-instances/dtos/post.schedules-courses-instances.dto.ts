@@ -1,6 +1,6 @@
 import { DayOfWeek } from "@prisma/client";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsDate, IsNumber, IsString } from "class-validator";
+import { IsDate, IsInt, IsNumber, IsString, Max, Min } from "class-validator";
 
 export class PostScheduleDto {
   @ApiProperty({
@@ -14,26 +14,35 @@ export class PostScheduleDto {
   @ApiProperty({
     description: 'The day of the week when the class takes place',
     enum: DayOfWeek,
-    example: 'MONDAY',
+    example: DayOfWeek.Monday,
   })
   @IsString()
   day: DayOfWeek;
 
-  @ApiProperty({
-    description: 'The start time of the class',
-    example: '2023-01-01T08:00:00Z',
-    type: Date,
-  })
-  @IsDate()
-  startTime: Date;
 
   @ApiProperty({
-    description: 'The end time of the class',
-    example: '2023-01-01T10:00:00Z',
-    type: Date,
+    description: 'Start hour of the class (0-24)',
+    example: 16,
+    minimum: 0,
+    maximum: 23,
+    type: Number,
   })
-  @IsDate()
-  endTime: Date;
+  @IsInt()
+  @Min(0)
+  @Max(23)
+  startTime: number;
+
+  @ApiProperty({
+    description: 'End hour of the class (0-24)',
+    example: 18,
+    minimum: 0,
+    maximum: 23,
+    type: Number,
+  })
+  @IsInt()
+  @Min(0)
+  @Max(23)
+  endTime: number;
 
   @ApiProperty({
     description: 'The classroom where the class takes place',

@@ -5,6 +5,7 @@ export const SCHEDULES = {
     SAVE: 'Error saving SCHEDULES',
     UPDATE: 'Error Updating SCHEDULES',
     CLASSROOM: 'Error classroom is already occupied',
-    CLASSROOM_CROSSING: 'Error exist crossing'
+    CLASSROOM_CROSSING: 'Error exist crossing',
+    CLASSROOM_OCUPED: 'Error you already occupied this classroom',
   },
 };
