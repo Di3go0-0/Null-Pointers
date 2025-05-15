@@ -7,7 +7,7 @@ import { PrismaModule } from 'src/shared/prisma/prisma.module';
 import { PrismaService } from 'src/shared/prisma/prisma.service';
 
 @Module({
-  imports: [JwtGuardModule, PrismaModule],
+  imports: [JwtGuardModule],
   controllers: [EnrollmentsCoursesController],
   providers: [
     EnrollmentsCoursesService,

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { Roles } from 'src/shared';
 import { JwtGuardService } from 'src/shared/jwt-guard/jwt-guard.service';
@@ -9,7 +9,7 @@ import { GetEnrollmentsCoursesDto, PatchEnrollmentsCoursesDto, PostEnrollmentsCo
 @ApiTags('Enrollments courses')
 @ApiBearerAuth('Token')
 @UseGuards(JwtGuardService, RolesGuard)
-@Roles('ADMIN', 'TEACHER')
+@Roles('ADMIN')
 @Controller('enrollments-courses')
 export class EnrollmentsCoursesController {
   constructor(private readonly enrollmentsCoursesService: EnrollmentsCoursesService) { }
@@ -24,12 +24,12 @@ export class EnrollmentsCoursesController {
     return this.enrollmentsCoursesService.findSearch(query);
   }
 
-  @Get()
+  @Post()
   async SaveEnrollmentsCourses(@Body() body: PostEnrollmentsCoursesDto) {
     return this.enrollmentsCoursesService.save(body)
   }
 
-  @Get(':id')
+  @Patch(':id')
   async PatchEnrollmentsCourses(@Param('id', ParseIntPipe) id: number, @Body() body: PatchEnrollmentsCoursesDto) {
     return this.enrollmentsCoursesService.update(id, body)
   }
