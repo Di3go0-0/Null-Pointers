@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { $Enums } from '@prisma/client';
 import { IsNumber, IsDate, IsEnum } from 'class-validator';
 
 export class PostEnrollmentsCoursesDto {
@@ -23,12 +22,4 @@ export class PostEnrollmentsCoursesDto {
   })
   @IsDate()
   enrollmentDate: Date;
-
-  @ApiProperty({
-    description: 'The current status of the enrollment',
-    enum: $Enums.CourseEnrollmentStatus,
-    example: 'ACTIVE'
-  })
-  @IsEnum($Enums.CourseEnrollmentStatus)
-  status: $Enums.CourseEnrollmentStatus;
 }
