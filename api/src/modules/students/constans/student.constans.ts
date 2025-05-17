@@ -4,7 +4,7 @@ export const STUDENTS = {
     UPDATED_ROL: 'Error updating rol',
     UPDATED_STUDENT: 'Error updating rol',
     CREATE_STUDENT: 'Error creating student',
-    USER_NOT_FOUND: 'User not found',
+    USER_ALREADY_EXIT: 'User already exist',
     STUDENT_ALREADY_EXIST: 'student already exist'
   },
 };

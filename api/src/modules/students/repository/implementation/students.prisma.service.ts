@@ -5,6 +5,8 @@ import { StudentEntity } from "../../entities";
 import { STUDENTS } from "../../constans";
 import { StudentMapper } from "../../mappers/student.mapper";
 import { RoleName } from "@prisma/client";
+import { RegisterType } from "src/modules/auth/types";
+import { create } from "domain";
 
 @Injectable()
 export class StudentsPrismaService implements StudentsRepository {
@@ -70,19 +72,27 @@ export class StudentsPrismaService implements StudentsRepository {
     }
   }
 
-  public async postStudent(userId: number): Promise<number> {
+  public async postStudent(body: RegisterType): Promise<number> {
+    const { name, email, password } = body;
     try {
-      const student = await this.prisma.student.create({
+      const roleId = await this.searchRole('STUDENT');
+
+      const createdUser = await this.prisma.user.create({
         data: {
-          id: userId,
-        }
-      })
+          name,
+          email,
+          password,
+          roleId,
+          student: {
+            create: {},
+          },
+        },
+        include: {
+          student: true,
+        },
+      });
 
-      if (!student) {
-        throw new HttpException(STUDENTS.ERROR.CREATE_STUDENT, HttpStatus.BAD_REQUEST);
-      }
-
-      return student.id
+      return createdUser.id;
     }
     catch (error) {
       this.logger.error(`Error creating student: ${error.message}`);
@@ -108,59 +118,12 @@ export class StudentsPrismaService implements StudentsRepository {
     }
   }
 
-  public async existUser(userId: number): Promise<boolean> {
+  public async existUser(email: string): Promise<boolean> {
     try {
       const user = await this.prisma.user.findUnique({
         where: {
-          id: userId,
+          email,
           active: true
-        },
-        select: {
-          id: true
-        }
-      })
-
-      if (!user) {
-        throw new HttpException(STUDENTS.ERROR.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
-      }
-      return !!user
-    } catch (error) {
-      this.logger.error(`Error searching user  ${userId}: ${error.message}`);
-      throw new HttpException(STUDENTS.ERROR.USER_NOT_FOUND, HttpStatus.BAD_REQUEST);
-    }
-  }
-
-  public async updateUserRol(userId: number, rolId: number): Promise<boolean> {
-    try {
-      const updatedRol = await this.prisma.user.update({
-        where: {
-          id: userId,
-          active: true
-        },
-        data: {
-          roleId: rolId
-        },
-      })
-
-      if (!updatedRol) {
-        throw new HttpException(STUDENTS.ERROR.UPDATED_ROL, HttpStatus.BAD_REQUEST);
-      }
-
-      return true
-    } catch (error) {
-      this.logger.error(`Error updating user rol ${userId}: ${error.message}`);
-      throw new HttpException(STUDENTS.ERROR.UPDATED_ROL, HttpStatus.BAD_REQUEST);
-    }
-  }
-
-  public async existStudent(userId: number): Promise<boolean> {
-    try {
-      const user = await this.prisma.teacher.findUnique({
-        where: {
-          id: userId,
-          user: {
-            active: true
-          }
         },
         select: {
           id: true
@@ -168,15 +131,16 @@ export class StudentsPrismaService implements StudentsRepository {
       })
 
       if (user) {
-        throw new HttpException(STUDENTS.ERROR.STUDENT_ALREADY_EXIST, HttpStatus.CONFLICT);
+        throw new HttpException(STUDENTS.ERROR.USER_ALREADY_EXIT, HttpStatus.NOT_FOUND);
       }
-
       return !!user
     } catch (error) {
-      this.logger.error(`Error searching teacher ${userId}: ${error.message}`);
-      throw new HttpException(STUDENTS.ERROR.USER_NOT_FOUND, HttpStatus.BAD_REQUEST);
+      this.logger.error(`Error searching user : ${error.message}`);
+      throw new HttpException(STUDENTS.ERROR.USER_ALREADY_EXIT, HttpStatus.BAD_REQUEST);
     }
   }
+
+
 }
 
 

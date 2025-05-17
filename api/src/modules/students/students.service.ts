@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { StudentsRepository } from './repository/students.repository';
 import { StudentEntity } from './entities';
+import { RegisterType } from '../auth/types';
 
 @Injectable()
 export class StudentsService {
@@ -20,12 +21,9 @@ export class StudentsService {
     return await this.studentsRepository.getStudents(this.roleId);
   }
 
-  async postStudent(userId: number): Promise<number> {
-    await this.studentsRepository.existUser(userId);
-    await this.studentsRepository.existStudent(userId)
-    await this.studentsRepository.updateUserRol(userId, this.roleId)
-
-    return await this.studentsRepository.postStudent(userId)
+  async postStudent(body: RegisterType): Promise<number> {
+    await this.studentsRepository.existUser(body.email);
+    return await this.studentsRepository.postStudent(body)
   }
 
   private async searchRole() {
