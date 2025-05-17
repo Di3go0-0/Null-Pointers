@@ -182,9 +182,9 @@ model ContractType {
 model Teacher {
   id             Int      @id // This is the PK and FK referencing User.id
   contractTypeId Int?     // Optional based on potential RESTRICT/SET NULL on FK
-  specialty      String?  @db.VarChar(255)
-  experience     String?  @db.Text
-  baseSalary     Decimal? @map("baseSalary") @db.Decimal(10, 2)
+  specialty      String   @db.VarChar(255)
+  experience     String   @db.Text
+  baseSalary     Decimal  @map("baseSalary") @db.Decimal(10, 2)
 
   user         User          @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade) // Relation to User (1-to-1)
   contractType ContractType? @relation(fields: [contractTypeId], references: [id], onDelete: Restrict, onUpdate: Cascade) // Relation to ContractTypes

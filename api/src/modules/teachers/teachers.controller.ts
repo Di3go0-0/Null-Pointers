@@ -23,9 +23,10 @@ export class TeachersController {
     return this.teachersService.getTeacherById(id)
   }
 
-  @Post(':id')
-  async creteTeacher(@Param('id', ParseIntPipe) id: number, @Body() body: PostTeacherDTO) {
-    return this.teachersService.postTeacher(id, body);
+  @Post()
+  async creteTeacher(@Body() body: PostTeacherDTO) {
+    const { confirmPassword, ...body1 } = body
+    return this.teachersService.postTeacher(body1);
   }
 
   @Patch(':id')

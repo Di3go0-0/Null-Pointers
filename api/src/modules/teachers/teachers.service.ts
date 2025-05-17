@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { TeachersRepository } from './reporitory/teachers.repository';
 import { PatchTeacherType, PostTeacherType } from './types';
 import { TeacherEntity } from './entities';
+import { hashpassword } from '../auth/helpers';
 
 @Injectable()
 export class TeachersService {
@@ -20,10 +21,10 @@ export class TeachersService {
     return this.teachersRepository.getTeachers(this.roleId);
   }
 
-  async postTeacher(userId: number, body: PostTeacherType): Promise<number> {
-    await this.teachersRepository.existUser(userId)
-    await this.teachersRepository.updateUserRol(userId, this.roleId);
-    return this.teachersRepository.postTeacher(userId, body);
+  async postTeacher(body: PostTeacherType): Promise<number> {
+    await this.teachersRepository.userNew(body.email);
+    const hashedPassword = await hashpassword(body.password);
+    return await this.teachersRepository.saveTeacher({ ...body, password: hashedPassword });
   }
 
   async patchTeacher(userId: number, body: PatchTeacherType): Promise<number> {

@@ -1,11 +1,12 @@
 import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common";
 import { TeachersRepository } from "../teachers.repository";
 import { PrismaService } from "src/shared/prisma/prisma.service";
-import { PatchTeacherType, PostTeacherType } from "../../types";
+import { PatchTeacherType, BaseTeacherType, PostTeacherType } from "../../types";
 import { TEACHERS } from "../../constans";
 import { TeacherEntity } from "../../entities";
 import { TeacherMapper } from "../../mappers/teacher.mapper";
 import { RoleName } from "@prisma/client";
+import { RegisterType } from "src/modules/auth/types";
 
 @Injectable()
 export class TeachersPrismaService implements TeachersRepository {
@@ -89,26 +90,31 @@ export class TeachersPrismaService implements TeachersRepository {
     }
   }
 
-  public async postTeacher(userId: number, body: PostTeacherType): Promise<number> {
+  public async saveTeacher(user: PostTeacherType): Promise<number> {
+    const { name, email, password, ...teacher } = user;
     try {
-      const createdTeacher = await this.prisma.teacher.create({
+      const roleId = await this.searchRole('TEACHER')
+
+      const user = await this.prisma.user.create({
         data: {
-          id: userId,
-          ...body
+          name,
+          email,
+          password,
+          roleId,
+          teacher: {
+            create: {
+              ...teacher
+            }
+          }
         },
-        include:
-        {
-          user: true
-        }
-      })
+      });
 
-      if (!createdTeacher) {
-        throw new HttpException(TEACHERS.ERROR.CREATE_TEACHER, HttpStatus.BAD_REQUEST);
-      }
-
-      return createdTeacher.id;
+      return user.id
     }
     catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
       this.logger.error(`Error registering teacher: ${error.message}`);
       throw new HttpException(TEACHERS.ERROR.CREATE_TEACHER, HttpStatus.BAD_REQUEST);
     }
@@ -156,50 +162,6 @@ export class TeachersPrismaService implements TeachersRepository {
     }
   }
 
-  public async existUser(userId: number): Promise<boolean> {
-    try {
-      const user = await this.prisma.user.findUnique({
-        where: {
-          id: userId,
-          active: true
-        },
-        select: {
-          id: true
-        }
-      })
-      if (!user) {
-        throw new HttpException(TEACHERS.ERROR.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
-      }
-      return !!user
-    } catch (error) {
-      this.logger.error(`Error searching user ${userId}: ${error.message}`);
-      throw new HttpException(TEACHERS.ERROR.USER_NOT_FOUND, HttpStatus.BAD_REQUEST);
-    }
-  }
-
-  public async updateUserRol(userId: number, rolId: number): Promise<boolean> {
-    try {
-      const updatedRol = await this.prisma.user.update({
-        where: {
-          id: userId,
-          active: true
-        },
-        data: {
-          roleId: rolId
-        },
-      })
-
-      if (!updatedRol) {
-        throw new HttpException(TEACHERS.ERROR.UPDATED_ROL, HttpStatus.NOT_FOUND);
-      }
-
-      return true
-    } catch (error) {
-      this.logger.error(`Error updating user rol ${userId}: ${error.message}`);
-      throw new HttpException(TEACHERS.ERROR.UPDATED_ROL, HttpStatus.BAD_REQUEST);
-    }
-  }
-
   public async existTeacher(userId: number): Promise<boolean> {
     try {
       const user = await this.prisma.teacher.findUnique({
@@ -220,6 +182,25 @@ export class TeachersPrismaService implements TeachersRepository {
     } catch (error) {
       this.logger.error(`Error searching teacher ${userId}: ${error.message}`);
       throw new HttpException(TEACHERS.ERROR.USER_NOT_FOUND, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  public async userNew(email: string): Promise<void> {
+    try {
+      const user = await this.prisma.user.findFirst({
+        where: { email }
+      });
+
+      if (user) {
+        throw new HttpException(TEACHERS.ERROR.USER_ALREADY_EXIST, HttpStatus.LOCKED);
+      }
+
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      this.logger.error(`Error user alrady exist: ${error.message}`);
+      throw new HttpException(TEACHERS.ERROR.USER_ALREADY_EXIST, HttpStatus.BAD_REQUEST);
     }
   }
 }
