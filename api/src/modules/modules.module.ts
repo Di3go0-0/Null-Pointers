@@ -13,6 +13,7 @@ import { CoursesInstancesModule } from './courses-instances/courses-instances.mo
 import { SchedulesCoursesInstancesModule } from './schedules-courses-instances/schedules-courses-instances.module';
 import { EnrollmentsCoursesModule } from './enrollments-courses/enrollments-courses.module';
 import { EnrollmentsProgramsModule } from './enrollments-programs/enrollments-programs.module';
+import { ExtensionInstancesModule } from './extension-courses-instances/extension-instance.module';
 
 @Module({
 
@@ -31,6 +32,7 @@ import { EnrollmentsProgramsModule } from './enrollments-programs/enrollments-pr
     SchedulesCoursesInstancesModule,
     EnrollmentsCoursesModule,
     EnrollmentsProgramsModule,
+    ExtensionInstancesModule,
   ]
 })
 export class ModulesModule { }
