@@ -3,7 +3,6 @@ import { EnrollmentsCoursesController } from './enrollments-courses.controller';
 import { EnrollmentsCoursesService } from './enrollments-courses.service';
 import { JwtGuardModule } from 'src/shared/jwt-guard/jwt-guard.module';
 import { EnrollmentsCoursesPrismaService, EnrollmentsCoursesRepository } from './repository';
-import { PrismaModule } from 'src/shared/prisma/prisma.module';
 import { PrismaService } from 'src/shared/prisma/prisma.service';
 
 @Module({

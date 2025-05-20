@@ -15,6 +15,7 @@ import { EnrollmentsCoursesModule } from './enrollments-courses/enrollments-cour
 import { EnrollmentsProgramsModule } from './enrollments-programs/enrollments-programs.module';
 import { ExtensionInstancesModule } from './extension-courses-instances/extension-instance.module';
 import { SchedulesExtensionInstancesModule } from './schedules-extension-instances/schedules-extension-instances.module';
+import { EnrollmentsExtensionModule } from './enrollments-extension/enrollments-extension.module';
 
 @Module({
 
@@ -35,6 +36,7 @@ import { SchedulesExtensionInstancesModule } from './schedules-extension-instanc
     EnrollmentsProgramsModule,
     ExtensionInstancesModule,
     SchedulesExtensionInstancesModule,
+    EnrollmentsExtensionModule,
   ]
 })
 export class ModulesModule { }
