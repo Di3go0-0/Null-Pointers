@@ -1,0 +1,33 @@
+.min-vh-100 {
+  min-height: 100vh;
+}
+
+
+.bg-primary {
+  background-color: #14b8a6 !important;
+}
+
+.btn-primary {
+  background-color: #14b8a6;
+  border-color: #14b8a6;
+}
+
+.btn-primary:hover {
+  background-color: #0d9488;
+  border-color: #0d9488;
+}
+
+.btn-outline-primary {
+  color: #14b8a6;
+  border-color: #14b8a6;
+}
+
+.btn-outline-primary:hover {
+  background-color: #14b8a6;
+  border-color: #14b8a6;
+  color: black;
+}
+
+.modal.show {
+  background-color: rgba(0, 0, 0, 0.5);
+}
