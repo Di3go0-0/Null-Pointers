@@ -1,0 +1,196 @@
+<div class="min-vh-100 d-flex flex-column">
+  <!-- Header -->
+  <header class="bg-dark text-white py-3 px-4">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center">
+        <div class="bg-primary text-white p-2 rounded me-2 fw-bold">CC</div>
+        <span class="h4 mb-0">Campus Connect</span>
+      </div>
+      <div class="d-flex align-items-center gap-3">
+        <button class="btn btn-outline-light btn-sm" (click)="goBack()">
+          <i class="bi bi-arrow-left me-2"></i>
+          Volver al Dashboard
+        </button>
+        <button class="btn btn-outline-danger btn-sm" (click)="logout()">
+          <i class="bi bi-box-arrow-right me-2"></i>
+          Cerrar sesión
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-grow-1 p-4" style="background: linear-gradient(to bottom, #5eead4, #14b8a6);">
+    <div class="container">
+      <div class="row g-4">
+        <!-- Profile Sidebar -->
+        <div class="col-lg-4">
+          <div class="card shadow">
+            <div class="card-body text-center">
+              <div class="mb-4">
+                <div class="bg-secondary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                     style="width: 100px; height: 100px;">
+                  <i class="bi bi-person text-white" style="font-size: 3rem;"></i>
+                </div>
+                <h4 class="mb-1">{{ currentUser?.name }}</h4>
+                @if (rol === 'ADMIN') {
+                    <span class="badge bg-secondary">Admin</span>
+                }@else if (rol === "TEACHER") {
+                    <span class="badge bg-success">Docente</span>
+                }@else if (rol === "STUDENT") {
+                    <span class="badge bg-primary">Estudiante</span>
+                }
+                
+              </div>
+              
+              <div class="text-start">
+                <div class="mb-3">
+                  
+                  @if (rol === 'ADMIN') {
+                    <h6 class="text-muted mb-1">Dependencia</h6>
+                    <p class="mb-0">Administrador</p>
+                  }@else if (rol === 'TEACHER') {
+                    <h6 class="text-muted mb-1">Cargo</h6>
+                    <p class="mb-0">Profesor</p>
+                  }
+                  @else{
+                    <h6 class="text-muted mb-1">Programa</h6>
+                    <p class="mb-0">programa</p>
+                  }
+                </div>
+                <div class="mb-3">
+                  <h6 class="text-muted mb-1">Semestre</h6>
+                  @if (rol === 'ADMIN' || rol === 'TEACHER') {
+                    <p class="mb-0">No aplica</p>
+                  }@else{
+                    <p class="mb-0">semestre</p>
+                  }
+                </div>
+                <div class="mb-3">
+                  <h6 class="text-muted mb-1">Numero de Documento</h6>
+                  <p class="mb-0">{{ personalInfo?.identificationNumber }}</p>
+                </div>
+                <hr>
+                <div>
+                  <h6 class="text-muted mb-1">Fecha de Nacimiento</h6>
+                  <p class="mb-0">{{ personalInfo?.birthdate | date:'longDate'}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Profile Content -->
+        <div class="col-lg-8">
+          <div class="card shadow">
+            <!-- Tabs -->
+            <div class="card-header">
+              <ul class="nav nav-tabs card-header-tabs">
+                <li class="nav-item">
+                  <button 
+                    class="nav-link" 
+                    [class.active]="activeTab === 'personal'"
+                    (click)="setActiveTab('personal')">
+                    Datos Personales
+                  </button>
+                </li>
+                <li class="nav-item">
+                  <button 
+                    class="nav-link" 
+                    [class.active]="activeTab === 'security'"
+                    (click)="setActiveTab('security')">
+                    Seguridad
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+            <div class="card-body">
+              <!-- Personal Data Tab -->
+              <div *ngIf="activeTab === 'personal'">
+                <h5 class="mb-3">Información Personal</h5>
+                <p class="text-muted mb-4">Información personal y de contacto</p>
+                
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <h6 class="text-muted mb-1">Nombre completo</h6>
+                    <p>{{currentUser?.name}}</p>
+                  </div>
+                  <div class="col-md-6">
+                    <h6 class="text-muted mb-1">Correo electrónico</h6>
+                    <p>{{ currentUser?.email }}</p>
+                  </div>
+                  <div class="col-md-6">
+                    <h6 class="text-muted mb-1">Teléfono</h6>
+                    <p>{{ personalInfo?.phoneNumber }}</p>
+                  </div>
+                  <div class="col-md-6">
+                    <h6 class="text-muted mb-1">Dirección</h6>
+                    <p>{{ personalInfo?.address }}</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Security Tab -->
+              <div *ngIf="activeTab === 'security'">
+                <h5 class="mb-3">Seguridad de la cuenta</h5>
+                <p class="text-muted mb-4">Gestiona la contraseña de tu cuenta</p>
+                
+                <form (ngSubmit)="changePassword()" #passwordForm="ngForm">
+                  <div class="mb-3">
+                    <label for="currentPassword" class="form-label">Contraseña actual</label>
+                    <input 
+                      type="password" 
+                      class="form-control" 
+                      id="currentPassword"
+                      [(ngModel)]="currentPassword"
+                      name="currentPassword"
+                      required>
+                  </div>
+                  
+                  <div class="mb-3">
+                    <label for="newPassword" class="form-label">Nueva contraseña</label>
+                    <input 
+                      type="password" 
+                      class="form-control" 
+                      id="newPassword"
+                      [(ngModel)]="newPassword"
+                      name="newPassword"
+                      required>
+                  </div>
+                  
+                  <div class="mb-3">
+                    <label for="confirmPassword" class="form-label">Confirmar nueva contraseña</label>
+                    <input 
+                      type="password" 
+                      class="form-control" 
+                      id="confirmPassword"
+                      [(ngModel)]="confirmPassword"
+                      name="confirmPassword"
+                      required>
+                  </div>
+
+                  <!-- Password Message -->
+                  <div class="alert" 
+                       [class.alert-success]="passwordMessageType === 'success'"
+                       [class.alert-danger]="passwordMessageType === 'danger'"
+                       *ngIf="passwordMessage">
+                    {{ passwordMessage }}
+                  </div>
+                  
+                  <button 
+                    type="submit" 
+                    class="btn btn-primary"
+                    [disabled]="isChangingPassword || !passwordForm.form.valid">
+                    <span *ngIf="isChangingPassword" class="spinner-border spinner-border-sm me-2"></span>
+                    {{ isChangingPassword ? 'Actualizando...' : 'Cambiar contraseña' }}
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

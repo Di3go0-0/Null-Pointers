@@ -67,3 +67,8 @@
 .dropdown-toggle::after {
   margin-left: 0.5rem;
 }
+.dropdown-item:hover {
+  background-color: #000000; /* rojo bootstrap */
+  color: white !important;
+  border-radius: 4px;
+}

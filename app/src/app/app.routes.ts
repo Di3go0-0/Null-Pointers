@@ -1,12 +1,14 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './login/login.component';
-import { HomeComponent } from './home/home.component';
+import { LoginComponent } from './modules/login/login.component';
+import { HomeComponent } from './modules/home/home.component';
 import { ErrorComponent } from './error/error.component';
+import { ProfileComponent } from './modules/profile/profile.component';
 
 export const routes: Routes = [
     {path: '', redirectTo: 'login', pathMatch: 'full'},
     {path: 'login', component: LoginComponent},
-    {path: 'home', component: HomeComponent},
+    {path: 'admin', component: HomeComponent},
+    {path: 'profile',component: ProfileComponent},
 
     // Para rutas no registradas
     {path: '**', component: ErrorComponent}

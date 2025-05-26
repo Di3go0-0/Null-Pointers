@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
+import { Token } from '../models/token';
+import { Router } from '@angular/router';
 
 interface LoginPayload {
   email: string;
@@ -11,12 +13,7 @@ interface LoginPayload {
 interface LoginResponse {
   token: string;
 }
-interface DecodedToken {
-  id: number;
-  email: string;
-  iat: number;
-  exp: number;
-}
+
 
 @Injectable({
   providedIn: 'root'
@@ -25,21 +22,23 @@ interface DecodedToken {
 export class AuthService {
   private apiUrl = 'http://localhost:3001/auth/login';
   private token: string | null = null;
-
-  constructor(private http: HttpClient) {
-  const token = localStorage.getItem('auth_token');
-  if (token) {
-    this.token = token;
-    this.decodeToken(token);
+  public userData: Token | null = null; // 👈 para guardar el usuario decodificado
+  constructor(private http: HttpClient,
+    private router: Router
+  ) {
+    const token = localStorage.getItem('auth_token');
+    if (token) {
+      this.token = token;
+      this.userData = this.decodeToken(token);
+    }
   }
-}
 
   login(payload: LoginPayload): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(this.apiUrl, payload).pipe(
       tap((res) => {
         this.token = res.token;
         localStorage.setItem('auth_token', res.token); // opcional
-        this.decodeToken(res.token); // 👈 decodificás y guardás el user
+        this.userData = this.decodeToken(res.token); // 👈 decodificás y guardás el user
       })
     );
   }
@@ -49,35 +48,35 @@ export class AuthService {
   }
 
   logout() {
+    // Elimina el token del almacenamiento local y de la variable de clase
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('userInfo'); // Limpia los datos del usuario
+    this.userData = null; // Limpia los datos del usuario
     this.token = null;
+    this.router.navigate(['/login']); // Redirige al usuario a la página de inicio de sesión
   }
 
   isAuthenticated(): boolean {
     // Devuelve true si hay token almacenado
     return !!this.token;
   }
+
   setToken(token: string): void {
     this.token = token;
   }
 
-   public userData: DecodedToken | null = null;
 
-  private decodeToken(token: string): void {
+  decodeToken(token: string): Token | null {
     try {
-      this.userData = jwtDecode<DecodedToken>(token);
-      console.log('Token decodificado y guardado:', this.userData);
+      const DecodeData = jwtDecode<Token>(token);
+      console.log('Token decodificado:', DecodeData);
+      return DecodeData;
     } catch (e) {
       console.error('No se pudo decodificar el token:', e);
-      this.userData = null;
+      return null;
     }
   }
 
-  // getuser(): DecodedToken | null {
-  //   if (!this.userData && this.token) {
-  //     this.decodeToken(this.token);
-  //   }
-  //   return this.userData;
-  // }
 
 }
 

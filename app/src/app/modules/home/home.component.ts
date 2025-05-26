@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component , OnInit, OnDestroy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
-import { User } from '../models/user';
+import { UserService } from '../../services/user.service';
+import { User } from '../../models/user';
+import { Subscription } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
 
 
 interface AdminModule {
@@ -12,12 +14,7 @@ interface AdminModule {
   route: string;
   bgColor: string;
 }
-interface DecodedToken {
-  id: number;
-  email: string;
-  iat: number;
-  exp: number;
-}
+
 
 @Component({
   selector: 'app-home',
@@ -28,7 +25,7 @@ interface DecodedToken {
 export class HomeComponent {
   // Propiedad para almacenar el estado del sidebar
   sidebarCollapsed = false;
- 
+
   adminModules: AdminModule[] = [
     {
       title: 'Registrar Usuario',
@@ -74,31 +71,33 @@ export class HomeComponent {
     }
   ];
 
+  user: User | null = null;
+  private subscription!: Subscription
+
   constructor(
     private authService: AuthService,
+    private userService: UserService,
     private router: Router
   ) { }
-  user: DecodedToken | null = {
-    id: 0,
-   email: 'string',
-   iat: 0,
-   exp: 0
+
+  ngOnInit() {
+    this.subscription = this.userService.userInfo$.subscribe(info => {
+      this.user = info;
+      if (info) {
+        console.log('Usuario actual:', info.name, info.email, info.role.roleName);
+      }
+    });
   }
 
-  ngOnInit(): void {
-    this.user = this.authService.userData;
-    console.log('Usuario cargado:', this.user);
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
-
-  
-
   toggleSidebar() {
     this.sidebarCollapsed = !this.sidebarCollapsed;
   }
 
   logout() {
-    //falta metodo de logout
-    this.router.navigate(['/login']);
+    this.authService.logout();
   }
 
   navigateToModule(route: string) {

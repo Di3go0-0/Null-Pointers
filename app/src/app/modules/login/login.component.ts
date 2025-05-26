@@ -2,7 +2,10 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../../services/auth.service';
+import { ApiService } from '../../services/solicitudes.service';
+import { User } from '../../models/user';
+import { UserService } from '../../services/user.service';
 
 
 @Component({
@@ -19,6 +22,8 @@ export class LoginComponent {
 
   constructor(
     private authService: AuthService,
+    private apiService: ApiService,
+    private userService: UserService,
     private router: Router
   ) { }
 
@@ -45,18 +50,24 @@ export class LoginComponent {
         this.authService.setToken(res.token);
         localStorage.setItem('auth_token', res.token);
         this.authService.setToken(res.token);
-
-        const user = this.authService.userData;
-        console.log('Usuario autenticado:', user);
-        const role = user?.id
-        console.log('Rol del usuario:', role);
-        if (role === 1) {
-          this.router.navigate(['/home']);
-        } else if (role === 2) {
-          this.router.navigate(['/user']);
-        } else {
-          alert('Rol no reconocido');
-        }
+        this.apiService.post<User>('/auth/userInfo', {}).subscribe({
+          next: (userData) => {
+            this.userService.setUserInfo(userData);
+            console.log('Datos del usuario guardados:', userData);
+            if(userData.role.roleName === 'ADMIN') {
+              this.router.navigate(['/admin']);
+            }
+            else if(userData.role.roleName === 'TEACHER') {
+              this.router.navigate(['/teacher']);
+            }
+            else if(userData.role.roleName === 'STUDENT') {
+              this.router.navigate(['/student']);
+            }
+          },
+          error: (err) => {
+            console.error('Error al obtener información del usuario', err);
+          }
+        });
       },
       error: (err) => {
         this.isLoading = false; // apago loader si hay error
