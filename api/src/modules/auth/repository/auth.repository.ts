@@ -4,4 +4,5 @@ import { RegisterType } from "../types";
 export abstract class AuthRepository {
   abstract registerUser(body: RegisterType): Promise<number>;
   abstract getUserByEmail(email: string): Promise<UserEntity>;
+  abstract getUserInfo(id: number): Promise<any>;
 }

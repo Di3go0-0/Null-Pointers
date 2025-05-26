@@ -29,4 +29,8 @@ export class AuthService {
     return { token };
   }
 
+
+  async getUserInfo(id: number): Promise<any> {
+    return await this.authRepository.getUserInfo(id);
+  }
 }

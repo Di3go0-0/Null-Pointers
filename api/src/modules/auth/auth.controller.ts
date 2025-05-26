@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards, Request } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto, RegisterDto } from './dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -24,5 +24,12 @@ export class AuthController {
   async registerUserDefault(@Body() body: RegisterDto): Promise<number> {
     return this.authService.registerUser(body);
   }
+
+  @Post('userInfo')
+  @UseGuards(JwtGuardService)
+  async getUserInfo(@Request() req: any): Promise<number> {
+    return this.authService.getUserInfo(req.user.id);
+  }
+
 
 }

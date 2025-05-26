@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common";
 import { AuthRepository } from "../auth.repository";
-import { RegisterType } from "../../types";
+import { RegisterType, userType } from "../../types";
 import { AUTH_MESSAGES } from "../../constans";
 import { PrismaService } from "src/shared/prisma/prisma.service";
 import { UserEntity } from "../../entities";
@@ -51,6 +51,44 @@ export class AuthPrismaSerivce implements AuthRepository {
     } catch (error) {
       this.logger.error(`Error searching user: ${error.message}`);
       throw new HttpException(AUTH_MESSAGES.ERROR.USER_NOT_FOUNT, HttpStatus.NOT_FOUND);
+    }
+
+  }
+
+  public async getUserInfo(id: number): Promise<userType> {
+    try {
+      const user = await this.prisma.user.findFirst({
+        where: {
+          id,
+          active: true,
+        },
+        select: {
+          name: true,
+          email: true,
+          role: {
+            select: {
+              roleName: true,
+            }
+          },
+          personalInfo: {
+            select: {
+              identificationNumber: true,
+              birthdate: true,
+              address: true,
+              phoneNumber: true,
+            }
+          },
+        }
+      });
+
+      if (!user) {
+        throw new HttpException(AUTH_MESSAGES.ERROR.USER_NOT_FOUNT, HttpStatus.NOT_FOUND);
+      }
+
+      return user;
+    } catch (error) {
+      this.logger.error(`Error searching user: ${error.message}`);
+      throw new HttpException(AUTH_MESSAGES.ERROR.USER_INFO, HttpStatus.NOT_FOUND);
     }
 
   }
