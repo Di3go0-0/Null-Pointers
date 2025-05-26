@@ -36,6 +36,33 @@ export class LoginComponent {
     }
 
     this.isLoading = true;
+    this.authService.login({ email: this.email, password: this.password }).subscribe({
+      next: (res) => {
+        this.isLoading = false;
+        console.log('Token recibido:', res.token);
+
+        // Guardar token
+        this.authService.setToken(res.token);
+        localStorage.setItem('auth_token', res.token);
+        this.authService.setToken(res.token);
+
+        const user = this.authService.userData;
+        console.log('Usuario autenticado:', user);
+        const role = user?.id
+        console.log('Rol del usuario:', role);
+        if (role === 1) {
+          this.router.navigate(['/home']);
+        } else if (role === 2) {
+          this.router.navigate(['/user']);
+        } else {
+          alert('Rol no reconocido');
+        }
+      },
+      error: (err) => {
+        this.isLoading = false; // apago loader si hay error
+        alert('Error en la autenticación: ' + (err.error?.message || err.message));
+      }
+    });
     return true;
   }
 

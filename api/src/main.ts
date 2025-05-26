@@ -28,7 +28,7 @@ async function bootstrap() {
   )
 
   console.log(`Swagger running on: localhost:${port}/${rute}`);
-
+  app.enableCors(); // <-- Esto es clave
   await app.listen(port);
 }
 bootstrap();

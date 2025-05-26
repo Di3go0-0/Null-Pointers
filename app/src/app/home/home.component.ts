@@ -12,6 +12,12 @@ interface AdminModule {
   route: string;
   bgColor: string;
 }
+interface DecodedToken {
+  id: number;
+  email: string;
+  iat: number;
+  exp: number;
+}
 
 @Component({
   selector: 'app-home',
@@ -22,13 +28,7 @@ interface AdminModule {
 export class HomeComponent {
   // Propiedad para almacenar el estado del sidebar
   sidebarCollapsed = false;
-  currentUser: User = {
-    id: 1,
-    name: 'andres',
-    email: 'andres@gmail.com',
-    role: 'admin'
-  };
-
+ 
   adminModules: AdminModule[] = [
     {
       title: 'Registrar Usuario',
@@ -78,6 +78,20 @@ export class HomeComponent {
     private authService: AuthService,
     private router: Router
   ) { }
+  user: DecodedToken | null = {
+    id: 0,
+   email: 'string',
+   iat: 0,
+   exp: 0
+  }
+
+  ngOnInit(): void {
+    this.user = this.authService.userData;
+    console.log('Usuario cargado:', this.user);
+  }
+
+  
+
   toggleSidebar() {
     this.sidebarCollapsed = !this.sidebarCollapsed;
   }
