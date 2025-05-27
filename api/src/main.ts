@@ -7,7 +7,7 @@ import { SwaggerConfig } from './shared/swagger/swagger.config';
 
 async function bootstrap() {
   const rute = ENV.CONSTANS.SWAGGER_RUTE;
-  const port = ENV.CONSTANS.API_PORT;
+  const port = ENV.CONSTANS.API_PORT || 3001;
   const app = await NestFactory.create(AppModule);
 
   app.useGlobalPipes(
