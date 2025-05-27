@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { StudentsRepository } from './repository/students.repository';
 import { StudentEntity } from './entities';
 import { RegisterType } from '../auth/types';
+import { hashpassword } from '../auth/helpers';
 
 @Injectable()
 export class StudentsService {
@@ -23,7 +24,8 @@ export class StudentsService {
 
   async postStudent(body: RegisterType): Promise<number> {
     await this.studentsRepository.existUser(body.email);
-    return await this.studentsRepository.postStudent(body)
+    const hashedPassword = await hashpassword(body.password);
+    return await this.studentsRepository.postStudent({ ...body, password: hashedPassword })
   }
 
   private async searchRole() {
