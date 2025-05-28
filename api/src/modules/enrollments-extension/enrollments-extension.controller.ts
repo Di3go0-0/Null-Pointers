@@ -4,7 +4,7 @@ import { Roles } from 'src/shared';
 import { JwtGuardService } from 'src/shared/jwt-guard/jwt-guard.service';
 import { RolesGuard } from 'src/shared/jwt-guard/jwt-rol-guard.service';
 import { EnrollmentsExtensionService } from './enrollments-extension.service';
-import { GetEnrollmentsCoursesDto, PostEnrollmentsCoursesDto, PatchEnrollmentsCoursesDto } from './dtos';
+import { GetEnrollmentsCoursesDto, PostEnrollmentsExtensionDto, PatchEnrollmentsCoursesDto } from './dtos';
 
 @ApiTags('Enrollments Extension courses')
 @ApiBearerAuth('Token')
@@ -25,7 +25,7 @@ export class EnrollmentsExtensionController {
   }
 
   @Post()
-  async SaveEnrollmentsCourses(@Body() body: PostEnrollmentsCoursesDto) {
+  async SaveEnrollmentsCourses(@Body() body: PostEnrollmentsExtensionDto) {
     return this.enrollmentsExtensionService.save(body)
   }
 

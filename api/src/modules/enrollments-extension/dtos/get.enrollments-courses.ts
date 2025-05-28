@@ -1,6 +1,6 @@
 import { PartialType } from "@nestjs/swagger";
-import { PostEnrollmentsCoursesDto } from "./post.enrollments-courses";
+import { PostEnrollmentsExtensionDto } from "./post.enrollments-courses";
 
-export class GetEnrollmentsCoursesDto extends PartialType(PostEnrollmentsCoursesDto) {
+export class GetEnrollmentsCoursesDto extends PartialType(PostEnrollmentsExtensionDto) {
 
 }

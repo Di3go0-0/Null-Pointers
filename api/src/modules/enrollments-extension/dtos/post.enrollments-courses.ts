@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsDate } from 'class-validator';
 
-export class PostEnrollmentsCoursesDto {
+export class PostEnrollmentsExtensionDto {
   @ApiProperty({
     description: 'The ID of the student',
     example: 1
