@@ -26,6 +26,7 @@ export class ContractsTypePrismaService implements ContractsTypeRepository {
       return contract
     }
     catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error getting contract-type by id: ${error.message}`);
       throw new HttpException(CONTRACTS_TYPE.ERROR.GET_CONTRACT_TYPE, HttpStatus.BAD_REQUEST);
     }
@@ -51,6 +52,7 @@ export class ContractsTypePrismaService implements ContractsTypeRepository {
       return contracts
     }
     catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error al obtener tipo de contrato: ${error.message}`);
       throw new HttpException(CONTRACTS_TYPE.ERROR.GET_CONTRACT_TYPE, HttpStatus.BAD_REQUEST);
     }
@@ -72,6 +74,7 @@ export class ContractsTypePrismaService implements ContractsTypeRepository {
       return contractstype.id;
     }
     catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error al crear tipo de contrato: ${error.message}`);
       throw new HttpException(CONTRACTS_TYPE.ERROR.CREATE_CONTRACT_TYPE, HttpStatus.BAD_REQUEST);
     }
@@ -104,6 +107,7 @@ export class ContractsTypePrismaService implements ContractsTypeRepository {
       return updatedContractstype.id;
     }
     catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error al crear tipo de contrato: ${error.message}`);
       throw new HttpException(CONTRACTS_TYPE.ERROR.UPDATE_CONTRACT_TYPE, HttpStatus.BAD_REQUEST);
     }
@@ -128,6 +132,7 @@ export class ContractsTypePrismaService implements ContractsTypeRepository {
       return deletedContractstype.id;
     }
     catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error al crear tipo de contrato: ${error.message}`);
       throw new HttpException(CONTRACTS_TYPE.ERROR.DELETE_CONTRACT_TYPE, HttpStatus.BAD_REQUEST);
     }

@@ -23,6 +23,7 @@ export class ExtensionCoursesProgramsPrismaService implements ExtensionCoursesRe
       return ExtensionCourseMapper.toDomainList(course);
     }
     catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error getting course: ${error.message}`);
       throw new HttpException(EXTENSION_COURSES.ERROR.GET_COURSES, HttpStatus.BAD_REQUEST);
     }
@@ -38,6 +39,7 @@ export class ExtensionCoursesProgramsPrismaService implements ExtensionCoursesRe
 
       return ExtensionCourseMapper.toDomainList(courses)
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error getting course: ${error.message}`);
       throw new HttpException(EXTENSION_COURSES.ERROR.GET_COURSES, HttpStatus.BAD_REQUEST);
     }
@@ -54,6 +56,7 @@ export class ExtensionCoursesProgramsPrismaService implements ExtensionCoursesRe
 
       return ExtensionCourseMapper.toDomainList(courses)
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error getting course: ${error.message}`);
       throw new HttpException(EXTENSION_COURSES.ERROR.GET_COURSES, HttpStatus.BAD_REQUEST);
     }
@@ -69,6 +72,7 @@ export class ExtensionCoursesProgramsPrismaService implements ExtensionCoursesRe
 
       return courseSave.id
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error creating course: ${error.message}`);
       throw new HttpException(EXTENSION_COURSES.ERROR.CREATE_COURSES, HttpStatus.BAD_REQUEST);
     }
@@ -88,6 +92,7 @@ export class ExtensionCoursesProgramsPrismaService implements ExtensionCoursesRe
 
       return courseUpdated.id
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error updating course: ${error.message}`);
       throw new HttpException(EXTENSION_COURSES.ERROR.UPDATED_COURSES, HttpStatus.BAD_REQUEST);
     }
@@ -107,6 +112,7 @@ export class ExtensionCoursesProgramsPrismaService implements ExtensionCoursesRe
 
       return courseDeleted.id;
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error deleting course: ${error.message}`);
       throw new HttpException(EXTENSION_COURSES.ERROR.DELETE_COURSES, HttpStatus.BAD_REQUEST);
     }
@@ -127,6 +133,7 @@ export class ExtensionCoursesProgramsPrismaService implements ExtensionCoursesRe
 
       return true;
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       if (error instanceof HttpException) {
         throw error;
       }
@@ -150,6 +157,7 @@ export class ExtensionCoursesProgramsPrismaService implements ExtensionCoursesRe
 
       return true;
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       if (error instanceof HttpException) {
         throw error;
       }
@@ -177,6 +185,7 @@ export class ExtensionCoursesProgramsPrismaService implements ExtensionCoursesRe
 
       return true
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error updating course code : ${error.message}`);
       throw new HttpException(EXTENSION_COURSES.ERROR.VALIDATE_COURSES, HttpStatus.BAD_REQUEST);
     }
@@ -197,6 +206,7 @@ export class ExtensionCoursesProgramsPrismaService implements ExtensionCoursesRe
 
       return true
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error validating course: ${error.message}`);
       throw new HttpException(EXTENSION_COURSES.ERROR.FIND_COURSES, HttpStatus.BAD_REQUEST);
     }

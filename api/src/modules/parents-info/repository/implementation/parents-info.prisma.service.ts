@@ -32,6 +32,7 @@ export class ParentsInfoPrismaService implements ParentsInfoRepository {
       return parentInfo;
 
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error finding parents info by id: ${error.message}`);
       throw new HttpException(PARENTS_INFO.ERROR.GET_PARENTS_INFO, HttpStatus.BAD_REQUEST);
     }
@@ -58,6 +59,7 @@ export class ParentsInfoPrismaService implements ParentsInfoRepository {
       return parentsInfo;
 
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error finding parents info : ${error.message}`);
       throw new HttpException(PARENTS_INFO.ERROR.GET_PARENTS_INFO, HttpStatus.BAD_REQUEST);
     }
@@ -75,6 +77,7 @@ export class ParentsInfoPrismaService implements ParentsInfoRepository {
       return parentsInfo.id
     }
     catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error creating parents info : ${error.message}`);
       throw new HttpException(PARENTS_INFO.ERROR.CREATE_PARENTS_INFO, HttpStatus.BAD_REQUEST);
     }
@@ -100,6 +103,7 @@ export class ParentsInfoPrismaService implements ParentsInfoRepository {
       return parentsInfo.id;
 
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error updating parents info : ${error.message}`);
       throw new HttpException(PARENTS_INFO.ERROR.UPDATED_PARENTS_INFO, HttpStatus.BAD_REQUEST);
     }
@@ -122,6 +126,7 @@ export class ParentsInfoPrismaService implements ParentsInfoRepository {
 
       return !!student
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error student not found : ${error.message}`);
       throw new HttpException(PARENTS_INFO.ERROR.USER_NOT_FOUND, HttpStatus.BAD_REQUEST);
     }
@@ -141,6 +146,7 @@ export class ParentsInfoPrismaService implements ParentsInfoRepository {
 
       return !!parentsInfo
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error student not found : ${error.message}`);
       throw new HttpException(PARENTS_INFO.ERROR.USER_NOT_FOUND, HttpStatus.BAD_REQUEST);
     }

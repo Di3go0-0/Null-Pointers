@@ -22,6 +22,7 @@ export class ExtensionInstancesPrismaService implements ExtensionInstancesReposi
       return ExtensionInstanceMapper.toDomainList(courses);
 
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error getting course: ${error.message}`);
       throw new HttpException(EXTENSION.ERROR.GET_COURSES, HttpStatus.BAD_REQUEST);
     }
@@ -39,6 +40,7 @@ export class ExtensionInstancesPrismaService implements ExtensionInstancesReposi
       return ExtensionInstanceMapper.toDomainList(courses);
 
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error getting course: ${error.message}`);
       throw new HttpException(EXTENSION.ERROR.GET_COURSES, HttpStatus.BAD_REQUEST);
     }
@@ -54,6 +56,7 @@ export class ExtensionInstancesPrismaService implements ExtensionInstancesReposi
 
       return courses.id
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error uploading course: ${error.message}`);
       throw new HttpException(EXTENSION.ERROR.CREATE_COURSES, HttpStatus.BAD_REQUEST);
     }
@@ -73,6 +76,7 @@ export class ExtensionInstancesPrismaService implements ExtensionInstancesReposi
 
       return courses.id
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error updating course: ${error.message}`);
       throw new HttpException(EXTENSION.ERROR.UPDATED_COURSES, HttpStatus.BAD_REQUEST);
     }
@@ -92,6 +96,7 @@ export class ExtensionInstancesPrismaService implements ExtensionInstancesReposi
 
       return courses.id
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error Deleting course: ${error.message}`);
       throw new HttpException(EXTENSION.ERROR.DELETE_COURSES, HttpStatus.BAD_REQUEST);
     }
@@ -113,6 +118,7 @@ export class ExtensionInstancesPrismaService implements ExtensionInstancesReposi
       return true
 
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       if (error instanceof HttpException) {
         throw error;
       }
@@ -138,6 +144,7 @@ export class ExtensionInstancesPrismaService implements ExtensionInstancesReposi
 
       return true
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       if (error instanceof HttpException) {
         throw error;
       }
@@ -161,6 +168,7 @@ export class ExtensionInstancesPrismaService implements ExtensionInstancesReposi
 
       return true
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       if (error instanceof HttpException) {
         throw error;
       }
@@ -184,6 +192,7 @@ export class ExtensionInstancesPrismaService implements ExtensionInstancesReposi
 
       return true
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       if (error instanceof HttpException) {
         throw error;
       }
@@ -207,6 +216,7 @@ export class ExtensionInstancesPrismaService implements ExtensionInstancesReposi
 
       return true
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       if (error instanceof HttpException) {
         throw error;
       }

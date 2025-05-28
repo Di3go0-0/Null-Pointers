@@ -28,6 +28,7 @@ export class PersonalInfoPrismaSerivce implements PersonalInfoRepository {
       return personalInfo
     }
     catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error getting peronsal info: ${error.message}`);
       throw new HttpException(PERSONAL_INFO_MESSAGES.ERROR.GET_PERSONAL_INFO, HttpStatus.NOT_FOUND);
     }
@@ -47,6 +48,7 @@ export class PersonalInfoPrismaSerivce implements PersonalInfoRepository {
       })
       return personalInfo.id
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error uploading peronsal info: ${error.message}`);
       throw new HttpException(PERSONAL_INFO_MESSAGES.ERROR.POST_PERSONAL_INFO, HttpStatus.BAD_REQUEST);
     }
@@ -65,6 +67,7 @@ export class PersonalInfoPrismaSerivce implements PersonalInfoRepository {
       return updated.id
     }
     catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error updating personal info: ${error.message}`);
       throw new HttpException(PERSONAL_INFO_MESSAGES.ERROR.PATCH_PERSONAL_INFO, HttpStatus.BAD_REQUEST);
     }
@@ -81,6 +84,7 @@ export class PersonalInfoPrismaSerivce implements PersonalInfoRepository {
       }
     }
     catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error personal info not exist: ${error.message}`);
       throw new HttpException(PERSONAL_INFO_MESSAGES.ERROR.NOT_FOUND, HttpStatus.NOT_FOUND);
     }

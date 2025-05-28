@@ -23,6 +23,7 @@ export class CoursesProgramsPrismaService implements CoursesRepository {
       return CourseMapper.toDomainList(course);
     }
     catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error getting course: ${error.message}`);
       throw new HttpException(COURSES.ERROR.GET_COURSES, HttpStatus.BAD_REQUEST);
     }
@@ -37,6 +38,7 @@ export class CoursesProgramsPrismaService implements CoursesRepository {
 
       return CourseMapper.toDomainList(courses)
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error getting course: ${error.message}`);
       throw new HttpException(COURSES.ERROR.GET_COURSES, HttpStatus.BAD_REQUEST);
     }
@@ -53,6 +55,7 @@ export class CoursesProgramsPrismaService implements CoursesRepository {
 
       return CourseMapper.toDomainList(courses)
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error getting course: ${error.message}`);
       throw new HttpException(COURSES.ERROR.GET_COURSES, HttpStatus.BAD_REQUEST);
     }
@@ -68,6 +71,7 @@ export class CoursesProgramsPrismaService implements CoursesRepository {
 
       return courseSave.id
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error creating course: ${error.message}`);
       throw new HttpException(COURSES.ERROR.CREATE_COURSES, HttpStatus.BAD_REQUEST);
     }
@@ -86,6 +90,7 @@ export class CoursesProgramsPrismaService implements CoursesRepository {
 
       return courseUpdated.id
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error updating course: ${error.message}`);
       throw new HttpException(COURSES.ERROR.UPDATED_COURSES, HttpStatus.BAD_REQUEST);
     }
@@ -104,6 +109,7 @@ export class CoursesProgramsPrismaService implements CoursesRepository {
 
       return courseDeleted.id;
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error deleting course: ${error.message}`);
       throw new HttpException(COURSES.ERROR.DELETE_COURSES, HttpStatus.BAD_REQUEST);
     }
@@ -124,6 +130,7 @@ export class CoursesProgramsPrismaService implements CoursesRepository {
 
       return true;
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       if (error instanceof HttpException) {
         throw error;
       }
@@ -147,6 +154,7 @@ export class CoursesProgramsPrismaService implements CoursesRepository {
 
       return true;
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       if (error instanceof HttpException) {
         throw error;
       }
@@ -174,6 +182,7 @@ export class CoursesProgramsPrismaService implements CoursesRepository {
 
       return true
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error updating course code : ${error.message}`);
       throw new HttpException(COURSES.ERROR.VALIDATE_COURSES, HttpStatus.BAD_REQUEST);
     }
@@ -194,6 +203,7 @@ export class CoursesProgramsPrismaService implements CoursesRepository {
 
       return true
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error validating course: ${error.message}`);
       throw new HttpException(COURSES.ERROR.FIND_COURSES, HttpStatus.BAD_REQUEST);
     }

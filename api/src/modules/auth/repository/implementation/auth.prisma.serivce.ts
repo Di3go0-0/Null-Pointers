@@ -29,6 +29,7 @@ export class AuthPrismaSerivce implements AuthRepository {
       return user.id
     }
     catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error Creating User: ${error.message}`);
       throw new HttpException(AUTH_MESSAGES.ERROR.REGISTER_ERROR, HttpStatus.BAD_REQUEST);
     }
@@ -49,6 +50,7 @@ export class AuthPrismaSerivce implements AuthRepository {
 
       return user;
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error searching user: ${error.message}`);
       throw new HttpException(AUTH_MESSAGES.ERROR.USER_NOT_FOUNT, HttpStatus.NOT_FOUND);
     }
@@ -87,6 +89,7 @@ export class AuthPrismaSerivce implements AuthRepository {
 
       return user;
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error searching user: ${error.message}`);
       throw new HttpException(AUTH_MESSAGES.ERROR.USER_INFO, HttpStatus.NOT_FOUND);
     }
@@ -105,6 +108,7 @@ export class AuthPrismaSerivce implements AuthRepository {
       return role.id;
 
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error searching role ${error.message}`);
       throw new HttpException(AUTH_MESSAGES.ERROR.PRISMA_ERROR, HttpStatus.BAD_REQUEST);
     }
@@ -122,6 +126,7 @@ export class AuthPrismaSerivce implements AuthRepository {
       }
 
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error user alrady exist: ${error.message}`);
       throw new HttpException(AUTH_MESSAGES.ERROR.USER_EXIST, HttpStatus.BAD_REQUEST);
     }

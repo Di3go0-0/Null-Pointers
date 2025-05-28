@@ -27,6 +27,7 @@ export class PasswordsPrismaSerivce implements PasswordsRepository {
       return user
     }
     catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error finding user: ${error.message}`);
       throw new HttpException(PASSWORDS_MESSAGES.ERROR.USER_NOT_FOUNT, HttpStatus.BAD_REQUEST);
     }
@@ -50,6 +51,7 @@ export class PasswordsPrismaSerivce implements PasswordsRepository {
       return tokenCreated
     }
     catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error finding user: ${error.message}`);
       throw new HttpException(PASSWORDS_MESSAGES.ERROR.REQUEST_TOKEN, HttpStatus.BAD_REQUEST);
     }
@@ -65,6 +67,7 @@ export class PasswordsPrismaSerivce implements PasswordsRepository {
       }
     }
     catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error matching passwords: ${error.message}`);
       throw new HttpException(PASSWORDS_MESSAGES.ERROR.PASSWORD_NOT_MATCH, HttpStatus.BAD_REQUEST);
     }
@@ -91,6 +94,7 @@ export class PasswordsPrismaSerivce implements PasswordsRepository {
       return user
     }
     catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error changing password: ${error.message}`);
       throw new HttpException(PASSWORDS_MESSAGES.ERROR.CHANGE_PASSWORD, HttpStatus.BAD_REQUEST);
     }
@@ -122,6 +126,7 @@ export class PasswordsPrismaSerivce implements PasswordsRepository {
       return tokenFind
     }
     catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error finding token: ${error.message}`);
       throw new HttpException(PASSWORDS_MESSAGES.ERROR.NOT_FOUND, HttpStatus.BAD_REQUEST);
     }
@@ -143,6 +148,7 @@ export class PasswordsPrismaSerivce implements PasswordsRepository {
     }
 
     catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error creating password history: ${error.message}`);
       throw new HttpException(PASSWORDS_MESSAGES.ERROR.CHANGE_PASSWORD, HttpStatus.BAD_REQUEST);
     }
@@ -162,6 +168,7 @@ export class PasswordsPrismaSerivce implements PasswordsRepository {
       }
     }
     catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error marking token as used: ${error.message}`);
       throw new HttpException(PASSWORDS_MESSAGES.ERROR.MARKING_TOKEN, HttpStatus.BAD_REQUEST);
     }

@@ -16,6 +16,7 @@ export class SchedulesExtensionInstancesPrismaService implements SchedulesExtens
 
       return schedules
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error finding many schedules: ${error.message}`);
       throw new HttpException(SCHEDULES.ERROR.FIND, HttpStatus.BAD_REQUEST);
     }
@@ -32,6 +33,7 @@ export class SchedulesExtensionInstancesPrismaService implements SchedulesExtens
       })
       return schedules
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error finding many schedules: ${error.message}`);
       throw new HttpException(SCHEDULES.ERROR.FIND, HttpStatus.BAD_REQUEST);
     }
@@ -47,6 +49,7 @@ export class SchedulesExtensionInstancesPrismaService implements SchedulesExtens
 
       return schedules.id
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error saving schedules: ${error.message}`);
       throw new HttpException(SCHEDULES.ERROR.SAVE, HttpStatus.BAD_REQUEST);
     }
@@ -65,6 +68,7 @@ export class SchedulesExtensionInstancesPrismaService implements SchedulesExtens
 
       return schedules.id
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error updating schedules: ${error.message}`);
       throw new HttpException(SCHEDULES.ERROR.UPDATE, HttpStatus.BAD_REQUEST);
     }
@@ -84,9 +88,8 @@ export class SchedulesExtensionInstancesPrismaService implements SchedulesExtens
       }
 
     } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
+      if (error instanceof HttpException) { throw error; }
+
       this.logger.error(`Error updating schedules: ${error.message}`);
       throw new HttpException(SCHEDULES.ERROR.FIND, HttpStatus.BAD_REQUEST);
     }

@@ -38,6 +38,7 @@ export class StudentsPrismaService implements StudentsRepository {
       return StudentMapper.toDomainList(student);
     }
     catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error finding student by id: ${error.message}`);
       throw new HttpException(STUDENTS.ERROR.GET_STUDENT, HttpStatus.BAD_REQUEST);
     }
@@ -67,6 +68,7 @@ export class StudentsPrismaService implements StudentsRepository {
       return StudentMapper.toDomainList(student);
     }
     catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error to find teacher by id: ${error.message}`);
       throw new HttpException(STUDENTS.ERROR.GET_STUDENT, HttpStatus.BAD_REQUEST);
     }
@@ -95,6 +97,7 @@ export class StudentsPrismaService implements StudentsRepository {
       return createdUser.id;
     }
     catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error creating student: ${error.message}`);
       throw new HttpException(STUDENTS.ERROR.CREATE_STUDENT, HttpStatus.BAD_REQUEST);
     }
@@ -113,6 +116,7 @@ export class StudentsPrismaService implements StudentsRepository {
       return role.id;
 
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error al searching roleName: ${error.message}`);
       throw new HttpException(STUDENTS.ERROR.CREATE_STUDENT, HttpStatus.BAD_REQUEST);
     }
@@ -135,6 +139,7 @@ export class StudentsPrismaService implements StudentsRepository {
       }
       return !!user
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error searching user : ${error.message}`);
       throw new HttpException(STUDENTS.ERROR.USER_ALREADY_EXIT, HttpStatus.BAD_REQUEST);
     }

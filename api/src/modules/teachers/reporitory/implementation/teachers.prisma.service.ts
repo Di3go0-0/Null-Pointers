@@ -47,6 +47,7 @@ export class TeachersPrismaService implements TeachersRepository {
 
       return TeacherMapper.toDomainList(teacherData);
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error to find teacher by id: ${error.message}`);
       throw new HttpException(TEACHERS.ERROR.GET_TEACHER, HttpStatus.BAD_REQUEST);
     }
@@ -85,6 +86,7 @@ export class TeachersPrismaService implements TeachersRepository {
 
       return TeacherMapper.toDomainList(teachersData);
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error finding teachers: ${error.message}`);
       throw new HttpException(TEACHERS.ERROR.GET_TEACHER, HttpStatus.BAD_REQUEST);
     }
@@ -112,6 +114,7 @@ export class TeachersPrismaService implements TeachersRepository {
       return user.id
     }
     catch (error) {
+      if (error instanceof HttpException) { throw error; }
       if (error instanceof HttpException) {
         throw error;
       }
@@ -138,6 +141,7 @@ export class TeachersPrismaService implements TeachersRepository {
       return updatedTeacher.id
     }
     catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error updating the teacher: ${error.message}`);
       throw new HttpException(TEACHERS.ERROR.UPDATED_TEACHER, HttpStatus.BAD_REQUEST);
     }
@@ -157,6 +161,7 @@ export class TeachersPrismaService implements TeachersRepository {
       return role.id;
 
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error searching role: ${error.message}`);
       throw new HttpException(TEACHERS.ERROR.CREATE_TEACHER, HttpStatus.BAD_REQUEST);
     }
@@ -180,6 +185,7 @@ export class TeachersPrismaService implements TeachersRepository {
       }
       return !!user
     } catch (error) {
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error searching teacher ${userId}: ${error.message}`);
       throw new HttpException(TEACHERS.ERROR.USER_NOT_FOUND, HttpStatus.BAD_REQUEST);
     }
@@ -196,9 +202,8 @@ export class TeachersPrismaService implements TeachersRepository {
       }
 
     } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
+      if (error instanceof HttpException) { throw error; }
+
       this.logger.error(`Error user alrady exist: ${error.message}`);
       throw new HttpException(TEACHERS.ERROR.USER_ALREADY_EXIST, HttpStatus.BAD_REQUEST);
     }
