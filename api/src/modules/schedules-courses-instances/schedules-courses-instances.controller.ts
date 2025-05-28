@@ -4,7 +4,7 @@ import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { Roles } from 'src/shared';
 import { JwtGuardService } from 'src/shared/jwt-guard/jwt-guard.service';
 import { RolesGuard } from 'src/shared/jwt-guard/jwt-rol-guard.service';
-import { GetScheduleDto, PatchScheduleDto, PostScheduleDto } from './dtos';
+import { GetScheduleDto, PatchScheduleDto, PostScheduleCourseInstanceDto } from './dtos';
 
 @ApiTags('Schedules Courses')
 @ApiBearerAuth('Token')
@@ -25,7 +25,7 @@ export class SchedulesCoursesInstancesController {
   }
 
   @Post()
-  async SaveSchedules(@Body() body: PostScheduleDto) {
+  async SaveSchedules(@Body() body: PostScheduleCourseInstanceDto) {
     return this.schedulesCoursesInstancesService.save(body)
   }
 

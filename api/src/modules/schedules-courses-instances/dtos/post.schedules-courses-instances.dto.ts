@@ -2,7 +2,7 @@ import { DayOfWeek } from "@prisma/client";
 import { ApiProperty } from "@nestjs/swagger";
 import { IsDate, IsInt, IsNumber, IsString, Max, Min } from "class-validator";
 
-export class PostScheduleDto {
+export class PostScheduleCourseInstanceDto {
   @ApiProperty({
     description: 'The ID of the course instance',
     example: 1,
