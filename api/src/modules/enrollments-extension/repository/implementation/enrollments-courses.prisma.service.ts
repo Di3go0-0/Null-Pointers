@@ -53,9 +53,7 @@ export class EnrollmentsExtensionPrismaService implements EnrollmentsExtensionRe
 
       return enrollment.id
     } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
+      if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error sabing Enrollment: ${error.message}`);
       throw new HttpException(ENROLLMENTS.ERROR.SAVE, HttpStatus.INTERNAL_SERVER_ERROR);
     }

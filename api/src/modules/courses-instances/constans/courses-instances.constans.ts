@@ -14,7 +14,9 @@ export const COURSES = {
     DELETE_COURSES: 'Failed to delete course instance',
     VALIDATE_COURSES: 'Failed to validate course or teacher existence',
     VERIFY_COURSE_CODE: 'Failed to verify group code uniqueness',
-    UNIQUE_CONSTRAINT: 'Cannot create duplicate course instance. Each combination of course, teacher, semester and group code must be unique'
+    UNIQUE_CONSTRAINT: 'Cannot create duplicate course instance. Each combination of course, teacher, semester and group code must be unique',
+    TEACHER_NOT_FOUND: 'Teacher not found or inactive',
+    COURSE_NOT_FOUND: 'Course instance not found or inactive',
   },
 };
 

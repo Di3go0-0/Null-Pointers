@@ -8,11 +8,11 @@ export class CoursesInstancesService {
   constructor(private readonly coursesInstancesRepository: CoursesInstancesRepository) { }
 
   async findCoursesInstances(): Promise<CourseInstanceType[]> {
-    return this.coursesInstancesRepository.findCoursesInstances();
+    return await this.coursesInstancesRepository.findCoursesInstances();
   }
 
   async findCoursesByStatus({ status }: GetByStatusCoursesInstancesType): Promise<CourseInstanceType[]> {
-    return this.coursesInstancesRepository.findCoursesByStatus({ status })
+    return await this.coursesInstancesRepository.findCoursesByStatus({ status })
   }
 
   // async findCoursesByTeacher(teacherId: number): Promise<CourseInstanceType[]> {
@@ -31,7 +31,7 @@ export class CoursesInstancesService {
     await this.coursesInstancesRepository.existTeacher(body.teacherId);
     await this.coursesInstancesRepository.existCourse(body.courseId);
     await this.coursesInstancesRepository.verifyGroupCode(body.groupCode, body.semester);
-    return this.coursesInstancesRepository.saveCourseInstance(body);
+    return await this.coursesInstancesRepository.saveCourseInstance(body);
   }
 
   async updateCourseInstance(id: number, body: PatchCourseInstanceType): Promise<number> {
@@ -39,11 +39,11 @@ export class CoursesInstancesService {
     if (body.teacherId) await this.coursesInstancesRepository.existTeacher(body.teacherId)
     if (body.groupCode) await this.coursesInstancesRepository.verifyGroupCodeOwner(id, body.groupCode);
 
-    return this.coursesInstancesRepository.updateCourseInstance(id, body);
+    return await this.coursesInstancesRepository.updateCourseInstance(id, body);
   }
 
   async deleteCourseInstance(id: number): Promise<number> {
     await this.coursesInstancesRepository.existCourseInstance(id);
-    return this.coursesInstancesRepository.deleteCourseInstance(id);
+    return await this.coursesInstancesRepository.deleteCourseInstance(id);
   }
 }
