@@ -1,1 +1,80 @@
-<p>asignatures works!</p>
+<div class="admin-layout">
+  <!-- <app-admin-header></app-admin-header> -->
+  
+  <div class="layout-container">
+    <!-- <app-admin-sidebar></app-admin-sidebar> -->
+    
+    <main class="main-content">
+      <div class="content-header">
+        <button class="back-button" (click)="goBack()">
+          <i class="material-icons">arrow_back</i>
+          <span>Asignar Docente</span>
+        </button>
+        <p class="subject-info">{{ subjectName }} / MAT101</p>
+      </div>
+
+      <div class="search-container">
+        <div class="search-input-wrapper">
+          <i class="material-icons">search</i>
+          <input 
+            type="text" 
+            placeholder="Buscar docente por nombre, especialidad o email..." 
+            [(ngModel)]="searchTerm"
+            (input)="onSearch()"
+            class="search-input"
+          >
+        </div>
+      </div>
+
+      <div class="teachers-container" *ngIf="!isLoading">
+        <div class="teacher-card" *ngFor="let teacher of filteredTeachers">
+          <div class="teacher-avatar">
+            <div class="avatar-initials" *ngIf="!teacher.avatar">
+              {{ teacher.name.split(' ').map(n => n[0]).join('').toUpperCase() }}
+            </div>
+          </div>
+          
+          <div class="teacher-info">
+            <h3 class="teacher-name">{{ teacher.name }}</h3>
+            <p class="teacher-specialization">{{ teacher.specialization }}</p>
+            <p class="teacher-experience">{{ teacher.experience }}</p>
+            <p class="teacher-email">
+              <i class="material-icons">email</i>
+              {{ teacher.email }}
+            </p>
+          </div>
+          
+          <div class="teacher-actions">
+            <button 
+              class="assign-button" 
+              (click)="assignTeacher(teacher.id)"
+              [disabled]="teacher.isAssigned"
+            >
+              <i class="material-icons">person_add</i>
+              {{ teacher.isAssigned ? 'Asignado' : 'Asignar' }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="loading-container" *ngIf="isLoading">
+        <div class="spinner"></div>
+        <p>Cargando docentes...</p>
+      </div>
+
+      <div class="empty-state" *ngIf="!isLoading && filteredTeachers.length === 0">
+        <i class="material-icons">person_search</i>
+        <h3>No se encontraron docentes</h3>
+        <p>{{ searchTerm ? 'No hay docentes que coincidan con su búsqueda' : 'No hay docentes disponibles' }}</p>
+      </div>
+
+      <div class="actions-footer">
+        <button class="back-footer-button" (click)="goBack()">
+          <i class="material-icons">arrow_back</i>
+          Regresar
+        </button>
+      </div>
+    </main>
+  </div>
+</div>
+
