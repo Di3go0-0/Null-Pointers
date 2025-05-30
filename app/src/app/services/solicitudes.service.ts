@@ -7,7 +7,7 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class ApiService {
-  private baseUrl = 'http://localhost:3001'; // puedes cargarlo desde environment.ts si quieres
+  private baseUrl = 'http://localhost:3001'; 
 
   constructor(
     private http: HttpClient,

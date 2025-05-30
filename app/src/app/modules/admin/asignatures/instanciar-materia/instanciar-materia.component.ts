@@ -1,35 +1,43 @@
 import { CommonModule } from "@angular/common"
 import { Component, type OnInit } from "@angular/core"
-import { MateriasService } from "../../../services/materias.service"
-import { Materia } from "../../../models/materia"
+import { MateriasService } from "../../../../services/materias.service"
+import { Materia } from "../../../../models/materia"
 import { FormsModule } from "@angular/forms"
-import { Router } from "@angular/router"
-
+import { ActivatedRoute, Router } from "@angular/router"
+import { MateriaInstanciada } from "../../../../models/materia-instanciada"
 
 @Component({
-  selector: 'app-asignatures',
+  selector: 'app-instanciar-materia',
   imports: [CommonModule, FormsModule],
-  templateUrl: './asignatures.component.html',
-  styleUrl: './asignatures.component.css'
+  templateUrl: './instanciar-materia.component.html',
+  styleUrl: './instanciar-materia.component.css'
 })
-export class AsignaturesComponent {
-  subjects: Materia[] = []
-  filteredSubjects: Materia[] = []
+export class InstanciarMateriaComponent {
+  subjects: MateriaInstanciada[] = []
+  filteredSubjects: MateriaInstanciada[] = []
   searchTerm = ""
   isLoading = false
+  materiaId: number = 0
 
   constructor(
     private materiasService: MateriasService,
+    private route: ActivatedRoute,
     private router: Router
   ) { }
 
   ngOnInit(): void {
-    this.loadSubjects()
+    // Cargar datos de la materia si se está editando
+    this.route.params.subscribe((params) => {
+      if (params['id']) {
+        this.materiaId = +params['id'];
+        this.loadSubjects();
+      }
+    });
   }
 
   loadSubjects(): void {
     this.isLoading = true
-    this.materiasService.getAllMaterias().subscribe({
+    this.materiasService.getInstanciaById(this.materiaId).subscribe({
       next: (subjects) => {
         this.subjects = subjects
         this.filteredSubjects = subjects
@@ -97,5 +105,5 @@ export class AsignaturesComponent {
     }
   }
 
-}
 
+}

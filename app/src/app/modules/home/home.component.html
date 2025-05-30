@@ -13,31 +13,36 @@
     <div class="sidebar-nav flex-grow-1 py-3">
       <ul class="nav flex-column">
         <li class="nav-item">
-          <a class="nav-link active text-white d-flex align-items-center px-3 py-2">
+          <a class="nav-link text-white" [routerLink]="['/admin']" routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }">
             <i class="bi bi-speedometer2 me-3"></i>
             <span *ngIf="!sidebarCollapsed">Dashboard</span>
           </a>
         </li>
+
         <li class="nav-item">
-          <a class="nav-link text-light d-flex align-items-center px-3 py-2" style="cursor: pointer;">
+          <a class="nav-link text-white" [routerLink]="['/admin/users']" routerLinkActive="active">
             <i class="bi bi-people me-3"></i>
             <span *ngIf="!sidebarCollapsed">Usuarios</span>
           </a>
         </li>
+
         <li class="nav-item">
-          <a class="nav-link text-light d-flex align-items-center px-3 py-2" style="cursor: pointer;">
+          <a class="nav-link text-white" [routerLink]="['/admin/courses']" routerLinkActive="active">
             <i class="bi bi-book me-3"></i>
             <span *ngIf="!sidebarCollapsed">Cursos</span>
           </a>
         </li>
+
         <li class="nav-item">
-          <a class="nav-link text-light d-flex align-items-center px-3 py-2" style="cursor: pointer;">
+          <a class="nav-link text-white" [routerLink]="['/admin/asignatures']" routerLinkActive="active">
             <i class="bi bi-mortarboard me-3"></i>
             <span *ngIf="!sidebarCollapsed">Asignaturas</span>
           </a>
         </li>
+
         <li class="nav-item">
-          <a class="nav-link text-light d-flex align-items-center px-3 py-2" style="cursor: pointer;">
+          <a class="nav-link text-white" [routerLink]="['/admin/reports']" routerLinkActive="active">
             <i class="bi bi-bar-chart me-3"></i>
             <span *ngIf="!sidebarCollapsed">Reportes</span>
           </a>
@@ -46,11 +51,10 @@
 
       <!-- Profile Section -->
       <div class="mt-4 px-3" *ngIf="!sidebarCollapsed">
-        <h6 class="text-lith small">Mi Cuenta</h6>
+        <h6 class="text-light small">Mi Cuenta</h6>
         <ul class="nav flex-column">
           <li class="nav-item">
-            <a class="nav-link text-light d-flex align-items-center px-3 py-2" style="cursor: pointer;"
-              (click)="goToProfile()">
+            <a style="cursor: pointer;" class="nav-link text-light d-flex align-items-center px-3 py-2" (click)="goToProfile()">
               <i class="bi bi-person me-3"></i>
               <span>Perfil</span>
             </a>
@@ -109,40 +113,6 @@
         </div>
       </div>
     </header>
+    <router-outlet />
 
-    <!-- Main Content Area -->
-    <main class="flex-grow-1 p-4 bg-light">
-      <div class="container-fluid">
-        <div class="mb-4">
-          <h1 class="h2 mb-1">Panel de Administración</h1>
-          <p class="text-muted">Bienvenido al panel de administración de Campus Connect.</p>
-        </div>
-
-        <!-- Admin Modules Grid -->
-        <div class="row g-4">
-          @for (module of adminModules; track module) {
-          <div class="col-md-6 col-lg-4">
-            <div class="card h-100 shadow-sm module-card" style="cursor: pointer;"
-              (click)="navigateToModule(module.route)">
-              <div class="card-body text-center text-white {{ module.bgColor }} d-flex flex-column">
-                <div class="mb-3">
-                  <div
-                    class="bg-white bg-opacity-25 rounded-circle d-inline-flex align-items-center justify-content-center"
-                    style="width: 60px; height: 60px;">
-                    <i class="{{ module.icon }} fs-2"></i>
-                  </div>
-                </div>
-                <h5 class="card-title mb-2">{{ module.title }}</h5>
-                <p class="card-text mb-3 flex-grow-1">{{ module.description }}</p>
-                <button class="btn btn-light btn-sm mt-auto">
-                  Ingresar
-                </button>
-              </div>
-            </div>
-          </div>
-          }
-
-        </div>
-      </div>
-    </main>
   </div>

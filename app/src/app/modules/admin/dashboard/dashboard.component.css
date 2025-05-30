@@ -1,0 +1,41 @@
+.module-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.module-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.bg-primary {
+  background-color: #14b8a6 !important;
+}
+
+.bg-success {
+  background: linear-gradient(135deg, #28a745, #20c997) !important;
+}
+
+.bg-warning {
+  background: linear-gradient(135deg, #ffc107, #fd7e14) !important;
+}
+
+.bg-secondary {
+  background: linear-gradient(135deg, #6c757d, #495057) !important;
+}
+
+.bg-info {
+  background: linear-gradient(135deg, #17a2b8, #6f42c1) !important;
+}
+
+.bg-dark {
+  background: linear-gradient(135deg, #343a40, #14b8a6) !important;
+}
+
+.dropdown-toggle::after {
+  margin-left: 0.5rem;
+}
+.dropdown-item:hover {
+  background-color: #000000; /* rojo bootstrap */
+  color: white !important;
+  border-radius: 4px;
+}

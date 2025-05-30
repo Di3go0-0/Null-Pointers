@@ -1,57 +1,62 @@
-<div class="admin-layout">
-  <!-- <app-admin-header></app-admin-header> -->
-  
-  <div class="layout-container">
-    <!-- <app-admin-sidebar></app-admin-sidebar> -->
-    
-    <main class="main-content">
+<main class="main-content">
       <div class="content-header">
-        <button class="back-button" (click)="goBack()">
-          <i class="material-icons">arrow_back</i>
-          <span>Asignar Docente</span>
-        </button>
-        <p class="subject-info">{{ subjectName }} / MAT101</p>
-      </div>
-
-      <div class="search-container">
-        <div class="search-input-wrapper">
-          <i class="material-icons">search</i>
-          <input 
-            type="text" 
-            placeholder="Buscar docente por nombre, especialidad o email..." 
-            [(ngModel)]="searchTerm"
-            (input)="onSearch()"
-            class="search-input"
-          >
-        </div>
-      </div>
-
-      <div class="teachers-container" *ngIf="!isLoading">
-        <div class="teacher-card" *ngFor="let teacher of filteredTeachers">
-          <div class="teacher-avatar">
-            <div class="avatar-initials" *ngIf="!teacher.avatar">
-              {{ teacher.name.split(' ').map(n => n[0]).join('').toUpperCase() }}
+        <h1 class="page-title">Gestionar Asignaturas</h1>
+        
+        <div class="actions-bar">
+          <div class="search-container">
+            <div class="search-input-wrapper">
+              <i class="material-icons">search</i>
+              <input 
+                type="text" 
+                placeholder="Buscar asignaturas..." 
+                [(ngModel)]="searchTerm"
+                (input)="onSearch()"
+                class="search-input"
+              >
             </div>
           </div>
           
-          <div class="teacher-info">
-            <h3 class="teacher-name">{{ teacher.name }}</h3>
-            <p class="teacher-specialization">{{ teacher.specialization }}</p>
-            <p class="teacher-experience">{{ teacher.experience }}</p>
-            <p class="teacher-email">
-              <i class="material-icons">email</i>
-              {{ teacher.email }}
-            </p>
+          <button class="add-button" (click)="addSubject()">
+            <i class="material-icons">add</i>
+            Nueva Asignatura
+          </button>
+        </div>
+      </div>
+
+      <div class="subjects-container" *ngIf="!isLoading">
+        <div class="subject-card" *ngFor="let subject of filteredSubjects">
+          <div class="subject-info">
+            <h3 class="subject-name">{{ subject.courseName }}</h3>
+            <div class="subject-details">
+              <span class="subject-code">Código: {{ subject.courseCode }}</span>
+              <span class="subject-semester">Creditos: {{ subject.credits }}</span>
+              <span class="subject-program">{{ obtenerProgramaNombre(subject.programId) }}</span>
+            </div>
+            <!-- <div class="subject-status" *ngIf="subject.teacher">
+              <i class="material-icons">person</i>
+              <span>{{ subject.teacher }}</span>
+            </div> -->
           </div>
           
-          <div class="teacher-actions">
-            <button 
-              class="assign-button" 
-              (click)="assignTeacher(teacher.id)"
-              [disabled]="teacher.isAssigned"
-            >
-              <i class="material-icons">person_add</i>
-              {{ teacher.isAssigned ? 'Asignado' : 'Asignar' }}
+          <div class="subject-actions">
+            <button class="action-btn edit-btn" (click)="editSubject(subject.id)" title="Editar">
+              <i class="material-icons">edit</i>
+              Editar
+            </button>
+            
+            <button class="action-btn btn-danger" (click)="deleteSubject(subject.id)" title="Eliminar">
+              <i class="material-icons">delete</i>
+              Eliminar
+            </button>
+            
+            <button class="action-btn assign-btn" (click)="assignTeacher(subject.id)" title="Instanciar Materia">
+              <i class="material-icons">settings</i>
+              Instanciar Materia
+            </button>
+            
+            <button class="action-btn schedule-btn" (click)="defineSchedule(subject.id)" title="Definir horario">
+              <i class="material-icons">schedule</i>
+              Definir horario
             </button>
           </div>
         </div>
@@ -59,22 +64,16 @@
 
       <div class="loading-container" *ngIf="isLoading">
         <div class="spinner"></div>
-        <p>Cargando docentes...</p>
+        <p>Cargando asignaturas...</p>
       </div>
 
-      <div class="empty-state" *ngIf="!isLoading && filteredTeachers.length === 0">
-        <i class="material-icons">person_search</i>
-        <h3>No se encontraron docentes</h3>
-        <p>{{ searchTerm ? 'No hay docentes que coincidan con su búsqueda' : 'No hay docentes disponibles' }}</p>
-      </div>
-
-      <div class="actions-footer">
-        <button class="back-footer-button" (click)="goBack()">
-          <i class="material-icons">arrow_back</i>
-          Regresar
+      <div class="empty-state" *ngIf="!isLoading && filteredSubjects.length === 0">
+        <i class="material-icons">school</i>
+        <h3>No se encontraron asignaturas</h3>
+        <p>{{ searchTerm ? 'No hay asignaturas que coincidan con su búsqueda' : 'Comience agregando una nueva asignatura' }}</p>
+        <button class="add-button" (click)="addSubject()" *ngIf="!searchTerm">
+          <i class="material-icons">add</i>
+          Agregar Primera Asignatura
         </button>
       </div>
     </main>
-  </div>
-</div>
-
