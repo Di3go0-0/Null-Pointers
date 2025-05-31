@@ -21,14 +21,16 @@ export class MateriasService {
   getAllMaterias(): Observable<Materia[]> {
     return this.apiService.get<Materia[]>(this.endpoint);
   }
-
+  getMateriaById(id: number): Observable<Materia[]> {
+    return this.apiService.get<Materia[]>(`${this.endpoint}/${id}`);
+  }
   /**
    * funcion para saber cual es el programa academico de una materia.
    * @param id el id del programa academico.
    * @returns nos devuelve un observable con la informacionde la materia.
    */
-  getProgramNameById(id: number): Observable<any> {
-    return this.apiService.get<any>(`/academic-programs/${id}`);
+  getProgramNameById(id: number): Observable<Programa> {
+    return this.apiService.get<Programa>(`/academic-programs/${id}`);
   }
   /**
    * Funcion para actualizar una materia.
@@ -53,15 +55,15 @@ export class MateriasService {
     return this.apiService.get<Programa[]>('/academic-programs');
   }
 
-  createInstanciaMateria(materia: MateriaInstanciada): Observable<MateriaInstanciada>{
-    return this.apiService.post<MateriaInstanciada>('/course-instances', materia);
+  createInstanciaMateria(materia: MateriaInstanciada): Observable<number>{
+    return this.apiService.post<number>('/courses-instances', materia);
   }
 
   getAllInstancias(): Observable<MateriaInstanciada[]> {
-    return this.apiService.get<MateriaInstanciada[]>('/course-instances');
+    return this.apiService.get<MateriaInstanciada[]>('/courses-instances');
   }
   getInstanciasById(id: number): Observable<MateriaInstanciada[]> {
-    return this.apiService.get<MateriaInstanciada[]>(`/courses-instances/search?id=${id}`);
+    return this.apiService.get<MateriaInstanciada[]>(`/courses-instances/search?courseId=${id}`);
   }
   updateInstanciaMateria(id: number, materia: MateriaInstanciada): Observable<MateriaInstanciada> {
     return this.apiService.patch<MateriaInstanciada>(`/course-instances/${id}`, materia);

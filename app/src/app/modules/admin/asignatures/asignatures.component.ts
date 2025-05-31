@@ -12,11 +12,12 @@ import { Router } from "@angular/router"
   templateUrl: './asignatures.component.html',
   styleUrl: './asignatures.component.css'
 })
-export class AsignaturesComponent {
+export class AsignaturesComponent implements OnInit{
   subjects: Materia[] = []
   filteredSubjects: Materia[] = []
   searchTerm = ""
   isLoading = false
+  programasMap: { [id: number]: string } = {};
 
   constructor(
     private materiasService: MateriasService,
@@ -25,6 +26,17 @@ export class AsignaturesComponent {
 
   ngOnInit(): void {
     this.loadSubjects()
+    this.materiasService.getAllPrograms().subscribe({
+      next: (programas) => {
+        this.programasMap = programas.reduce((map, programa) => {
+          map[programa.id] = programa.programName;
+          return map;
+        }, {} as { [id: number]: string });
+      },
+      error: (err) => {
+        console.error('Error cargando programas:', err);
+      }
+    });
   }
 
   loadSubjects(): void {
@@ -41,15 +53,15 @@ export class AsignaturesComponent {
       },
     })
   }
-  obtenerProgramaNombre(programaId: number){
-      this.materiasService.getProgramNameById(programaId).subscribe(programa => {
-      console.log(programa.programName); // Ciencias de la Computacion
-      return programa.programName;
-    }, error => {
-      console.error("Error fetching program name:", error);
-      return "Desconocido";
-    });
-}
+  //   obtenerProgramaNombre(programaId: number){
+  //       this.materiasService.getProgramNameById(programaId).subscribe(programa => {
+  //       console.log(programa.programName); // Ciencias de la Computacion
+  //       return 1;
+  //     }, error => {
+  //       console.error("Error fetching program name:", error);
+  //       return "Desconocido";
+  //     });
+  // }
 
   onSearch(): void {
     if (!this.searchTerm.trim()) {
@@ -73,12 +85,8 @@ export class AsignaturesComponent {
   }
 
 
-  assignTeacher(subjectId: number): void {
-    // this.router.navigate(["/admin/subjects/assign-teacher", subjectId])
-  }
-
-  defineSchedule(subjectId: number): void {
-    // this.router.navigate(["/admin/subjects/schedule", subjectId])
+  InstanciarMateria(subjectId: number): void {
+    this.router.navigate(["/admin/asignatures/instancias", subjectId])
   }
 
   deleteSubject(subjectId: number): void {

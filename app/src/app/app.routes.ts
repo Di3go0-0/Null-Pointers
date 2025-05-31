@@ -11,6 +11,8 @@ import { AsignaturesComponent } from './modules/admin/asignatures/asignatures.co
 import { NewAsignatureComponent } from './modules/admin/new-asignature/new-asignature.component';
 import { ReportsComponent } from './modules/admin/reports/reports.component';
 import { ModificarMateriaComponent } from './modules/admin/asignatures/modificar-materia/modificar-materia.component';
+import { InstanciarMateriaComponent } from './modules/admin/asignatures/instanciar-materia/instanciar-materia.component';
+import { CrearInstanciaComponent } from './modules/admin/asignatures/crear-instancia/crear-instancia.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -26,6 +28,8 @@ export const routes: Routes = [
             { path: 'asignatures', component: AsignaturesComponent },
             { path: 'asignatures/modificar/:id', component: ModificarMateriaComponent },
             { path: 'asignatures/new', component: NewAsignatureComponent },
+            { path: 'asignatures/instancias/:id', component: InstanciarMateriaComponent },
+            { path: 'asignatures/instancias/crear/:id', component: CrearInstanciaComponent },
             { path: 'reports', component: ReportsComponent }
             // etc.
         ]

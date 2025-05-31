@@ -1,79 +1,77 @@
 <main class="main-content">
-    <div class="content-header">
+      <div class="content-header">
+        <div class="content-header">
         <button class="back-button" (click)="cancel()">
             <i class="material-icons">arrow_back</i>
-            <span>{{ isEditing ? 'Modificar asignatura' : 'Nueva asignatura' }}</span>
+            <span class="page-title">Instancias de: {{materia[0].courseName}}</span>
         </button>
     </div>
-
-    <div class="form-container" *ngIf="materia">
-        <form #form="ngForm" (ngSubmit)="onSubmit()" class="subject-form">
-
-            <div class="form-group" [class.invalid]="name.invalid && name.touched">
-                <label for="name">Nombre de la asignatura*</label>
-                <input type="text" id="name" [(ngModel)]="materia.courseName" name="name" #name="ngModel" required
-                    placeholder="Ej: Programación Avanzada" minlength="3">
-                <small *ngIf="name.invalid && name.touched" class="error-text">
-                    Nombre requerido (mínimo 3 caracteres).
-                </small>
+        <!-- <h1 class="page-title">Instancias de: {{materia[0].courseName}}</h1> -->
+        
+        <div class="actions-bar">
+          <div class="search-container">
+            <div class="search-input-wrapper">
+              <i class="material-icons">search</i>
+              <input 
+                type="text" 
+                placeholder="Buscar asignaturas..." 
+                [(ngModel)]="searchTerm"
+                (input)="onSearch()"
+                class="search-input"
+              >
             </div>
+          </div>
+          
+          <button class="add-button" (click)="addSubject()">
+            <i class="material-icons">add</i>
+            Nueva Instancia
+          </button>
+        </div>
+      </div>
 
-            <div class="form-row">
-                <div class="form-group" [class.invalid]="code.invalid && code.touched">
-                    <label for="code">Código*</label>
-                    <input type="text" id="code" [(ngModel)]="materia.courseCode" name="code" #code="ngModel" required
-                        placeholder="Ej: CS101" pattern="[A-Z]{2,5}[0-9]{2,4}">
-                    <small *ngIf="code.invalid && code.touched" class="error-text">
-                        Código requerido. Ej: CS101
-                    </small>
-                </div>
-
-                <div class="form-group" [class.invalid]="credits.invalid && credits.touched">
-                    <label for="credits">Créditos*</label>
-                    <input type="number" id="credits" [(ngModel)]="materia.credits" name="credits" #credits="ngModel"
-                        placeholder="Mínimo 1 crédito requerido." required min="1">
-                    <small *ngIf="credits.invalid && credits.touched" class="error-text">
-                        Mínimo 1 crédito requerido.
-                    </small>
-                </div>
+      <div class="subjects-container" *ngIf="!isLoading">
+        <div class="subject-card" *ngFor="let subject of filteredSubjects">
+          <div class="subject-info">
+            <h3 class="subject-name">{{materia[0].courseName}} ID:{{ subject.id }}</h3>
+            <div class="subject-details">
+              <span class="subject-code">Código: {{ subject.groupCode }}</span>
+              <span class="subject-semester">Semestre: {{ subject.semester }}</span>
+              <span class="subject-semester">Status: {{ subject.status }}</span>
+              <span class="subject-semester">Profesor: {{ teachersMap[subject.teacherId] || 'Desconocido' }}</span>
             </div>
+          </div>
+          
+          <div class="subject-actions">
+            <button class="action-btn edit-btn" (click)="editSubject(subject.id)" title="Editar">
+              <i class="material-icons">edit</i>
+              Editar
+            </button>
+            
+            <button class="action-btn btn-danger" (click)="deleteSubject(subject.id)" title="Eliminar">
+              <i class="material-icons">delete</i>
+              Eliminar
+            </button>
+            
+            <button class="action-btn schedule-btn" (click)="defineSchedule(subject.id)" title="Definir horario">
+              <i class="material-icons">schedule</i>
+              Definir horario
+            </button>
+          </div>
+        </div>
+      </div>
 
-            <div class="form-group" [class.invalid]="description.invalid && description.touched">
-                <label for="description">Descripción*</label>
-                <textarea id="description" [(ngModel)]="materia.description" name="description" #description="ngModel"
-                    required placeholder="Descripción de la asignatura minimo 10 caracteres" minlength="10"
-                    rows="4"></textarea>
-                <small *ngIf="description.invalid && description.touched" class="error-text">
-                    Descripción requerida (mínimo 10 caracteres).
-                </small>
-            </div>
+      <div class="loading-container" *ngIf="isLoading">
+        <div class="spinner"></div>
+        <p>Cargando Instancias...</p>
+      </div>
 
-            <div class="form-group" [class.invalid]="programId.invalid && programId.touched">
-                <label for="program">Programa Académico*</label>
-                <select id="program" [(ngModel)]="materia.programId" name="programId" #programId="ngModel" required>
-                    <option value="">Seleccione un programa</option>
-                    <option *ngFor="let p of programas" [value]="p.id">{{ p.programName }}</option>
-                </select>
-                <small *ngIf="programId.invalid && programId.touched" class="error-text">
-                    Seleccione un programa académico.
-                </small>
-            </div>
-
-            <div class="form-actions">
-                <button type="button" class="cancel-button" (click)="cancel()">
-                    <i class="material-icons">close</i> Cancelar
-                </button>
-
-                <button type="submit" class="submit-button" [disabled]="form.invalid || isLoading">
-                    <span *ngIf="!isLoading">
-                        <i class="material-icons">save</i>
-                        {{ isEditing ? 'Guardar' : 'Crear' }}
-                    </span>
-                    <div class="spinner" *ngIf="isLoading"></div>
-                </button>
-            </div>
-        </form>
-    </div>
-
-    <div *ngIf="!materia && isLoading">Cargando datos...</div>
-</main>
+      <div class="empty-state" *ngIf="!isLoading && filteredSubjects.length === 0">
+        <i class="material-icons">school</i>
+        <h3>No se encontraron asignaturas</h3>
+        <p>{{ searchTerm ? 'No hay asignaturas que coincidan con su búsqueda' : 'Comience agregando una nueva asignatura' }}</p>
+        <button class="add-button" (click)="addSubject()" *ngIf="!searchTerm">
+          <i class="material-icons">add</i>
+          Instanciar nueva asignatura
+        </button>
+      </div>
+    </main>

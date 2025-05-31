@@ -30,12 +30,8 @@
             <div class="subject-details">
               <span class="subject-code">Código: {{ subject.courseCode }}</span>
               <span class="subject-semester">Creditos: {{ subject.credits }}</span>
-              <span class="subject-program">{{ obtenerProgramaNombre(subject.programId) }}</span>
+              <span class="subject-semester">Programa: {{ programasMap[subject.programId] || 'Desconocido' }}</span>
             </div>
-            <!-- <div class="subject-status" *ngIf="subject.teacher">
-              <i class="material-icons">person</i>
-              <span>{{ subject.teacher }}</span>
-            </div> -->
           </div>
           
           <div class="subject-actions">
@@ -49,15 +45,11 @@
               Eliminar
             </button>
             
-            <button class="action-btn assign-btn" (click)="assignTeacher(subject.id)" title="Instanciar Materia">
+            <button class="action-btn assign-btn" (click)="InstanciarMateria(subject.id)" title="Instanciar Materia">
               <i class="material-icons">settings</i>
               Instanciar Materia
             </button>
             
-            <button class="action-btn schedule-btn" (click)="defineSchedule(subject.id)" title="Definir horario">
-              <i class="material-icons">schedule</i>
-              Definir horario
-            </button>
           </div>
         </div>
       </div>
