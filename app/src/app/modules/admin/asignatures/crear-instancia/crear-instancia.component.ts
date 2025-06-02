@@ -47,26 +47,57 @@ export class CrearInstanciaComponent implements OnInit {
     });
   }
 
-  onSubmit(): void {
-    // Validar campos mínimos
-    if (!this.materia.semester || !this.materia.groupCode || !this.materia.teacherId) {
-      alert("Por favor complete todos los campos obligatorios.");
-      return;
-    }
+ onSubmit(): void {
+  // Validación de campos requeridos
+  const camposObligatorios = [
+    this.materia.semester,
+    this.materia.groupCode,
+    this.materia.teacherId,
+    this.materia.startDate,
+    this.materia.endDate,
+    this.materia.minStudents,
+    this.materia.maxStudents,
+  ];
 
-    this.isLoading = true;
-    this.materiaService.createInstanciaMateria(this.materia).subscribe({
-      next: () => {
-        alert("Instancia de materia creada exitosamente.");
-        this.router.navigate(['/admin/asignatures']);
-      },
-      error: (err) => {
-        console.error("Error al crear instancia:", err);
-        alert("Error al crear instancia.");
-        this.isLoading = false;
-      }
-    });
+  const hayCampoVacio = camposObligatorios.some(c => !c || c.toString().trim() === '');
+  if (hayCampoVacio) {
+    alert("Por favor complete todos los campos obligatorios.");
+    return;
   }
+
+  // Validar que el código de grupo sea único entre otras instancias
+  this.materiaService.getAllInstancias().subscribe({
+    next: (data) => {
+      const duplicado = data.find(i =>
+        i.groupCode === this.materia.groupCode &&
+        i.id !== this.materia.id // Excluye la instancia actual
+      );
+
+      if (duplicado) {
+        alert("Ya existe una instancia con ese código de grupo. Elija uno diferente.");
+        return;
+      }
+
+      // Si pasa las validaciones, continuar con la actualización
+      this.isLoading = true;
+      this.materiaService.createInstanciaMateria(this.materia).subscribe({
+        next: () => {
+          alert("Instancia de materia creada exitosamente.");
+          this.router.navigate(['/admin/asignatures']);
+        },
+        error: (err) => {
+          console.error("Error alcrear instancia:", err);
+          alert("Error al crear la instancia.");
+          this.isLoading = false;
+        }
+      });
+    },
+    error: (err) => {
+      console.error("Error al validar código de grupo:", err);
+      alert("Error al validar datos.");
+    }
+  });
+}
 
   cancel(): void {
     this.router.navigate(["/admin/asignatures/instancias", this.courseId]);

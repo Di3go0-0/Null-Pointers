@@ -1,1 +1,37 @@
-<p>new-user works!</p>
+<main class="main-content">
+      <div class="content-header">
+        <button class="back-button" (click)="goBack()">
+          <i class="material-icons">arrow_back</i>
+          <span>Volver al Dashboard</span>
+        </button>
+        <h1 class="page-title">Registrar Usuario</h1>
+      </div>
+
+      <div class="user-type-container">
+        <h2 class="selection-title">Escoja el tipo de Usuario</h2>
+        
+        <div class="user-type-cards">
+          <div class="user-type-card" (click)="selectUserType('teacher')">
+            <div class="card-icon">
+              <i class="material-icons">school</i>
+            </div>
+            <h3>Docente</h3>
+            <p>Registra nuevo profesional y personal académico</p>
+            <div class="card-arrow">
+              <i class="material-icons">arrow_forward</i>
+            </div>
+          </div>
+          
+          <div class="user-type-card" (click)="selectUserType('student')">
+            <div class="card-icon">
+              <i class="material-icons">person</i>
+            </div>
+            <h3>Estudiante</h3>
+            <p>Registra nuevo alumno y aprendices</p>
+            <div class="card-arrow">
+              <i class="material-icons">arrow_forward</i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>

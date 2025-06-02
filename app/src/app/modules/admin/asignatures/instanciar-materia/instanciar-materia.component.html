@@ -54,7 +54,7 @@
             
             <button class="action-btn schedule-btn" (click)="defineSchedule(subject.id)" title="Definir horario">
               <i class="material-icons">schedule</i>
-              Definir horario
+              Horario
             </button>
           </div>
         </div>
@@ -67,8 +67,8 @@
 
       <div class="empty-state" *ngIf="!isLoading && filteredSubjects.length === 0">
         <i class="material-icons">school</i>
-        <h3>No se encontraron asignaturas</h3>
-        <p>{{ searchTerm ? 'No hay asignaturas que coincidan con su búsqueda' : 'Comience agregando una nueva asignatura' }}</p>
+        <h3>No se encontraron Instancias</h3>
+        <p>{{ searchTerm ? 'No hay asignaturas que coincidan con su búsqueda' : 'Comience agregando una nueva Instancia' }}</p>
         <button class="add-button" (click)="addSubject()" *ngIf="!searchTerm">
           <i class="material-icons">add</i>
           Instanciar nueva asignatura

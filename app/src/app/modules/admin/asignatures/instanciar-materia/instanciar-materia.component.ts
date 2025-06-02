@@ -13,7 +13,7 @@ import { TeacherService } from "../../../../services/profesores.service"
   templateUrl: './instanciar-materia.component.html',
   styleUrl: './instanciar-materia.component.css'
 })
-export class InstanciarMateriaComponent implements OnInit{
+export class InstanciarMateriaComponent implements OnInit {
   subjects: MateriaInstanciada[] = []
   filteredSubjects: MateriaInstanciada[] = []
   searchTerm = ""
@@ -21,7 +21,7 @@ export class InstanciarMateriaComponent implements OnInit{
   materiaId: number = 0
   materia: Materia[] = []
   teachersMap: { [id: number]: string } = {};
-isEditing: any
+  isEditing: any
 
   constructor(
     private materiasService: MateriasService,
@@ -41,16 +41,16 @@ isEditing: any
     });
     // carga los profesores
     this.profesorService.getAllTeachers().subscribe({
-    next: (profesores) => {
-      this.teachersMap = profesores.reduce((map, profesor) => {
-        map[profesor.id] = profesor.name;
-        return map;
-      }, {} as { [id: number]: string });
-    },
-    error: (err) => {
-      console.error('Error cargando profesores:', err);
-    }
-  });
+      next: (profesores) => {
+        this.teachersMap = profesores.reduce((map, profesor) => {
+          map[profesor.id] = profesor.name;
+          return map;
+        }, {} as { [id: number]: string });
+      },
+      error: (err) => {
+        console.error('Error cargando profesores:', err);
+      }
+    });
   }
   loadMateria(): void {
     this.materiasService.getMateriaById(this.materiaId).subscribe({
@@ -59,7 +59,7 @@ isEditing: any
         console.log("Materia loaded:", this.materia);
         this.isLoading = false
       },
-      error: (error) => {  
+      error: (error) => {
         console.error("Error loading materia:", error)
         this.isLoading = false
       }
@@ -67,18 +67,21 @@ isEditing: any
   }
 
   loadSubjects(): void {
-    this.isLoading = true
-    this.materiasService.getInstanciasById(this.materiaId).subscribe({
-      next: (subjects) => {
-        this.subjects = subjects
-        this.filteredSubjects = subjects
-        this.isLoading = false
+    this.isLoading = true;
+    this.materiasService.getAllInstancias().subscribe({
+      next: (allSubjects) => {
+        // Filtrar solo aquellas instancias que coincidan con el materiaId actual
+        const filtered = allSubjects.filter(i => i.courseId === this.materiaId);
+
+        this.subjects = filtered;
+        this.filteredSubjects = filtered;
+        this.isLoading = false;
       },
       error: (error) => {
-        console.error("Error loading subjects:", error)
-        this.isLoading = false
+        console.error("Error loading subjects:", error);
+        this.isLoading = false;
       },
-    })
+    });
   }
   obtenerProfesorNombre(profesorId: number) {
     this.profesorService.getAllTeachers().subscribe(profesores => {
@@ -95,15 +98,15 @@ isEditing: any
       return "Desconocido";
     });
   }
-  obtenerProgramaNombre(programaId: number){
-      this.materiasService.getProgramNameById(programaId).subscribe(programa => {
+  obtenerProgramaNombre(programaId: number) {
+    this.materiasService.getProgramNameById(programaId).subscribe(programa => {
       console.log(programa.programName); // Ciencias de la Computacion
       return programa.programName;
     }, error => {
       console.error("Error fetching program name:", error);
       return "Desconocido";
     });
-}
+  }
 
   onSearch(): void {
     if (!this.searchTerm.trim()) {
@@ -115,7 +118,7 @@ isEditing: any
       (subject) =>
         subject.semester.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
         subject.groupCode.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        subject.status.toLowerCase().includes(this.searchTerm.toLowerCase()) 
+        subject.status.toLowerCase().includes(this.searchTerm.toLowerCase())
     )
   }
 
@@ -124,28 +127,24 @@ isEditing: any
   }
 
   editSubject(subjectId: number): void {
-    this.router.navigate(["/admin/asignatures/modificar", subjectId])
+    this.router.navigate(["/admin/asignatures/instancias/modificar", subjectId])
   }
 
-
-  assignTeacher(subjectId: number): void {
-    // this.router.navigate(["/admin/subjects/assign-teacher", subjectId])
-  }
 
   defineSchedule(subjectId: number): void {
-    // this.router.navigate(["/admin/subjects/schedule", subjectId])
+    this.router.navigate(["/admin/asignatures/instancias/Horario/", subjectId])
   }
 
   deleteSubject(subjectId: number): void {
-    if (confirm("¿Está seguro de que desea eliminar esta asignatura?")) {
-      this.materiasService.deleteMateria(subjectId).subscribe({
+    if (confirm("¿Está seguro de que desea eliminar esta Instancia?")) {
+      this.materiasService.deleteInstanciaMateria(subjectId).subscribe({
         next: (id) => {
-          alert("Asignatura eliminada correctamente")
+          alert("Instancia eliminada correctamente")
           console.log("Subject deleted:", id)
           this.loadSubjects()
         },
         error: (error) => {
-          alert("Error al eliminar la asignatura")
+          alert("Error al eliminar la Instancia")
           console.error("Error deleting subject:", error)
         },
       })

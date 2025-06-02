@@ -1,12 +1,16 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-error',
-  imports: [RouterLink],
+  imports: [],
   templateUrl: './error.component.html',
   styleUrl: './error.component.css'
 })
 export class ErrorComponent {
-
+  constructor(private location: Location) { }
+  goBack(): void {
+    this.location.back();
+  }
 }
+

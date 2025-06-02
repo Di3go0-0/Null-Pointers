@@ -73,6 +73,7 @@ export class AsignaturesComponent implements OnInit{
       (subject) =>
         subject.courseName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
         subject.courseCode.toLowerCase().includes(this.searchTerm.toLowerCase())
+        || subject.description.toLowerCase().includes(this.searchTerm.toLowerCase())
     )
   }
 

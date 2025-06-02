@@ -13,6 +13,11 @@ import { ReportsComponent } from './modules/admin/reports/reports.component';
 import { ModificarMateriaComponent } from './modules/admin/asignatures/modificar-materia/modificar-materia.component';
 import { InstanciarMateriaComponent } from './modules/admin/asignatures/instanciar-materia/instanciar-materia.component';
 import { CrearInstanciaComponent } from './modules/admin/asignatures/crear-instancia/crear-instancia.component';
+import { ModificarInstanciaComponent } from './modules/admin/asignatures/modificar-instancia/modificar-instancia.component';
+import { HorarioInstanciaComponent } from './modules/admin/asignatures/horario-instancia/horario-instancia.component';
+import { AgregarHorarioComponent } from './modules/admin/asignatures/agregar-horario/agregar-horario.component';
+import { NewTeacherComponent } from './modules/admin/new-user/new-teacher/new-teacher.component';
+import { NewStudentComponent } from './modules/admin/new-user/new-student/new-student.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -24,12 +29,17 @@ export const routes: Routes = [
             { path: '', component: DashboardComponent }, // /admin
             { path: 'users', component: UsersComponent },   // /admin/users
             { path: 'users/new', component: NewUserComponent },// /admin/users/new
+            { path: 'users/new/teacher', component: NewTeacherComponent },// /admin/users/new/teacher
+            { path: 'users/new/student', component: NewStudentComponent },// /admin/users/new/student
             { path: 'courses', component: CoursesComponent },
             { path: 'asignatures', component: AsignaturesComponent },
             { path: 'asignatures/modificar/:id', component: ModificarMateriaComponent },
             { path: 'asignatures/new', component: NewAsignatureComponent },
             { path: 'asignatures/instancias/:id', component: InstanciarMateriaComponent },
             { path: 'asignatures/instancias/crear/:id', component: CrearInstanciaComponent },
+            { path: 'asignatures/instancias/modificar/:id', component: ModificarInstanciaComponent },
+            { path: 'asignatures/instancias/Horario/:id', component: HorarioInstanciaComponent },
+            { path: 'asignatures/instancias/Horario/crear/:id', component: AgregarHorarioComponent },
             { path: 'reports', component: ReportsComponent }
             // etc.
         ]
