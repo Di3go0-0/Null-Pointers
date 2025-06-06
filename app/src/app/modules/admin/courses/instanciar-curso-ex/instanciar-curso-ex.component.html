@@ -1,6 +1,12 @@
 <main class="main-content">
       <div class="content-header">
-        <h1 class="page-title">Gestionar Cursos de Extension</h1>
+        <div class="content-header">
+        <button class="back-button" (click)="cancel()">
+            <i class="material-icons">arrow_back</i>
+            <span class="page-title">Instancias de: {{materia[0].courseName}}</span>
+        </button>
+    </div>
+        <!-- <h1 class="page-title">Instancias de: {{materia[0].courseName}}</h1> -->
         
         <div class="actions-bar">
           <div class="search-container">
@@ -18,7 +24,7 @@
           
           <button class="add-button" (click)="addSubject()">
             <i class="material-icons">add</i>
-            Nuevo Curso de Extension
+            Nueva Instancia
           </button>
         </div>
       </div>
@@ -26,11 +32,13 @@
       <div class="subjects-container" *ngIf="!isLoading">
         <div class="subject-card" *ngFor="let subject of filteredSubjects">
           <div class="subject-info">
-            <h3 class="subject-name">{{ subject.courseName }}</h3>
+            <h3 class="subject-name">{{materia[0].courseName}} ID:{{ subject.id }}</h3>
             <div class="subject-details">
-              <span class="subject-code">Código: {{ subject.courseCode }}</span>
-              <span class="subject-semester">Duracion: {{ subject.durationHours }} Horas</span>
-              <span class="subject-semester">Programa: {{ programasMap[subject.programId] || 'Desconocido' }}</span>
+              <span class="subject-code">Código: {{ subject.groupCode }}</span>
+              <span class="subject-semester">Inicio: {{ subject.startDate | date}}</span>
+                <span class="subject-semester">Fin: {{ subject.endDate | date}}</span>
+              <span class="subject-semester">Status: {{ subject.publicationStatus }}</span>
+              <span class="subject-semester">Profesor: {{ teachersMap[subject.teacherId] || 'Desconocido' }}</span>
             </div>
           </div>
           
@@ -45,27 +53,26 @@
               Eliminar
             </button>
             
-            <button class="action-btn assign-btn" (click)="InstanciarMateria(subject.id)" title="Instanciar Materia">
-              <i class="material-icons">settings</i>
-              Instanciar Curso
+            <button class="action-btn schedule-btn" (click)="defineSchedule(subject.id)" title="Definir horario">
+              <i class="material-icons">schedule</i>
+              Horario
             </button>
-            
           </div>
         </div>
       </div>
 
       <div class="loading-container" *ngIf="isLoading">
         <div class="spinner"></div>
-        <p>Cargando cursos...</p>
+        <p>Cargando Instancias...</p>
       </div>
 
       <div class="empty-state" *ngIf="!isLoading && filteredSubjects.length === 0">
         <i class="material-icons">school</i>
-        <h3>No se encontraron cursos</h3>
-        <p>{{ searchTerm ? 'No hay asignaturas que coincidan con su búsqueda' : 'Comience agregando una nueva asignatura' }}</p>
+        <h3>No se encontraron Instancias</h3>
+        <p>{{ searchTerm ? 'No hay asignaturas que coincidan con su búsqueda' : 'Comience agregando una nueva Instancia' }}</p>
         <button class="add-button" (click)="addSubject()" *ngIf="!searchTerm">
           <i class="material-icons">add</i>
-          Agregar Primer Curso de Extension
+          Instanciar nuevo cursos
         </button>
       </div>
     </main>

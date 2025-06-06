@@ -1,0 +1,79 @@
+<main class="main-content">
+    <div class="content-header">
+        <button class="back-button" (click)="cancel()">
+            <i class="material-icons">arrow_back</i>
+            <span>{{ isEditing ? 'Modificar Curso' : 'Nuevo Curso' }}</span>
+        </button>
+    </div>
+
+    <div class="form-container" *ngIf="materia">
+        <form #form="ngForm" (ngSubmit)="onSubmit()" class="subject-form">
+
+            <div class="form-group" [class.invalid]="name.invalid && name.touched">
+                <label for="name">Nombre de la asignatura*</label>
+                <input type="text" id="name" [(ngModel)]="materia.courseName" name="name" #name="ngModel" required
+                    placeholder="Ej: Programación Avanzada" minlength="3">
+                <small *ngIf="name.invalid && name.touched" class="error-text">
+                    Nombre requerido (mínimo 3 caracteres).
+                </small>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group" [class.invalid]="code.invalid && code.touched">
+                    <label for="code">Código*</label>
+                    <input type="text" id="code" [(ngModel)]="materia.courseCode" name="code" #code="ngModel" required
+                        placeholder="Ej: CSX101" pattern="[A-Z]{2,5}[0-9]{2,4}">
+                    <small *ngIf="code.invalid && code.touched" class="error-text">
+                        Código requerido. Ej: CSX101
+                    </small>
+                </div>
+
+                <div class="form-group" [class.invalid]="credits.invalid && credits.touched">
+                    <label for="credits">Duracion del Curso en horas*</label>
+                    <input type="number" id="credits" [(ngModel)]="materia.durationHours" name="credits" #credits="ngModel"
+                        placeholder="maximo 12 horas." required min="1" max="12">
+                    <small *ngIf="credits.invalid && credits.touched" class="error-text">
+                        Mínimo 1 hora, máximo 12 horas.
+                    </small>
+                </div>
+            </div>
+
+            <div class="form-group" [class.invalid]="description.invalid && description.touched">
+                <label for="description">Descripción*</label>
+                <textarea id="description" [(ngModel)]="materia.description" name="description" #description="ngModel"
+                    required placeholder="Descripción del curso minimo 10 caracteres" minlength="10"
+                    rows="4"></textarea>
+                <small *ngIf="description.invalid && description.touched" class="error-text">
+                    Descripción requerida (mínimo 10 caracteres).
+                </small>
+            </div>
+
+            <div class="form-group" [class.invalid]="programId.invalid && programId.touched">
+                <label for="program">Programa Académico*</label>
+                <select id="program" [(ngModel)]="materia.programId" name="programId" #programId="ngModel" required>
+                    <option value="">Seleccione un programa</option>
+                    <option *ngFor="let p of programas" [value]="p.id">{{ p.programName }}</option>
+                </select>
+                <small *ngIf="programId.invalid && programId.touched" class="error-text">
+                    Seleccione un programa académico.
+                </small>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="cancel-button" (click)="cancel()">
+                    <i class="material-icons">close</i> Cancelar
+                </button>
+
+                <button type="submit" class="submit-button" [disabled]="form.invalid || isLoading">
+                    <span *ngIf="!isLoading">
+                        <i class="material-icons">save</i>
+                        {{ isEditing ? 'Guardar' : 'Crear' }}
+                    </span>
+                    <div class="spinner" *ngIf="isLoading"></div>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div *ngIf="!materia && isLoading">Cargando datos...</div>
+</main>

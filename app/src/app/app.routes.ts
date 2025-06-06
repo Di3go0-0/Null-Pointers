@@ -18,6 +18,13 @@ import { HorarioInstanciaComponent } from './modules/admin/asignatures/horario-i
 import { AgregarHorarioComponent } from './modules/admin/asignatures/agregar-horario/agregar-horario.component';
 import { NewTeacherComponent } from './modules/admin/new-user/new-teacher/new-teacher.component';
 import { NewStudentComponent } from './modules/admin/new-user/new-student/new-student.component';
+import { ModificarCursoExComponent } from './modules/admin/courses/modificar-curso-ex/modificar-curso-ex.component';
+import { NuevoCursoExComponent } from './modules/admin/courses/nuevo-curso-ex/nuevo-curso-ex.component';
+import { InstanciarCursoExComponent } from './modules/admin/courses/instanciar-curso-ex/instanciar-curso-ex.component';
+import { CrearInstanciaExComponent } from './modules/admin/courses/crear-instancia-ex/crear-instancia-ex.component';
+import { ModificarInstanciaExComponent } from './modules/admin/courses/modificar-instancia-ex/modificar-instancia-ex.component';
+import { HorarioInstanciaExComponent } from './modules/admin/courses/horario-instancia-ex/horario-instancia-ex.component';
+import { AgregarHorarioExComponent } from './modules/admin/courses/agregar-horario-ex/agregar-horario-ex.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -31,7 +38,6 @@ export const routes: Routes = [
             { path: 'users/new', component: NewUserComponent },// /admin/users/new
             { path: 'users/new/teacher', component: NewTeacherComponent },// /admin/users/new/teacher
             { path: 'users/new/student', component: NewStudentComponent },// /admin/users/new/student
-            { path: 'courses', component: CoursesComponent },
             { path: 'asignatures', component: AsignaturesComponent },
             { path: 'asignatures/modificar/:id', component: ModificarMateriaComponent },
             { path: 'asignatures/new', component: NewAsignatureComponent },
@@ -40,8 +46,16 @@ export const routes: Routes = [
             { path: 'asignatures/instancias/modificar/:id', component: ModificarInstanciaComponent },
             { path: 'asignatures/instancias/Horario/:id', component: HorarioInstanciaComponent },
             { path: 'asignatures/instancias/Horario/crear/:id', component: AgregarHorarioComponent },
+            { path: 'courses', component: CoursesComponent  },
+            { path: 'courses/modificar/:id', component: ModificarCursoExComponent },
+            { path: 'courses/new', component: NuevoCursoExComponent },
+            { path: 'courses/instancias/:id', component: InstanciarCursoExComponent },
+            { path: 'courses/instancias/crear/:id', component: CrearInstanciaExComponent },
+            { path: 'courses/instancias/modificar/:id', component: ModificarInstanciaExComponent },
+            { path: 'courses/instancias/Horario/:id', component: HorarioInstanciaExComponent },
+            { path: 'courses/instancias/Horario/crear/:id', component: AgregarHorarioExComponent },
             { path: 'reports', component: ReportsComponent }
-            // etc.
+          
         ]
     },
     { path: 'profile', component: ProfileComponent },

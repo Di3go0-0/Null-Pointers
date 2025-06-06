@@ -15,7 +15,7 @@
 
 .main-content {
   flex: 1;
-  background: linear-gradient(180deg,#003303 0%, #43e748 100%);
+  background: linear-gradient(135deg,#807e04 0%, #dbf304 100%);
   padding: 2rem;
   overflow-y: auto;
 }
@@ -195,13 +195,14 @@
 }
 
 .submit-button {
-  background-color: #667eea;
-  color: white;
+  background-color: #eeff04;
+  color: rgb(0, 0, 0);
+  border: black solid 1px;
   
   &:hover:not(:disabled) {
-    background-color: #5a6fd8;
+    background-color: #a4a704;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 4px 12px rgba(214, 234, 102, 0.3);
   }
   
   &:disabled {

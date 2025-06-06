@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { Teacher } from '../models/teacher';
 import { ApiService } from './solicitudes.service';
 import { TeacherCreate } from '../models/teacher-create';
+import { TipoContrato } from '../models/tipo-contrato';
 
 @Injectable({
   providedIn: 'root'
@@ -22,11 +23,14 @@ export class TeacherService {
    * @param teacherData Datos del nuevo profesor
    * @returns ID del nuevo profesor
    */
-  createTeacher(teacher: TeacherCreate): Observable<{ id: number }> {
-    return this.apiService.post<{ id: number }>('/teachers', teacher);
+  createTeacher(teacher: TeacherCreate): Observable<number> {
+    return this.apiService.post<number>('/teachers', teacher);
   }
   createPersonalInfo(teacherId: number, personalInfo: any): Observable<any> {
     return this.apiService.post<any>(`/personal-info/${teacherId}`, personalInfo);
+  }
+  getTypesOfContract(): Observable<TipoContrato[]> {
+    return this.apiService.get<TipoContrato[]>('/contracts-type');
   }
 }
 

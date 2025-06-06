@@ -1,1 +1,61 @@
-<p>users works!</p>
+<main class="main-content">
+    <div class="content-header">
+        <h1 class="page-title">Gestión de Usuarios</h1>
+
+        <div class="actions-bar">
+            <div class="search-container">
+                <div class="search-input-wrapper">
+                    <i class="material-icons">search</i>
+                    <input type="text" placeholder="Buscar..." [(ngModel)]="searchTerm" (input)="onSearch()"
+                        class="search-input">
+                </div>
+            </div>
+
+            <select class="custom-select" [(ngModel)]="currentView" (change)="onSearch()">
+                <option value="students">Estudiantes</option>
+                <option value="teachers">Docentes</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="subjects-container" *ngIf="currentView === 'students' && !isLoading">
+        <div class="subject-card" *ngFor="let student of filteredStudents">
+            <div class="subject-info">
+                <h3>{{ student.name }}</h3>
+                <p>Email: {{ student.email }}</p>
+            </div>
+            <div class="subject-actions">
+                <button class="action-btn edit-btn" (click)="editSubject(student.id)" title="Editar">
+                    <i class="material-icons">edit</i>
+                    Editar
+                </button>
+                <button class="action-btn schedule-btn">
+                    <i class="material-icons">schedule</i> Horario
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="subjects-container" *ngIf="currentView === 'teachers' && !isLoading">
+        <div class="subject-card" *ngFor="let teacher of filteredTeachers">
+            <div class="subject-info">
+                <h3>{{ teacher.name }}</h3>
+                <p>Email: {{ teacher.email }}</p>
+                <p>Especialidad: {{ teacher.specialty }}</p>
+                <p>Contrato: {{ teacher.contractName }}</p>
+            </div>
+            <div class="subject-actions">
+                <button class="action-btn edit-btn">
+                    <i class="material-icons">edit</i> Editar
+                </button>
+                <button class="action-btn schedule-btn">
+                    <i class="material-icons">schedule</i> Horario
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="isLoading">
+        <p>Cargando usuarios...</p>
+    </div>
+</main>
