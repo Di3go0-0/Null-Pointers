@@ -203,14 +203,26 @@ export class ExtensionInstancesPrismaService implements ExtensionInstancesReposi
 
   public async verifyGroupCodeOwner(courseId: number, groupCode: string): Promise<boolean> {
     try {
+      const group = await this.prisma.courseInstance.findFirst({
+        where: {
+          id: courseId,
+          active: true,
+        },
+        select: {
+          semester: true
+        }
+      })
+
       const code = await this.prisma.courseInstance.findFirst({
         where: {
+          id: courseId,
           groupCode,
+          semester: group?.semester,
           active: true,
         }
       })
 
-      if (code?.id !== courseId) {
+      if (!code) {
         throw new HttpException(EXTENSION.ALERT.COURSE_CODE, HttpStatus.CONFLICT);
       }
 
