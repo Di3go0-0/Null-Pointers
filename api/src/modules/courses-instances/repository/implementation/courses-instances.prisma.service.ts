@@ -263,7 +263,7 @@ export class CoursesInstancesPrismaService implements CoursesInstancesRepository
         }
       })
 
-      if (code) {
+      if (!code) {
         throw new HttpException(COURSES.ALERT.COURSE_CODE, HttpStatus.CONFLICT);
       }
 
