@@ -8,8 +8,7 @@ import { ExtensionCoursesService } from './extension-courses.service';
 
 @ApiTags('Extension Courses')
 @ApiBearerAuth('Token')
-@UseGuards(JwtGuardService, RolesGuard)
-@Roles('ADMIN')
+@UseGuards(JwtGuardService)
 @Controller('extension-courses')
 export class ExtensionCoursesController {
   constructor(private readonly extensionCoursesService: ExtensionCoursesService) { }

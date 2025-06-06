@@ -8,8 +8,7 @@ import { GetEnrollmentsCoursesDto, PatchEnrollmentsCoursesDto, PostEnrollmentsCo
 
 @ApiTags('Enrollments courses')
 @ApiBearerAuth('Token')
-@UseGuards(JwtGuardService, RolesGuard)
-@Roles('ADMIN')
+@UseGuards(JwtGuardService)
 @Controller('enrollments-courses')
 export class EnrollmentsCoursesController {
   constructor(private readonly enrollmentsCoursesService: EnrollmentsCoursesService) { }

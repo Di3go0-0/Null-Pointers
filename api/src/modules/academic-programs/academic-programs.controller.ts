@@ -9,8 +9,7 @@ import { PatchAcademicProgramDto, PostAcademicProgramDto } from './dtos';
 
 @ApiTags('Academic Programs')
 @ApiBearerAuth('Token')
-@UseGuards(JwtGuardService, RolesGuard)
-@Roles('ADMIN')
+@UseGuards(JwtGuardService)
 @Controller('academic-programs')
 export class AcademicProgramsController {
   constructor(private readonly academicProgramsService: AcademicProgramsService) { }

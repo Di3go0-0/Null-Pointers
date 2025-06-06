@@ -8,8 +8,7 @@ import { Roles } from 'src/shared';
 
 @ApiTags('Courses')
 @ApiBearerAuth('Token')
-@UseGuards(JwtGuardService, RolesGuard)
-@Roles('ADMIN')
+@UseGuards(JwtGuardService)
 @Controller('courses')
 export class CoursesController {
   constructor(private readonly coursesService: CoursesService) { }

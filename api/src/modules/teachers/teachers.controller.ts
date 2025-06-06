@@ -8,8 +8,10 @@ import { RolesGuard } from 'src/shared/jwt-guard/jwt-rol-guard.service';
 
 @ApiTags('Teachers')
 @ApiBearerAuth('Token')
-@UseGuards(JwtGuardService, RolesGuard)
-@Roles('ADMIN', 'TEACHER')
+@UseGuards(JwtGuardService
+  // , RolesGuard
+)
+// @Roles('ADMIN', 'TEACHER')
 @Controller('teachers')
 export class TeachersController {
   constructor(private readonly teachersService: TeachersService) { }

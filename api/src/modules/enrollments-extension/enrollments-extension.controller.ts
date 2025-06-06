@@ -8,8 +8,10 @@ import { GetEnrollmentsCoursesDto, PostEnrollmentsExtensionDto, PatchEnrollments
 
 @ApiTags('Enrollments Extension courses')
 @ApiBearerAuth('Token')
-@UseGuards(JwtGuardService, RolesGuard)
-@Roles('ADMIN')
+@UseGuards(JwtGuardService
+  // , RolesGuard
+)
+// @Roles('ADMIN')
 @Controller('enrollments-extension')
 export class EnrollmentsExtensionController {
   constructor(private readonly enrollmentsExtensionService: EnrollmentsExtensionService) { }

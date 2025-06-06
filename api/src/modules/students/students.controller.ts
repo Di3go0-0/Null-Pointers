@@ -8,8 +8,7 @@ import { RegisterDto } from '../auth/dto';
 
 @ApiTags('Students')
 @ApiBearerAuth('Token')
-@UseGuards(JwtGuardService, RolesGuard)
-@Roles('ADMIN')
+@UseGuards(JwtGuardService)
 @Controller('students')
 export class StudentsController {
   constructor(private readonly studentsService: StudentsService) { }

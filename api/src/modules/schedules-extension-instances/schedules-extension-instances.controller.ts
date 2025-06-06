@@ -8,8 +8,7 @@ import { RolesGuard } from 'src/shared/jwt-guard/jwt-rol-guard.service';
 
 @ApiTags('Schedules Extension Courses')
 @ApiBearerAuth('Token')
-@UseGuards(JwtGuardService, RolesGuard)
-@Roles('ADMIN')
+@UseGuards(JwtGuardService)
 @Controller('schedules-extension-instances')
 export class SchedulesExtensionInstancesController {
   constructor(private readonly schedulesExtensionInstancesService: SchedulesExtensionInstancesService) { }

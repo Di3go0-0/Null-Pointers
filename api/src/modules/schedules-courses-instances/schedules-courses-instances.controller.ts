@@ -8,8 +8,7 @@ import { GetScheduleDto, PatchScheduleDto, PostScheduleCourseInstanceDto } from 
 
 @ApiTags('Schedules Courses')
 @ApiBearerAuth('Token')
-@UseGuards(JwtGuardService, RolesGuard)
-@Roles('ADMIN')
+@UseGuards(JwtGuardService)
 @Controller('schedules-courses-instances')
 export class SchedulesCoursesInstancesController {
   constructor(private readonly schedulesCoursesInstancesService: SchedulesCoursesInstancesService) { }

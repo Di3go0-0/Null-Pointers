@@ -9,8 +9,7 @@ import { GetEnrollmentsProgramsDto } from './dtos/get.enrollments-programs.dto';
 
 @ApiTags('Enrollments Program')
 @ApiBearerAuth('Token')
-@UseGuards(JwtGuardService, RolesGuard)
-@Roles('ADMIN')
+@UseGuards(JwtGuardService)
 @Controller('enrollments-programs')
 export class EnrollmentsProgramsController {
   constructor(private readonly enrollmentsProgramsService: EnrollmentsProgramsService) { }

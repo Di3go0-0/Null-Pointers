@@ -8,8 +8,7 @@ import { GetByStatusExtensionInstancesDto, PatchExtensionInstanceDto, PostExtens
 
 @ApiTags('Extesnion Courses Instances')
 @ApiBearerAuth('Token')
-@UseGuards(JwtGuardService, RolesGuard)
-@Roles('ADMIN')
+@UseGuards(JwtGuardService)
 @Controller('extesnion-courses-instances')
 export class ExtensionInstancesController {
   constructor(private readonly extensionInstancesService: ExtensionInstancesService) { }

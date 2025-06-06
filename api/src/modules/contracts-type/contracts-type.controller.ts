@@ -8,11 +8,7 @@ import { Roles } from 'src/shared';
 
 @ApiTags('Contracts Type')
 @ApiBearerAuth('Token')
-@UseGuards(
-  JwtGuardService,
-  RolesGuard
-)
-@Roles('ADMIN')
+@UseGuards(JwtGuardService)
 @Controller('contracts-type')
 export class ContractsTypeController {
   constructor(private readonly contractsTypeService: ContractsTypeService) { }
