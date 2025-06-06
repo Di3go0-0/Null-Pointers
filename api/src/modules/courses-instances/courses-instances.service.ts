@@ -11,8 +11,8 @@ export class CoursesInstancesService {
     return await this.coursesInstancesRepository.findCoursesInstances();
   }
 
-  async findCoursesByStatus({ status }: GetByStatusCoursesInstancesType): Promise<CourseInstanceType[]> {
-    return await this.coursesInstancesRepository.findCoursesByStatus({ status })
+  async findCoursesByStatus(params: GetByStatusCoursesInstancesType): Promise<CourseInstanceType[]> {
+    return await this.coursesInstancesRepository.findCoursesByStatus(params)
   }
 
   // async findCoursesByTeacher(teacherId: number): Promise<CourseInstanceType[]> {

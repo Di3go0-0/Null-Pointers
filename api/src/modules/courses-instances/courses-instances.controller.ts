@@ -20,8 +20,8 @@ export class CoursesInstancesController {
   }
 
   @Get('search')
-  findCoursesByStatus(@Query() status: GetByStatusCoursesInstancesDto) {
-    return this.coursesInstancesService.findCoursesByStatus(status);
+  findCoursesByStatus(@Query() params: GetByStatusCoursesInstancesDto) {
+    return this.coursesInstancesService.findCoursesByStatus(params);
   }
 
   @Post()

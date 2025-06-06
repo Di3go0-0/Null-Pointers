@@ -3,7 +3,7 @@ import { CourseInstanceType } from "../types/courses-instances.type";
 
 export abstract class CoursesInstancesRepository {
   abstract findCoursesInstances(): Promise<CourseInstanceType[]>;
-  abstract findCoursesByStatus({ status }: GetByStatusCoursesInstancesType): Promise<CourseInstanceType[]>;
+  abstract findCoursesByStatus(params: GetByStatusCoursesInstancesType): Promise<CourseInstanceType[]>;
   // abstract findCoursesByTeacher(teacherId: number): Promise<CourseInstanceType[]>;
   // abstract findCoursesByCourseId(courseId: number): Promise<CourseInstanceType[]>;
   // abstract findCoursesById(id: number): Promise<CourseInstanceType[]>;
