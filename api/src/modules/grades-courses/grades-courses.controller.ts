@@ -3,7 +3,9 @@ import { GradesCoursesService } from './grades-courses.service';
 import { PatchGradesDto } from './dtos/patch.grades.dto';
 import { PostGradesDto } from './dtos/post.grades.dto';
 import { GetGradeDto } from './dtos/get.grades.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Course Grades')
 @Controller('grades-courses')
 export class GradesCoursesController {
   constructor(private readonly gradesCoursesService: GradesCoursesService) { }
