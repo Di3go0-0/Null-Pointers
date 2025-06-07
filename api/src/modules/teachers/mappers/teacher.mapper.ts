@@ -27,6 +27,7 @@ export class TeacherMapper {
       id: teacherData.id,
       name: teacherData.user?.name ?? '',
       email: teacherData.user?.email ?? '',
+      contractTypeId: teacherData.contractType?.id ?? 0,
       contractName: teacherData.contractType?.typeName ?? '',
       specialty: teacherData.specialty ?? '',
       experience: teacherData.experience ?? '',
