@@ -73,7 +73,7 @@ export class AgregarHorarioComponent {
     this.materiasService.createHorarioMateria(this.horario).subscribe({
       next: () => {
         alert("Horario creado exitosamente.");
-        this.router.navigate(['/admin/asignatures/instancias/horario', this.instanciaId]);
+        this.router.navigate(['/admin/asignatures/instancias/Horario', this.instanciaId]);
       },
       error: (err) => {
         console.error("Error al crear horario:", err);

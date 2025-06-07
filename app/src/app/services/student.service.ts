@@ -7,6 +7,11 @@ import { PersonalInfo } from '../models/personal-info';
 import { ParentsInfo } from '../models/parents-info';
 import { EnrollmentsPrograms } from '../models/enrollments-programs';
 import { StudentInfo } from '../models/student-info';
+import { EnrollmentCourse } from '../models/enrollment-course';
+import { HorarioMateria } from '../models/horario-materia';
+import { CourseInstancia } from '../models/course-instancia';
+import { Materia } from '../models/materia';
+import { MateriaInstanciada } from '../models/materia-instanciada';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +20,7 @@ export class StudentService {
 
   constructor(private apiService: ApiService) { }
 
-  getPrograms():Observable<Programa[]> {
+  getPrograms(): Observable<Programa[]> {
     return this.apiService.get<Programa[]>('/academic-programs');
   }
 
@@ -31,7 +36,7 @@ export class StudentService {
     return this.apiService.post<number>(`/parents-info/${studentId}`, parentsInfo);
   }
 
-  registrarEstudiantePrograma(enrollmentProgram: EnrollmentsPrograms): Observable<number>{
+  registrarEstudiantePrograma(enrollmentProgram: EnrollmentsPrograms): Observable<number> {
     return this.apiService.post<number>('/enrollments-programs', enrollmentProgram);
   }
   getstudents(): Observable<StudentInfo[]> {
@@ -59,13 +64,30 @@ export class StudentService {
     return this.apiService.patch<any>(`/personal-info/${id}`, personalInfo);
   }
 
-  updateParentsInfo(id: number,idInfo:number, parentsInfo: ParentsInfo): Observable<any> {
+  updateParentsInfo(id: number, idInfo: number, parentsInfo: ParentsInfo): Observable<any> {
     return this.apiService.patch<any>(`/parents-info/${id}?parentsInfoId=${idInfo}`, parentsInfo);
   }
 
-  updateEnrollment(id:number , enrollmentProgram: any): Observable<any> {
+  updateEnrollment(id: number, enrollmentProgram: any): Observable<any> {
     return this.apiService.patch<any>(`/enrollments-programs/${id}`, enrollmentProgram);
   }
 
-  
+  // metodo para obtener los cursos en los que un estudiante esta inscrito
+  getEnrollmentCourses(id: number): Observable<EnrollmentCourse[]> {
+    return this.apiService.get<EnrollmentCourse[]>(`/enrollments-courses/search?studentId=${id}`);
+  }
+  //metodo para obtener el horaio de una instancia por su id
+  getHorarioByInstanceId(id: number): Observable<HorarioMateria[]> {
+    return this.apiService.get<HorarioMateria[]>(`/schedules-courses-instances/search?courseInstanceId=${id}`);
+  }
+
+  // metodo para obtener la instancia por su id
+  getCourseInstancesActiveByStudent(id: number): Observable<MateriaInstanciada[]> {
+    return this.apiService.get<MateriaInstanciada[]>(`/courses-instances/search?id=${id}`);
+  }
+  getMateriaById(id: number): Observable<Materia[]> {
+      return this.apiService.get<Materia[]>(`/courses/${id}`);
+    }
+
+
 }

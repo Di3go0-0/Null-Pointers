@@ -4,6 +4,9 @@ import { Teacher } from '../models/teacher';
 import { ApiService } from './solicitudes.service';
 import { TeacherCreate } from '../models/teacher-create';
 import { TipoContrato } from '../models/tipo-contrato';
+import { MateriaInstanciada } from '../models/materia-instanciada';
+import { HorarioMateria } from '../models/horario-materia';
+import { Materia } from '../models/materia';
 
 @Injectable({
   providedIn: 'root'
@@ -50,6 +53,22 @@ export class TeacherService {
 
   updatePersonalInfo(id: number, personalInfo: any): Observable<any> {
     return this.apiService.patch<any>(`/personal-info/${id}`, personalInfo);
+  }
+  /**
+   * Obtiene las asignaturas que imparte un profesor activas
+   * @param id ID del profesor
+   * @returns Lista de asignaturas
+   */
+  getCourseInstancesActiveByTeacher(id: number): Observable<MateriaInstanciada[]> {
+    return this.apiService.get<MateriaInstanciada[]>(`/courses-instances/search?teacherId=${id}&status=Active`);  
+  }
+
+  getHorarioByInstanceId(id: number): Observable<HorarioMateria[]> {
+    return this.apiService.get<HorarioMateria[]>(`/schedules-courses-instances/search?courseInstanceId=${id}`); 
+  }
+
+  getMateriaById(id: number): Observable<Materia[]> {
+    return this.apiService.get<Materia[]>(`/courses/${id}`);
   }
 }
 

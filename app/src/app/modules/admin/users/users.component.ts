@@ -65,7 +65,7 @@ export class UsersComponent implements OnInit {
     }
   }
   horarioSubject(userId: number, userType: 'student' | 'teacher') {
-    return;
+    this.router.navigate(['/admin/users/horario', userType, userId]);
   }
   editSubject(userId: number, userType: 'student' | 'teacher') {
     this.router.navigate(['/admin/users/editar', userType, userId]);
