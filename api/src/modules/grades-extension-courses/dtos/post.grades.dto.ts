@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber } from 'class-validator';
 
-export class PostGradesDto {
+export class PostExtensionGradesDto {
   @ApiProperty({
     description: 'The ID of the enrollment course',
     example: 1,
