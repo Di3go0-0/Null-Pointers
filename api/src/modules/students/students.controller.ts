@@ -1,10 +1,11 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Roles } from 'src/shared';
 import { JwtGuardService } from 'src/shared/jwt-guard/jwt-guard.service';
 import { RolesGuard } from 'src/shared/jwt-guard/jwt-rol-guard.service';
 import { StudentsService } from './students.service';
 import { RegisterDto } from '../auth/dto';
+import { PatchStudentDto } from './dtos/patch.student.dto';
 
 @ApiTags('Students')
 @ApiBearerAuth('Token')
@@ -26,5 +27,10 @@ export class StudentsController {
   async creteStudent(@Body() body: RegisterDto) {
     const { confirmPassword, ...body1 } = body
     return this.studentsService.postStudent(body1);
+  }
+
+  @Patch(':id')
+  async patchTeacher(@Param('id', ParseIntPipe) id: number, @Body() body: PatchStudentDto) {
+    return this.studentsService.patchStudent(id, body)
   }
 }
