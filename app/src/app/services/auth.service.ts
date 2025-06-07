@@ -22,7 +22,7 @@ interface LoginResponse {
 export class AuthService {
   private apiUrl = 'http://localhost:3001/auth/login';
   private token: string | null = null;
-  public userData: Token | null = null; // 👈 para guardar el usuario decodificado
+  public userData: Token | null = null;
   constructor(private http: HttpClient,
     private router: Router
   ) {

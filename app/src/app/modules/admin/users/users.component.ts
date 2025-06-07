@@ -8,14 +8,12 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-users',
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css'
 })
 export class UsersComponent implements OnInit {
-editSubject(arg0: any) {
-throw new Error('Method not implemented.');
-}
+
   currentView: 'students' | 'teachers' = 'students';
   searchTerm = '';
   isLoading = false;
@@ -29,7 +27,7 @@ throw new Error('Method not implemented.');
   constructor(
     private studentService: StudentService,
     private teacherService: TeacherService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadUsers();
@@ -63,5 +61,11 @@ throw new Error('Method not implemented.');
           t.specialty.toLowerCase().includes(term)
       );
     }
+  }
+  horarioSubject(userId: number, userType: 'student' | 'teacher') {
+    return;
+  }
+  editSubject(userId: number, userType: 'student' | 'teacher') {
+    throw new Error('Method not implemented.');
   }
 }

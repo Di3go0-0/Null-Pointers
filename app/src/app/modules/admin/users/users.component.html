@@ -25,11 +25,11 @@
                 <p>Email: {{ student.email }}</p>
             </div>
             <div class="subject-actions">
-                <button class="action-btn edit-btn" (click)="editSubject(student.id)" title="Editar">
+                <button class="action-btn edit-btn" (click)="editSubject(student.id,'student')" title="Editar">
                     <i class="material-icons">edit</i>
                     Editar
                 </button>
-                <button class="action-btn schedule-btn">
+                <button class="action-btn schedule-btn" (click)="horarioSubject(student.id, 'student')" title="Horario">
                     <i class="material-icons">schedule</i> Horario
                 </button>
             </div>
@@ -45,17 +45,18 @@
                 <p>Contrato: {{ teacher.contractName }}</p>
             </div>
             <div class="subject-actions">
-                <button class="action-btn edit-btn">
+                <button class="action-btn edit-btn" (click)="editSubject(teacher.id,'teacher')" title="Editar">
                     <i class="material-icons">edit</i> Editar
                 </button>
-                <button class="action-btn schedule-btn">
+                <button class="action-btn schedule-btn" (click)="horarioSubject(teacher.id,'teacher')" title="Horario">
                     <i class="material-icons">schedule</i> Horario
                 </button>
             </div>
         </div>
     </div>
 
-    <div *ngIf="isLoading">
-        <p>Cargando usuarios...</p>
-    </div>
+    <div class="loading-container" *ngIf="isLoading">
+        <div class="spinner"></div>
+        <p>Cargando Usuarios...</p>
+      </div>
 </main>

@@ -32,5 +32,17 @@ export class TeacherService {
   getTypesOfContract(): Observable<TipoContrato[]> {
     return this.apiService.get<TipoContrato[]>('/contracts-type');
   }
+
+  /**
+   * Obtiene un profesor por su ID
+   * @param id ID del profesor
+   * @returns Datos del profesor
+   */
+  getTeacherById(id: number): Observable<Teacher> {
+    return this.apiService.get<Teacher>(`/teachers/${id}`);
+  }
+  getPersonalInfo(id: number): Observable<any> {
+    return this.apiService.get<any>(`/personal-info/${id}`);
+  }
 }
 

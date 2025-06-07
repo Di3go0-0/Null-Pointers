@@ -37,6 +37,15 @@ export class StudentService {
   getstudents(): Observable<StudentInfo[]> {
     return this.apiService.get<StudentInfo[]>('/students');
   }
+  getPersonalInfo(id: number): Observable<any> {
+    return this.apiService.get<any>(`/personal-info/${id}`);
+  }
+  getParentsInfo(id: number): Observable<any> {
+    return this.apiService.get<any>(`/parents-info/${id}`);
+  }
+  getStudentById(id: number): Observable<StudentInfo> {
+    return this.apiService.get<StudentInfo>(`/students/${id}`);
+  }
 
   
 }
