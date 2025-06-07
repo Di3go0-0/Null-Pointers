@@ -7,6 +7,7 @@ import { StudentMapper } from "../../mappers/student.mapper";
 import { RoleName } from "@prisma/client";
 import { RegisterType } from "src/modules/auth/types";
 import { create } from "domain";
+import { PatchStudentType } from "../../types/patch.student.type";
 
 @Injectable()
 export class StudentsPrismaService implements StudentsRepository {
@@ -145,6 +146,44 @@ export class StudentsPrismaService implements StudentsRepository {
     }
   }
 
+
+  public async patchStudent(id: number, body: PatchStudentType): Promise<number> {
+    try {
+      const user = await this.prisma.user.update({
+        where: {
+          id,
+        },
+        data: {
+          ...body
+        }
+      })
+
+      return user.id
+    } catch (error) {
+      if (error instanceof HttpException) { throw error; }
+      this.logger.error(`Error searching user : ${error.message}`);
+      throw new HttpException(STUDENTS.ERROR.UPDATED_STUDENT, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+
+  public async existStudent(id: number): Promise<boolean> {
+    try {
+      const user = await this.prisma.student.findUnique({
+        where: { id }
+      })
+
+      if (user) {
+        throw new HttpException(STUDENTS.ERROR.USER_ALREADY_EXIT, HttpStatus.NOT_FOUND);
+      }
+
+      return !!user
+    } catch (error) {
+      if (error instanceof HttpException) { throw error; }
+      this.logger.error(`Error searching user : ${error.message}`);
+      throw new HttpException(STUDENTS.ERROR.STUDENT_DOESNT_EXIST, HttpStatus.BAD_REQUEST);
+    }
+  }
 
 }
 

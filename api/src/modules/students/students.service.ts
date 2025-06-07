@@ -3,6 +3,7 @@ import { StudentsRepository } from './repository/students.repository';
 import { StudentEntity } from './entities';
 import { RegisterType } from '../auth/types';
 import { hashpassword } from '../auth/helpers';
+import { PatchStudentType } from './types/patch.student.type';
 
 @Injectable()
 export class StudentsService {
@@ -26,6 +27,11 @@ export class StudentsService {
     await this.studentsRepository.existUser(body.email);
     const hashedPassword = await hashpassword(body.password);
     return await this.studentsRepository.postStudent({ ...body, password: hashedPassword })
+  }
+
+  async patchStudent(id: number, body: PatchStudentType): Promise<number> {
+    await this.studentsRepository.existStudent(id);
+    return await this.studentsRepository.patchStudent(id, body);
   }
 
   private async searchRole() {
