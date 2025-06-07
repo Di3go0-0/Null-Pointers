@@ -180,7 +180,7 @@ export class TeachersPrismaService implements TeachersRepository {
           id: true
         }
       })
-      if (user) {
+      if (!user) {
         throw new HttpException(TEACHERS.ERROR.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
       }
       return !!user
