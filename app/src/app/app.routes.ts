@@ -25,6 +25,7 @@ import { CrearInstanciaExComponent } from './modules/admin/courses/crear-instanc
 import { ModificarInstanciaExComponent } from './modules/admin/courses/modificar-instancia-ex/modificar-instancia-ex.component';
 import { HorarioInstanciaExComponent } from './modules/admin/courses/horario-instancia-ex/horario-instancia-ex.component';
 import { AgregarHorarioExComponent } from './modules/admin/courses/agregar-horario-ex/agregar-horario-ex.component';
+import { EditUserComponent } from './modules/admin/users/edit-user/edit-user.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -38,6 +39,7 @@ export const routes: Routes = [
             { path: 'users/new', component: NewUserComponent },// /admin/users/new
             { path: 'users/new/teacher', component: NewTeacherComponent },// /admin/users/new/teacher
             { path: 'users/new/student', component: NewStudentComponent },// /admin/users/new/student
+            { path: 'users/editar/:tipo/:id', component: EditUserComponent }, // /admin/users/modificar/:tipo/:id
             { path: 'asignatures', component: AsignaturesComponent },
             { path: 'asignatures/modificar/:id', component: ModificarMateriaComponent },
             { path: 'asignatures/new', component: NewAsignatureComponent },

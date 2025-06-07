@@ -58,5 +58,14 @@
     <div class="loading-container" *ngIf="isLoading">
         <div class="spinner"></div>
         <p>Cargando Usuarios...</p>
+    </div>
+    <div class="empty-state" *ngIf="!isLoading && (filteredTeachers.length === 0 && currentView === 'teachers') || (filteredStudents.length === 0 && currentView === 'students')">
+        <i class="material-icons">groups</i>
+        <h3>No se encontraron usuarios</h3>
+        <p>{{ searchTerm ? 'No hay usuarios que coincidan con su búsqueda' : 'Comience agregando una nuevo usuario' }}</p>
+        <button class="add-button" (click)="addSubject()" *ngIf="!searchTerm">
+          <i class="material-icons">add</i>
+          Agregar Primer usuario
+        </button>
       </div>
 </main>

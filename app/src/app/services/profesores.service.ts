@@ -38,13 +38,13 @@ export class TeacherService {
    * @param id ID del profesor
    * @returns Datos del profesor
    */
-  getTeacherById(id: number): Observable<Teacher> {
-    return this.apiService.get<Teacher>(`/teachers/${id}`);
+  getTeacherById(id: number): Observable<Teacher[]> {
+    return this.apiService.get<Teacher[]>(`/teachers/${id}`);
   }
-  getPersonalInfo(id: number): Observable<any> {
-    return this.apiService.get<any>(`/personal-info/${id}`);
+  getPersonalInfo(id: number): Observable<any[]> {
+    return this.apiService.get<any[]>(`/personal-info/${id}`);
   }
-  updateTeacher(id: number, teacher: Teacher): Observable<Teacher> {
+  updateTeacher(id: number, teacher: any): Observable<Teacher> {
     return this.apiService.patch<Teacher>(`/teachers/${id}`, teacher);
   }
 

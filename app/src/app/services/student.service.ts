@@ -37,18 +37,18 @@ export class StudentService {
   getstudents(): Observable<StudentInfo[]> {
     return this.apiService.get<StudentInfo[]>('/students');
   }
-  getPersonalInfo(id: number): Observable<any> {
-    return this.apiService.get<any>(`/personal-info/${id}`);
+  getPersonalInfo(id: number): Observable<any[]> {
+    return this.apiService.get<any[]>(`/personal-info/${id}`);
   }
-  getParentsInfo(id: number): Observable<any> {
-    return this.apiService.get<any>(`/parents-info/${id}`);
+  getParentsInfo(id: number): Observable<any[]> {
+    return this.apiService.get<any[]>(`/parents-info/${id}`);
   }
-  getStudentById(id: number): Observable<StudentInfo> {
-    return this.apiService.get<StudentInfo>(`/students/${id}`);
+  getStudentById(id: number): Observable<StudentInfo[]> {
+    return this.apiService.get<StudentInfo[]>(`/students/${id}`);
   }
 
-  getEnrollmentByStudent(id: number): Observable<any> {
-    return this.apiService.get<any>(`/enrollments-programs/search?studentId=${id}`);
+  getEnrollmentByStudent(id: number): Observable<any[]> {
+    return this.apiService.get<any[]>(`/enrollments-programs/search?studentId=${id}`);
   }
 
   updateStudent(id: number, student: any): Observable<number> {
@@ -59,8 +59,8 @@ export class StudentService {
     return this.apiService.patch<any>(`/personal-info/${id}`, personalInfo);
   }
 
-  updateParentsInfo(id: number, parentsInfo: ParentsInfo): Observable<any> {
-    return this.apiService.patch<any>(`/parents-info/${id}`, parentsInfo);
+  updateParentsInfo(id: number,idInfo:number, parentsInfo: ParentsInfo): Observable<any> {
+    return this.apiService.patch<any>(`/parents-info/${id}?parentsInfoId=${idInfo}`, parentsInfo);
   }
 
   updateEnrollment(id:number , enrollmentProgram: any): Observable<any> {

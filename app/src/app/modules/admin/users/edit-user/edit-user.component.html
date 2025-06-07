@@ -1,1 +1,170 @@
-<p>edit-user works!</p>
+<main class="main-content">
+    <div class="content-header">
+        <button class="back-button" (click)="cancel()">
+            <i class="material-icons">arrow_back</i>
+            <span>Editar {{ tipoUsuario === 'teacher' ? 'Docente' : 'Estudiante' }}</span>
+        </button>
+    </div>
+
+    <form #form="ngForm" (ngSubmit)="onSubmit()" class="subject-form">
+        <ng-container *ngIf="tipoUsuario === 'teacher'">
+            <h3>Información Profesional</h3>
+            <div class="form-group">
+                <label>Nombre*</label>
+                <input type="text" [(ngModel)]="teacher.name" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label>Email*</label>
+                <input type="email" [(ngModel)]="teacher.email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label>Especialidad*</label>
+                <input type="text" [(ngModel)]="teacher.specialty" name="specialty" required>
+            </div>
+
+            <div class="form-group">
+                <label>Experiencia*</label>
+                <textarea [(ngModel)]="teacher.experience" name="experience" rows="3" required></textarea>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Salario base*</label>
+                    <input type="number" [(ngModel)]="teacher.baseSalary" name="baseSalary" required min="0">
+                </div>
+
+                <div class="form-group">
+                    <label>Tipo de contrato*</label>
+                    <select [(ngModel)]="teacher.contractName" name="contractTypeId" required>
+                        <option value="">Seleccione un tipo</option>
+                        <option *ngFor="let tipo of tiposContrato" [value]="tipo.typeName">
+                            {{ tipo.typeName }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+            <hr>
+
+            <h3>Información Personal</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Número de identificación*</label>
+                    <input type="text" [(ngModel)]="personalInfo.identificationNumber" name="identificationNumber"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label>Fecha de nacimiento*</label>
+                    <input type="date" [(ngModel)]="personalInfo.birthdate" name="birthdate" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Dirección*</label>
+                <input type="text" [(ngModel)]="personalInfo.address" name="address" required>
+            </div>
+
+            <div class="form-group">
+                <label>Teléfono*</label>
+                <input type="text" [(ngModel)]="personalInfo.phoneNumber" name="phoneNumber" required>
+            </div>
+        </ng-container>
+
+        <ng-container *ngIf="tipoUsuario === 'student'">
+            <!-- Información del estudiante -->
+            <h3>Información de Cuenta</h3>
+
+            <div class="form-group">
+                <label>Nombre completo*</label>
+                <input type="text" [(ngModel)]="student.name" name="name" required placeholder="Ej: Juan Pérez" />
+            </div>
+
+            <div class="form-group">
+                <label>Email*</label>
+                <input type="email" [(ngModel)]="student.email" name="email" required
+                    placeholder="Ej: juan@email.com" />
+            </div>
+            <hr />
+            <!-- Información personal -->
+            <h3>Información Personal</h3>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Número de identificación*</label>
+                    <input type="text" [(ngModel)]="personalInfo.identificationNumber" name="identificationNumber"
+                        required placeholder="Ej: 1234567890" />
+                </div>
+
+                <div class="form-group">
+                    <label>Fecha de nacimiento*</label>
+                    <input type="date" [(ngModel)]="personalInfo.birthdate" name="birthdate" required />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Dirección*</label>
+                <input type="text" [(ngModel)]="personalInfo.address" name="address" required
+                    placeholder="Ej: Calle 45 #10-23" />
+            </div>
+
+            <div class="form-group">
+                <label>Teléfono*</label>
+                <input type="text" [(ngModel)]="personalInfo.phoneNumber" name="phoneNumber" required
+                    placeholder="Ej: 3001234567" />
+            </div>
+
+            <hr />
+
+            <!-- Información del acudiente -->
+            <h3>Información del Acudiente</h3>
+
+            <div class="form-group">
+                <label>Nombre del acudiente*</label>
+                <input type="text" [(ngModel)]="parentsInfo.name" name="parentName" required
+                    placeholder="Ej: María Gómez" />
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Parentesco*</label>
+                    <input type="text" [(ngModel)]="parentsInfo.relationship" name="relationship" required
+                        placeholder="Ej: Madre, Padre, Tío..." />
+                </div>
+
+                <div class="form-group">
+                    <label>Teléfono del acudiente*</label>
+                    <input type="text" [(ngModel)]="parentsInfo.phoneNumber" name="parentPhone" required
+                        placeholder="Ej: 3109876543" />
+                </div>
+            </div>
+
+            <hr />
+
+            <!-- Programa académico -->
+            <h3>Programa Académico</h3>
+
+            <div class="form-group">
+                <label>Seleccionar programa académico*</label>
+                <select [(ngModel)]="enrollmentProgram.academicProgramId" name="programId" required>
+                    <option value="">Seleccione un programa</option>
+                    <option *ngFor="let program of programs" [value]="program.id">
+                        {{ program.programName }}
+                    </option>
+                </select>
+            </div>
+        </ng-container>
+
+        <div class="form-actions">
+            <button type="button" class="cancel-button" (click)="cancel()">
+                <i class="material-icons">close</i> Cancelar
+            </button>
+
+            <button type="submit" class="submit-button" [disabled]="isLoading">
+                <span *ngIf="!isLoading"><i class="material-icons">save</i> Guardar cambios</span>
+                <div class="spinner" *ngIf="isLoading"></div>
+            </button>
+        </div>
+    </form>
+</main>

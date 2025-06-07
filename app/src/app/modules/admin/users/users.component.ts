@@ -5,6 +5,7 @@ import { Teacher } from '../../../models/teacher';
 import { StudentService } from '../../../services/student.service';
 import { TeacherService } from '../../../services/profesores.service';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-users',
@@ -26,7 +27,8 @@ export class UsersComponent implements OnInit {
 
   constructor(
     private studentService: StudentService,
-    private teacherService: TeacherService
+    private teacherService: TeacherService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -66,6 +68,9 @@ export class UsersComponent implements OnInit {
     return;
   }
   editSubject(userId: number, userType: 'student' | 'teacher') {
-    throw new Error('Method not implemented.');
+    this.router.navigate(['/admin/users/editar', userType, userId]);
+  }
+  addSubject(){
+    this.router.navigate(['/admin/users/new']);
   }
 }
