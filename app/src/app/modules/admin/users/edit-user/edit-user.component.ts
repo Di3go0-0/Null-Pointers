@@ -82,7 +82,7 @@ export class EditUserComponent {
       this.studentService.updateStudent(this.idUsuario, this.student).subscribe(() => {
         this.studentService.updatePersonalInfo(this.idUsuario, this.personalInfo).subscribe();
         this.studentService.updateParentsInfo(this.idUsuario, this.parentsInfo).subscribe();
-        this.studentService.updateEnrollment(this.enrollmentProgram).subscribe(() => {
+        this.studentService.updateEnrollment(this.idUsuario,this.enrollmentProgram).subscribe(() => {
           alert('Estudiante actualizado');
           this.router.navigate(['/admin/estudiantes']);
         });

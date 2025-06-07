@@ -51,7 +51,7 @@ export class StudentService {
     return this.apiService.get<any>(`/enrollments-programs/search?studentId=${id}`);
   }
 
-  updateStudent(id: number, student: Student): Observable<number> {
+  updateStudent(id: number, student: any): Observable<number> {
     return this.apiService.patch<number>(`/students/${id}`, student);
   }
 
@@ -61,6 +61,10 @@ export class StudentService {
 
   updateParentsInfo(id: number, parentsInfo: ParentsInfo): Observable<any> {
     return this.apiService.patch<any>(`/parents-info/${id}`, parentsInfo);
+  }
+
+  updateEnrollment(id:number , enrollmentProgram: any): Observable<any> {
+    return this.apiService.patch<any>(`/enrollments-programs/${id}`, enrollmentProgram);
   }
 
   
