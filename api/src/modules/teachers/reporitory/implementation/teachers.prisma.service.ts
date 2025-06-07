@@ -124,24 +124,30 @@ export class TeachersPrismaService implements TeachersRepository {
   }
 
   public async patchTeacher(userId: number, body: PatchTeacherType): Promise<number> {
+    const { name, email, ...teacherData } = body
     try {
-      const updatedTeacher = await this.prisma.user.update({
+      const updatedUser = await this.prisma.user.update({
         where: {
           id: userId,
         },
         data: {
-          ...body
+          name,
+          email,
+          teacher: {
+            update: {
+              ...teacherData
+            }
+          }
         }
-      })
+      });
 
-      return updatedTeacher.id
+      return updatedUser.id;
     }
     catch (error) {
       if (error instanceof HttpException) { throw error; }
       this.logger.error(`Error updating the teacher: ${error.message}`);
       throw new HttpException(TEACHERS.ERROR.UPDATED_TEACHER, HttpStatus.BAD_REQUEST);
     }
-
   }
 
   public async searchRole(roleName: RoleName): Promise<number> {
