@@ -47,5 +47,21 @@ export class StudentService {
     return this.apiService.get<StudentInfo>(`/students/${id}`);
   }
 
+  getEnrollmentByStudent(id: number): Observable<any> {
+    return this.apiService.get<any>(`/enrollments-programs/search?studentId=${id}`);
+  }
+
+  updateStudent(id: number, student: Student): Observable<number> {
+    return this.apiService.patch<number>(`/students/${id}`, student);
+  }
+
+  updatePersonalInfo(id: number, personalInfo: PersonalInfo): Observable<any> {
+    return this.apiService.patch<any>(`/personal-info/${id}`, personalInfo);
+  }
+
+  updateParentsInfo(id: number, parentsInfo: ParentsInfo): Observable<any> {
+    return this.apiService.patch<any>(`/parents-info/${id}`, parentsInfo);
+  }
+
   
 }

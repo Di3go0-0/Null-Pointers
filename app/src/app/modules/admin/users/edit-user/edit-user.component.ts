@@ -64,7 +64,7 @@ export class EditUserComponent {
     this.studentService.getStudentById(this.idUsuario).subscribe(data => this.student = data);
     this.studentService.getPersonalInfo(this.idUsuario).subscribe(info => this.personalInfo = info);
     this.studentService.getParentsInfo(this.idUsuario).subscribe(info => this.parentsInfo = info);
-    this.studentService.getEnrollmentByStudent(this.idUsuario).subscribe(info => this.enrollmentProgram = info);
+    this.studentService.getEnrollmentByStudent(this.idUsuario).subscribe(info => this.enrollmentProgram = info[0]);
     this.studentService.getPrograms().subscribe(data => this.programs = data);
   }
 

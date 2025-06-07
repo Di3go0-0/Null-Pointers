@@ -44,5 +44,12 @@ export class TeacherService {
   getPersonalInfo(id: number): Observable<any> {
     return this.apiService.get<any>(`/personal-info/${id}`);
   }
+  updateTeacher(id: number, teacher: Teacher): Observable<Teacher> {
+    return this.apiService.patch<Teacher>(`/teachers/${id}`, teacher);
+  }
+
+  updatePersonalInfo(id: number, personalInfo: any): Observable<any> {
+    return this.apiService.patch<any>(`/personal-info/${id}`, personalInfo);
+  }
 }
 
