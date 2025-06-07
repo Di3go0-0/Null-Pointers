@@ -125,7 +125,7 @@ export class TeachersPrismaService implements TeachersRepository {
 
   public async patchTeacher(userId: number, body: PatchTeacherType): Promise<number> {
     try {
-      const updatedTeacher = await this.prisma.teacher.update({
+      const updatedTeacher = await this.prisma.user.update({
         where: {
           id: userId,
         },
@@ -133,10 +133,6 @@ export class TeachersPrismaService implements TeachersRepository {
           ...body
         }
       })
-
-      if (!updatedTeacher) {
-        throw new HttpException(TEACHERS.ERROR.UPDATED_TEACHER, HttpStatus.BAD_REQUEST);
-      }
 
       return updatedTeacher.id
     }
