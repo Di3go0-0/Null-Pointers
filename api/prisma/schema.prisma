@@ -191,7 +191,6 @@ model Teacher {
 
   // Back-relations
   courseInstances          CourseInstance[]          @relation("TeacherCourseInstances")
-  gradesUpdated            Grade[]                   @relation("GradesUpdatedByTeacher")
   extensionCourseInstances ExtensionCourseInstance[] @relation("TeacherExtensionCourseInstances")
 
   @@map("Teachers")
@@ -323,18 +322,16 @@ model EnrollmentCourse {
 }
 
 model Grade {
-  id                     Int      @id @default(autoincrement())
-  enrollmentCourseId     Int      @unique @map("enrollmentCourseId")
-  term1_grade            Decimal? @db.Decimal(5, 2)
-  term2_grade            Decimal? @db.Decimal(5, 2)
-  term3_grade            Decimal? @db.Decimal(5, 2)
-  // final_grade Decimal? // Omitido: Es un campo GENERATED en MySQL. Prisma no lo maneja directamente. Debe calcularse en la aplicación o leerse tal cual de la DB.
-  lastUpdatedByTeacherId Int?     @map("lastUpdatedByTeacherId")
-  createdAt              DateTime @default(now())
-  updatedAt              DateTime @updatedAt
+  id                 Int      @id @default(autoincrement())
+  enrollmentCourseId Int      @unique @map("enrollmentCourseId")
+  term1_grade        Decimal? @db.Decimal(5, 2)
+  term2_grade        Decimal? @db.Decimal(5, 2)
+  term3_grade        Decimal? @db.Decimal(5, 2)
+  final              Decimal? @db.Decimal(5, 2)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 
-  enrollmentCourse     EnrollmentCourse @relation(fields: [enrollmentCourseId], references: [id], onDelete: Cascade, onUpdate: Cascade) // Relation to EnrollmentsCourses
-  lastUpdatedByTeacher Teacher?         @relation("GradesUpdatedByTeacher", fields: [lastUpdatedByTeacherId], references: [id], onDelete: SetNull, onUpdate: Cascade) // Relation to Teachers
+  enrollmentCourse EnrollmentCourse @relation(fields: [enrollmentCourseId], references: [id], onDelete: Cascade, onUpdate: Cascade) // Relation to EnrollmentsCourses
 
   @@map("Grades")
 }
@@ -385,8 +382,25 @@ model ExtensionCourseEnrollment {
   student                 Student                 @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade) // Relation to Students
   extensionCourseInstance ExtensionCourseInstance @relation(fields: [extensionCourseInstanceId], references: [id], onDelete: Cascade, onUpdate: Cascade) // Relation to ExtensionCourseInstances
 
+  grade ExtensionCourseGrade? // Back-relation (1-to-1)
+
   @@unique([studentId, extensionCourseInstanceId], map: "uq_student_ext_course_instance") // Composite unique key
   @@map("ExtensionCourseEnrollments")
+}
+
+model ExtensionCourseGrade {
+  id                           Int      @id @default(autoincrement())
+  extensionCourseEnrollmentId Int      @unique @map("extensionCourseEnrollmentId")
+  term1_grade        Decimal? @db.Decimal(5, 2)
+  term2_grade        Decimal? @db.Decimal(5, 2)
+  term3_grade        Decimal? @db.Decimal(5, 2)
+  final              Decimal? @db.Decimal(5, 2)
+  createdAt                   DateTime @default(now())
+  updatedAt                   DateTime @updatedAt
+
+  extensionCourseEnrollment ExtensionCourseEnrollment @relation(fields: [extensionCourseEnrollmentId], references: [id], onDelete: Cascade, onUpdate: Cascade) // Relation to ExtensionCourseEnrollments
+
+  @@map("ExtensionCourseGrades")
 }
 
 model Faq {
