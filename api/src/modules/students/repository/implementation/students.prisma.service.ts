@@ -173,8 +173,8 @@ export class StudentsPrismaService implements StudentsRepository {
         where: { id }
       })
 
-      if (user) {
-        throw new HttpException(STUDENTS.ERROR.USER_ALREADY_EXIT, HttpStatus.NOT_FOUND);
+      if (!user) {
+        throw new HttpException(STUDENTS.ERROR.STUDENT_DOESNT_EXIST, HttpStatus.NOT_FOUND);
       }
 
       return !!user
