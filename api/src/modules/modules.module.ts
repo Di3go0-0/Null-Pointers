@@ -17,6 +17,7 @@ import { ExtensionInstancesModule } from './extension-courses-instances/extensio
 import { SchedulesExtensionInstancesModule } from './schedules-extension-instances/schedules-extension-instances.module';
 import { EnrollmentsExtensionModule } from './enrollments-extension/enrollments-extension.module';
 import { GradesCoursesModule } from './grades-courses/grades-courses.module';
+import { GradesExtensionCoursesModule } from './grades-extension-courses/grades-extension-courses.module';
 
 @Module({
 
@@ -39,6 +40,7 @@ import { GradesCoursesModule } from './grades-courses/grades-courses.module';
     SchedulesExtensionInstancesModule,
     EnrollmentsExtensionModule,
     GradesCoursesModule,
+    GradesExtensionCoursesModule,
   ]
 })
 export class ModulesModule { }
