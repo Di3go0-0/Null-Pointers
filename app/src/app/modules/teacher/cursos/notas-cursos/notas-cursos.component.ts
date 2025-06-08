@@ -14,7 +14,7 @@ import { StudentService } from '../../../../services/student.service';
   styleUrl: './notas-cursos.component.css'
 })
 export class NotasCursosComponent implements OnInit {
-
+  hayNotas: boolean = false;
   instanciaId!: number;
   notas: NotasCursos[] = [];
   students: StudentInfo[] = [];
@@ -31,6 +31,11 @@ export class NotasCursosComponent implements OnInit {
 
     this.materiasService.getNotasByInstanciaId(this.instanciaId).subscribe((notas: NotasCursos[]) => {
       this.notas = notas;
+      if (this.notas.length > 0) {
+        this.hayNotas = true;
+      }else{
+        this.hayNotas = false;
+      }
       this.studentService.getstudents().subscribe((students: StudentInfo[]) => {
         this.students = students;
         this.notas.forEach(nota => this.calcularFinal(nota));

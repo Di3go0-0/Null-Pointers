@@ -35,6 +35,11 @@ import { NotasMaterias } from './models/notas-materias';
 import { NotasMateriasComponent } from './modules/teacher/materias/notas-materias/notas-materias.component';
 import { CursosComponent } from './modules/teacher/cursos/cursos.component';
 import { NotasCursosComponent } from './modules/teacher/cursos/notas-cursos/notas-cursos.component';
+import { HomeStudentComponent } from './modules/student/home-student/home-student.component';
+import { HorarioStudentComponent } from './modules/student/horario-student/horario-student.component';
+import { MateriasStudentComponent } from './modules/student/materias-student/materias-student.component';
+import { CursosStudentComponent } from './modules/student/cursos-student/cursos-student.component';
+import { StudentComponent } from './modules/student/student.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -80,6 +85,16 @@ export const routes: Routes = [
             { path: 'asignaturas/notas/:id', component: NotasMateriasComponent},
             { path: 'cursos', component: CursosComponent},
             { path: 'cursos/notas/:id', component: NotasCursosComponent}
+        ]
+    },
+    {
+        path: 'student',
+        component: StudentComponent,
+        children: [
+            { path: '', component: HomeStudentComponent }, // /teacher
+            { path: 'horario', component: HorarioStudentComponent},
+            { path: 'asignaturas', component: MateriasStudentComponent},
+            { path: 'cursos', component: CursosStudentComponent},
         ]
     },
     { path: 'profile', component: ProfileComponent },

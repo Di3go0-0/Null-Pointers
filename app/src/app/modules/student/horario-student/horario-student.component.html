@@ -8,7 +8,7 @@
                         <button class="btn btn-link text-white p-0 me-3" (click)="back()">
                             <i class="bi bi-arrow-left-circle-fill fs-4 text-white"></i>
                         </button>
-                        <h2 class="text-white mb-0">Horario Profesor </h2>
+                        <h2 class="text-white mb-0">Horario Estudiantes </h2>
                     </div>
                 </div>
 
@@ -73,7 +73,7 @@
                 <!-- Sin horario -->
                 <div class="loading-container" *ngIf="isLoading">
                     <div class="spinner"></div>
-                    <p>Cargando Horario...</p>
+                    <p>Cargando Usuarios...</p>
                 </div>
                 <div class="empty-state"
                     *ngIf="!isLoading && !cursosNormales.length && !cursosExtension.length">

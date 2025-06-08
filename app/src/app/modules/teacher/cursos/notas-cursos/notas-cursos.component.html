@@ -45,6 +45,15 @@
 
         <hr style="margin: 2rem 0;" />
       </div>
+      <div class="loading-container" *ngIf="!hayNotas">
+        <div class="spinner"></div>
+        <p>Cargando notas...</p>
+      </div>
+
+      <div class="empty-state" *ngIf="!hayNotas && notas.length === 0">
+        <i class="material-icons">school</i>
+        <h3>No se encontraron Estudiantes matriculados</h3>
+      </div>
 
       <div class="form-actions">
         <button type="button" class="cancel-button" (click)="goBack()">

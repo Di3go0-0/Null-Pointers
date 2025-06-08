@@ -104,6 +104,9 @@ export class StudentService {
   getMateriaByIdEx(id: number): Observable<Course[]> {
     return this.apiService.get<Course[]>(`/extension-courses/${id}`);
   }
+  getId(): Observable<number> {
+    return this.apiService.get<number>('/auth/user-id');
+  }
 
 
 }
