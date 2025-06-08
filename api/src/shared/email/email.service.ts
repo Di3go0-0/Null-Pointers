@@ -24,7 +24,7 @@ export class EmailService {
       <p>Usa el siguiente código para completar el proceso:</p>
       <h2 style="text-align: center; background-color: #f0f0f0; padding: 10px; border-radius: 5px;">${code}</h2>
       <p>Si no solicitaste esto, puedes ignorar este correo de forma segura.</p>
-      <p>Gracias,<br>El equipo de Tu App</p>
+      <p>Gracias,<br>El equipo de Null Pointers</p>
     `;
 
     try {
