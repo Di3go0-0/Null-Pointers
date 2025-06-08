@@ -5,12 +5,13 @@ import { Programa } from '../models/programa';
 import { Course } from '../models/course';
 import { CourseInstancia } from '../models/course-instancia';
 import { HorarioCourse } from '../models/horario-course';
+import { NotasCursos } from '../models/notas-cursos';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CursosExtensionService {
-private endpoint = '/extension-courses';
+  private endpoint = '/extension-courses';
 
   constructor(private apiService: ApiService) { }
 
@@ -112,5 +113,12 @@ private endpoint = '/extension-courses';
         error: (err) => observer.error(err)
       });
     });
+  }
+  getNotasByInstanciaId(instanciaId: number): Observable<NotasCursos[]> {
+    return this.apiService.get<NotasCursos[]>(`/grades-extesnion-courses?extensionCourseInstanceId=${instanciaId}`);
+  }
+
+  actualizarNotas(notaId: number, notas: NotasCursos): Observable<any> {
+    return this.apiService.patch(`/grades-extesnion-courses/${notaId}`, notas);
   }
 }

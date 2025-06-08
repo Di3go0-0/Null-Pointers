@@ -105,7 +105,7 @@ export class MateriasComponent implements OnInit {
  
 
   notas(subjectId: number): void {
-    this.router.navigate(["/admin/asignatures/instancias/modificar", subjectId])
+    this.router.navigate(["/teacher/asignaturas/notas", subjectId])
   }
 
 

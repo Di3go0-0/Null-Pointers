@@ -66,6 +66,7 @@ export class TeacherService {
     return this.apiService.get<MateriaInstanciada[]>(`/courses-instances/search?teacherId=${id}&status=Active`);  
   }
 
+
   getHorarioByInstanceId(id: number): Observable<HorarioMateria[]> {
     return this.apiService.get<HorarioMateria[]>(`/schedules-courses-instances/search?courseInstanceId=${id}`); 
   }

@@ -6,6 +6,7 @@ import { MateriaCreate } from '../models/materia-create';
 import { Programa } from '../models/programa';
 import { MateriaInstanciada } from '../models/materia-instanciada';
 import { HorarioMateria } from '../models/horario-materia';
+import { NotasMaterias } from '../models/notas-materias';
 
 @Injectable({
   providedIn: "root",
@@ -114,5 +115,13 @@ export class MateriasService {
       });
     });
   }
+
+  getNotasByInstanciaId(instanciaId: number): Observable<NotasMaterias[]> {
+    return this.apiService.get<NotasMaterias[]>(`/grades-courses?courseInstanceId=${instanciaId}`);
+  }
+
+  actualizarNotas(notaId: number, notas: NotasMaterias): Observable<any> {
+  return this.apiService.patch(`/grades-courses/${notaId}`, notas);
+}
 }
 

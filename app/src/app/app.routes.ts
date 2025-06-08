@@ -31,6 +31,10 @@ import { TeacherComponent } from './modules/teacher/teacher.component';
 import { HomeTeacherComponent } from './modules/teacher/home-teacher/home-teacher.component';
 import { HorarioTeacerComponent } from './modules/teacher/horario-teacer/horario-teacer.component';
 import { MateriasComponent } from './modules/teacher/materias/materias.component';
+import { NotasMaterias } from './models/notas-materias';
+import { NotasMateriasComponent } from './modules/teacher/materias/notas-materias/notas-materias.component';
+import { CursosComponent } from './modules/teacher/cursos/cursos.component';
+import { NotasCursosComponent } from './modules/teacher/cursos/notas-cursos/notas-cursos.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -72,7 +76,10 @@ export const routes: Routes = [
         children: [
             { path: '', component: HomeTeacherComponent }, // /teacher
             { path: 'horario', component: HorarioTeacerComponent},
-            { path: 'asignaturas', component: MateriasComponent}
+            { path: 'asignaturas', component: MateriasComponent},
+            { path: 'asignaturas/notas/:id', component: NotasMateriasComponent},
+            { path: 'cursos', component: CursosComponent},
+            { path: 'cursos/notas/:id', component: NotasCursosComponent}
         ]
     },
     { path: 'profile', component: ProfileComponent },
