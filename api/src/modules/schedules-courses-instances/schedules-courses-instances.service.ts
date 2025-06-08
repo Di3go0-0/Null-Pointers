@@ -38,4 +38,8 @@ export class SchedulesCoursesInstancesService {
     }
     return await this.schedulesCoursesInstancesRepository.update(id, body)
   }
+
+  async delete(id: number): Promise<number> {
+    return await this.schedulesCoursesInstancesRepository.delete(id)
+  }
 }

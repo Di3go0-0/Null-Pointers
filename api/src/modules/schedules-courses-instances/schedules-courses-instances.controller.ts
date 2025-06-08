@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { SchedulesCoursesInstancesService } from './schedules-courses-instances.service';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { Roles } from 'src/shared';
@@ -31,5 +31,10 @@ export class SchedulesCoursesInstancesController {
   @Patch(':id')
   async UpdateSchedules(@Param('id', ParseIntPipe) id: number, @Body() body: PatchScheduleDto) {
     return this.schedulesCoursesInstancesService.update(id, body)
+  }
+
+  @Delete(':id')
+  async delete(@Param('id', ParseIntPipe) id: number, @Body() body: PatchScheduleDto) {
+    return this.schedulesCoursesInstancesService.delete(id);
   }
 }

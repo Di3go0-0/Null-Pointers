@@ -10,4 +10,5 @@ export abstract class SchedulesCoursesInstancesRepository {
   abstract update(id: number, body: PatchScheduleType): Promise<number>;
   abstract schedulesCrossing(props: partialSchedules): Promise<void>;
   abstract courseInstanceId(scheuleId: number): Promise<number>;
+  abstract delete(id: number): Promise<number>;
 }
