@@ -1,0 +1,39 @@
+.min-vh-100 {
+  height: 100vh !important;
+}
+
+.bg-primary {
+  background-color: #007bff !important;
+}
+
+.bg-purple {
+  background: linear-gradient(135deg, #6f42c1, #8e44ad) !important;
+}
+
+.bg-warning {
+  background: linear-gradient(135deg, #ffc107, #f39c12) !important;
+}
+
+.bg-success {
+  background: linear-gradient(135deg, #28a745, #27ae60) !important;
+}
+
+.report-card {
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.report-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+
+
+.btn-link {
+  text-decoration: none !important;
+}
+
+.btn-link:hover .text-decoration-underline {
+  text-decoration: underline !important;
+}
