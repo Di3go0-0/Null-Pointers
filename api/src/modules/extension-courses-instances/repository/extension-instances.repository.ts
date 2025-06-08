@@ -11,5 +11,5 @@ export abstract class ExtensionInstancesRepository {
   abstract existTeacher(teacherId: number): Promise<boolean>;
   abstract existExtensionCourse(courseId: number): Promise<boolean>;
   abstract verifyGroupCode(groupCode: string): Promise<boolean>;
-  abstract verifyGroupCodeOwner(courseId: number, groupCode: string): Promise<boolean>;
+  abstract verifyGroupCodeOwner(id: number, groupCode: string): Promise<boolean>;
 }

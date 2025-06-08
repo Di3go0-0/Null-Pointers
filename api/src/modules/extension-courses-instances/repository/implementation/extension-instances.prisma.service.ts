@@ -201,28 +201,22 @@ export class ExtensionInstancesPrismaService implements ExtensionInstancesReposi
     }
   }
 
-  public async verifyGroupCodeOwner(courseId: number, groupCode: string): Promise<boolean> {
+  public async verifyGroupCodeOwner(id: number, groupCode: string): Promise<boolean> {
     try {
-      const group = await this.prisma.courseInstance.findFirst({
+      const code = await this.prisma.extensionCourseInstance.findFirst({
         where: {
-          id: courseId,
+          groupCode,
           active: true,
         },
-        select: {
-          semester: true
-        }
       })
 
-      const code = await this.prisma.courseInstance.findFirst({
-        where: {
-          id: courseId,
-          groupCode,
-          semester: group?.semester,
-          active: true,
-        }
-      })
-
+      // Si no existe ningún curso con ese código, está disponible
       if (!code) {
+        return true;
+      }
+
+      // Si existe y el id es diferente, significa que el código ya está en uso por otro curso
+      if (code.id !== id) {
         throw new HttpException(EXTENSION.ALERT.COURSE_CODE, HttpStatus.CONFLICT);
       }
 

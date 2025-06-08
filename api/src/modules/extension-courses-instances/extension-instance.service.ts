@@ -24,7 +24,7 @@ export class ExtensionInstancesService {
 
   async updateExtensionCourseInstance(id: number, body: PatchExtensionInstanceDto): Promise<number> {
     await this.extensionInstancesRepository.existExtensionCourseInstance(id)
-    if (body.extensionCourseId) await this.extensionInstancesRepository.existExtensionCourseInstance(body.extensionCourseId);
+    if (body.extensionCourseId) await this.extensionInstancesRepository.existExtensionCourse(body.extensionCourseId);
     if (body.teacherId) await this.extensionInstancesRepository.existTeacher(body.teacherId);
     if (body.groupCode) await this.extensionInstancesRepository.verifyGroupCodeOwner(id, body.groupCode);
     return await this.extensionInstancesRepository.updateExtensionCourseInstance(id, body);
