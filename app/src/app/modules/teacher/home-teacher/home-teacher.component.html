@@ -1,0 +1,43 @@
+<main class="main-content">
+      <div class="content-header">
+        <h1 class="page-title">Plataforma Docente</h1>
+      </div>
+
+      <div class="user-type-container">
+        <h2 class="selection-title">Bienvenido a la plataforma</h2>
+        
+        <div class="user-type-cards">
+          <div class="user-type-card" (click)="selectUserType('horario')">
+            <div class="card-icon">
+              <i class="material-icons">schedule</i>
+            </div>
+            <h3>Horario</h3>
+            <p>Revisa tu horario de trabajo</p>
+            <div class="card-arrow">
+              <i class="material-icons">arrow_forward</i>
+            </div>
+          </div>
+          
+          <div class="user-type-card" (click)="selectUserType('asignaturas')">
+            <div class="card-icon">
+              <i class="bi bi-mortarboard"></i>
+            </div>
+            <h3>Asignaturas</h3>
+            <p>Registra Notas de asignaturas</p>
+            <div class="card-arrow">
+              <i class="material-icons">arrow_forward</i>
+            </div>
+          </div>
+          <div class="user-type-card" (click)="selectUserType('cursos')">
+            <div class="card-icon">
+              <i class="bi bi-book"></i>
+            </div>
+            <h3>Cursos de Extension</h3>
+            <p>Registra Notas de Cursos de Extension</p>
+            <div class="card-arrow">
+              <i class="material-icons">arrow_forward</i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>

@@ -7,15 +7,6 @@ import { Subscription } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 
 
-interface AdminModule {
-  title: string;
-  description: string;
-  icon: string;
-  route: string;
-  bgColor: string;
-}
-
-
 @Component({
   selector: 'app-home',
   imports: [CommonModule, RouterOutlet, RouterLink,RouterLinkActive],
@@ -27,7 +18,6 @@ export class HomeComponent {
   sidebarCollapsed = false;
 
   
-
   user: User | null = null;
   private subscription!: Subscription
 

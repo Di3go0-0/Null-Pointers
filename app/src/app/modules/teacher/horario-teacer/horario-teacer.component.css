@@ -1,0 +1,154 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+.schedule-container {
+  background: linear-gradient(135deg, #184916 0%, #48ea33 50%, #3aed43 100%);
+  min-height: 100vh;
+  padding: 2rem 0;
+}
+
+.header-section {
+  margin-bottom: 2rem;
+}
+
+.header-section h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+.header-section h4 {
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+.loading-container,
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  color: white;
+  text-align: center;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.empty-state i {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  opacity: 0.7;
+}
+
+.empty-state h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+  font-size: 1rem;
+  opacity: 0.8;
+  margin-bottom: 1.5rem;
+}
+
+.course-card {
+  background: rgb(255, 255, 255);
+  border-radius: 12px;
+  padding: 1.5rem;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.726);
+  color: black;
+}
+
+.course-icon {
+  width: 40px;
+  height: 40px;
+  background: rgb(253, 253, 253);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(0, 0, 0);
+}
+
+.schedule-grid {
+  margin-top: 1rem;
+}
+
+.schedule-item {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 0.75rem;
+  text-align: center;
+  border: 1px solid rgb(0, 0, 0);
+}
+
+.day-label {
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.time-label {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.75rem;
+}
+
+.btn-register {
+  background: #1f2937;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.btn-register:hover {
+  background: #374151;
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.btn-link {
+  text-decoration: none !important;
+}
+
+.btn-link:hover {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .schedule-container {
+    padding: 1rem 0;
+  }
+  
+  .course-card {
+    padding: 1rem;
+  }
+  
+  .schedule-item {
+    padding: 0.5rem;
+  }
+  
+  .day-label {
+    font-size: 0.75rem;
+  }
+  
+  .time-label {
+    font-size: 0.7rem;
+  }
+}

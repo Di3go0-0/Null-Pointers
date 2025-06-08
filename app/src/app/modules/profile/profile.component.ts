@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -31,6 +31,7 @@ export class ProfileComponent {
     private authService: AuthService,
     private userService: UserService,
     private apiService: ApiService,
+    private location: Location,
     private router: Router
   ) { }
   currentUser: User | null = null;
@@ -43,7 +44,7 @@ export class ProfileComponent {
       this.currentUser = info;
       this.rol = info?.role.roleName || '';
       this.personalInfo = info?.personalInfo || null;
-      
+
       if (info) {
         console.log('Usuario actual:', info.name, info.email, info.role.roleName);
       }
@@ -59,41 +60,41 @@ export class ProfileComponent {
   }
 
   async changePassword() {
-  if (!this.currentPassword || !this.newPassword || !this.confirmPassword) {
-    this.showPasswordMessage('Por favor completa todos los campos', 'danger');
-    return;
+    if (!this.currentPassword || !this.newPassword || !this.confirmPassword) {
+      this.showPasswordMessage('Por favor completa todos los campos', 'danger');
+      return;
+    }
+
+    if (this.newPassword !== this.confirmPassword) {
+      this.showPasswordMessage('Las contraseñas no coinciden', 'danger');
+      return;
+    }
+
+    if (!this.currentUser?.email) {
+      this.showPasswordMessage('No se pudo obtener el correo del usuario', 'danger');
+      return;
+    }
+
+    this.isChangingPassword = true;
+
+    try {
+      await this.apiService.changePasswordWithOld(this.currentUser.email, {
+        oldPassword: this.currentPassword,
+        password: this.newPassword,
+        confirmPassword: this.confirmPassword
+      }).toPromise();
+
+      this.showPasswordMessage('Contraseña actualizada correctamente', 'success');
+      this.currentPassword = '';
+      this.newPassword = '';
+      this.confirmPassword = '';
+    } catch (error: any) {
+      const message = error?.error?.message || 'Error al cambiar la contraseña';
+      this.showPasswordMessage(message, 'danger');
+    } finally {
+      this.isChangingPassword = false;
+    }
   }
-
-  if (this.newPassword !== this.confirmPassword) {
-    this.showPasswordMessage('Las contraseñas no coinciden', 'danger');
-    return;
-  }
-
-  if (!this.currentUser?.email) {
-    this.showPasswordMessage('No se pudo obtener el correo del usuario', 'danger');
-    return;
-  }
-
-  this.isChangingPassword = true;
-
-  try {
-    await this.apiService.changePasswordWithOld(this.currentUser.email, {
-      oldPassword: this.currentPassword,
-      password: this.newPassword,
-      confirmPassword: this.confirmPassword
-    }).toPromise();
-
-    this.showPasswordMessage('Contraseña actualizada correctamente', 'success');
-    this.currentPassword = '';
-    this.newPassword = '';
-    this.confirmPassword = '';
-  } catch (error: any) {
-    const message = error?.error?.message || 'Error al cambiar la contraseña';
-    this.showPasswordMessage(message, 'danger');
-  } finally {
-    this.isChangingPassword = false;
-  }
-}
 
 
   showPasswordMessage(message: string, type: string) {
@@ -111,7 +112,7 @@ export class ProfileComponent {
     this.router.navigate(['/login']);
   }
 
-  goBack() {
-    this.router.navigate(['/admin']);
+  goBack(): void {
+    this.location.back(); // Regresa a la ruta anterior en el historial
   }
 }

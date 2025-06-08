@@ -27,6 +27,10 @@ import { HorarioInstanciaExComponent } from './modules/admin/courses/horario-ins
 import { AgregarHorarioExComponent } from './modules/admin/courses/agregar-horario-ex/agregar-horario-ex.component';
 import { EditUserComponent } from './modules/admin/users/edit-user/edit-user.component';
 import { HorarioUserComponent } from './modules/admin/users/horario-user/horario-user.component';
+import { TeacherComponent } from './modules/teacher/teacher.component';
+import { HomeTeacherComponent } from './modules/teacher/home-teacher/home-teacher.component';
+import { HorarioTeacerComponent } from './modules/teacher/horario-teacer/horario-teacer.component';
+import { MateriasComponent } from './modules/teacher/materias/materias.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -60,6 +64,15 @@ export const routes: Routes = [
             { path: 'courses/instancias/Horario/crear/:id', component: AgregarHorarioExComponent },
             { path: 'reports', component: ReportsComponent }
           
+        ]
+    },
+    {
+        path: 'teacher',
+        component: TeacherComponent,
+        children: [
+            { path: '', component: HomeTeacherComponent }, // /teacher
+            { path: 'horario', component: HorarioTeacerComponent},
+            { path: 'asignaturas', component: MateriasComponent}
         ]
     },
     { path: 'profile', component: ProfileComponent },

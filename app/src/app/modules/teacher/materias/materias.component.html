@@ -1,0 +1,54 @@
+<main class="main-content">
+      <div class="content-header">
+        <div class="content-header">
+        <button class="back-button" (click)="cancel()">
+            <i class="material-icons">arrow_back</i>
+            <span class="page-title">Asignaturas del docente</span>
+        </button>
+    </div>
+
+        <div class="actions-bar">
+          <div class="search-container">
+            <div class="search-input-wrapper">
+              <i class="material-icons">search</i>
+              <input 
+                type="text" 
+                placeholder="Buscar asignaturas..." 
+                [(ngModel)]="searchTerm"
+                (input)="onSearch()"
+                class="search-input"
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subjects-container" *ngIf="!isLoading">
+        <div class="subject-card" *ngFor="let subject of filteredSubjects">
+          <div class="subject-info">
+            <h3 class="subject-name">{{materia[0].courseName}} ID:{{ subject.id }}</h3>
+            <div class="subject-details">
+              <span class="subject-code">Código: {{ subject.groupCode }}</span>
+              <span class="subject-semester">Semestre: {{ subject.semester }}</span>
+            </div>
+          </div>
+          
+          <div class="subject-actions">
+            <button class="action-btn edit-btn" (click)="notas(subject.id)" title="Editar">
+              <i class="material-icons">edit</i>
+              Notas
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="loading-container" *ngIf="isLoading">
+        <div class="spinner"></div>
+        <p>Cargando Instancias...</p>
+      </div>
+
+      <div class="empty-state" *ngIf="!isLoading && filteredSubjects.length === 0">
+        <i class="material-icons">school</i>
+        <h3>No se encontraron Materias</h3>
+      </div>
+    </main>

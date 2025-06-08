@@ -1,0 +1,96 @@
+<div class="schedule-container">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10 col-12">
+                <!-- Header -->
+                <div class="header-section mb-4">
+                    <div class="d-flex align-items-center mb-2">
+                        <button class="btn btn-link text-white p-0 me-3" (click)="back()">
+                            <i class="bi bi-arrow-left-circle-fill fs-4 text-white"></i>
+                        </button>
+                        <h2 class="text-white mb-0">Gestionar usuarios</h2>
+                    </div>
+                    <h4 class="text-white mb-0">Consultar Horario</h4>
+                    <small class="text-white">Consulta horarios ({{ tipo === 'teacher' ? 'Profesor' : 'Estudiante'
+                        }})</small>
+                </div>
+
+                <!-- Horarios normales -->
+                <div *ngIf="cursosNormales.length > 0">
+                    <h4 class="text-white mb-4">Horarios Académicos</h4>
+                    <div class="course-card mb-4" *ngFor="let course of cursosNormales">
+                        <div class="course-header d-flex align-items-center mb-3">
+                            <div class="course-icon me-3">
+                                <i class="bi bi-journal-text fs-4 text-primary"></i>
+                            </div>
+                            <div>
+                                <h5 class="text-black mb-2">{{ course.codigo }} - {{ course.nombre }}</h5>
+                                <h6>Grupo: {{ course.grupo }}</h6>
+                            </div>
+                        </div>
+                        <div class="schedule-grid">
+                            <div class="row g-2">
+                                <div class="col-4" *ngFor="let schedule of course.horario">
+                                    <div class="schedule-item bg-light p-2 rounded text-center">
+                                        <div class="fw-bold">{{ schedule.day }}</div>
+                                        <div>Hora: {{ schedule.time }}</div>
+                                        <div class="text-black small">Salón: {{ schedule.classroom }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Horarios de extensión -->
+                <div *ngIf="horarioExtension">
+                    <hr
+                        style="height: 4px; color: rgb(0, 0, 0); border: rgb(0, 0, 0) 5px solid; border-radius: 10px;" />
+                    <div class="courses-section">
+                        <h4 class="text-white mb-4">Horarios de Extensión</h4>
+                        <div class="course-card mb-4" *ngFor="let course of cursosExtension">
+                            <div class="course-header d-flex align-items-center mb-3">
+                                <div class="course-icon me-3">
+                                    <i class="bi bi-journal-text fs-4 text-primary"></i>
+                                </div>
+                                <div>
+                                    <h5 class="text-black mb-2">{{ course.codigo }} - {{ course.nombre }}</h5>
+                                    <h6>Grupo: {{ course.grupo }}</h6>
+                                </div>
+                            </div>
+                            <div class="schedule-grid">
+                                <div class="row g-2">
+                                    <div class="col-4" *ngFor="let schedule of course.horario">
+                                        <div class="schedule-item bg-light p-2 rounded text-center">
+                                            <div class="fw-bold">{{ schedule.day }}</div>
+                                            <div>Hora: {{ schedule.time }}</div>
+                                            <div class="text-black small">Salón: {{ schedule.classroom }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sin horario -->
+                <div class="loading-container" *ngIf="isLoading">
+                    <div class="spinner"></div>
+                    <p>Cargando Usuarios...</p>
+                </div>
+                <div class="empty-state"
+                    *ngIf="!isLoading && !cursosNormales.length && !cursosExtension.length">
+                    <i class="material-icons">groups</i>
+                    <h3>No se encontraron Horarios</h3>
+                </div>
+
+                <!-- Botón Regresar -->
+                <div class="text-center mt-4">
+                    <button type="button" class="btn btn-primary px-5 py-2" (click)="back()">
+                        Regresar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
