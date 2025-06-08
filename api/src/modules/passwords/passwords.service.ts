@@ -3,16 +3,21 @@ import { PasswordsRepository } from './repository';
 import { ChangePasswordTokenType, ChangePassworType } from './types';
 import { generateResetToken } from './helpers';
 import { hashpassword } from '../auth/helpers';
+import { EmailService } from 'src/shared/email/email.service';
 
 @Injectable()
 export class PasswordsService {
-  constructor(private readonly passwordsRepository: PasswordsRepository) { }
+  constructor(
+    private readonly passwordsRepository: PasswordsRepository,
+    private readonly emailService: EmailService
+  ) { }
 
   async requestPasswordToken(email: string): Promise<boolean> {
     const user = await this.passwordsRepository.userExist(email);
     const token = generateResetToken();
     const expiresAt = new Date(Date.now() + 1000 * 60 * 15)
-    const tokenCreated = await this.passwordsRepository.createToken(user.id, token, expiresAt)
+    const tokenCreated = await this.passwordsRepository.createToken(user.id, token, expiresAt);
+    await this.emailService.sendPasswordRecoveryEmail(email, token);
 
     return !!tokenCreated.token
   }
