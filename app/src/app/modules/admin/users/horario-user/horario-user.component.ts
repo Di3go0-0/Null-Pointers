@@ -14,8 +14,10 @@ import { TeacherService } from '../../../../services/profesores.service';
 export class HorarioUserComponent implements OnInit {
   tipo: 'student' | 'teacher' = 'student';
   id!: number;
-  cursos: any[] = [];
+  cursosNormales: any[] = [];
+  cursosExtension: any[] = [];
   public sinHorario: boolean = false;
+  public horarioExtension: boolean = false;
   diasTraducidos: { [key: string]: string } = {
     'Monday': 'Lunes',
     'Tuesday': 'Martes',
@@ -46,12 +48,7 @@ export class HorarioUserComponent implements OnInit {
 
   async loadStudentSchedule(): Promise<void> {
     const enrollmentCourses = await this.studentService.getEnrollmentCourses(this.id).toPromise();
-    if (!enrollmentCourses || enrollmentCourses.length === 0) {
-      this.sinHorario = true;  
-      return;
-    }
-
-    for (const enrollment of enrollmentCourses) {
+    for (const enrollment of enrollmentCourses || []) {
       const instanceId = enrollment.courseInstanceId;
       const horario = await this.studentService.getHorarioByInstanceId(instanceId).toPromise();
       if (!horario || horario.length === 0) continue;
@@ -65,7 +62,7 @@ export class HorarioUserComponent implements OnInit {
 
       const materia = materiaResponse[0];
 
-      this.cursos.push({
+      this.cursosNormales.push({
         nombre: materia.courseName,
         codigo: materia.courseCode,
         grupo: inst.groupCode,
@@ -76,16 +73,47 @@ export class HorarioUserComponent implements OnInit {
         }))
       });
     }
+
+    const extensionEnrollments = await this.studentService.getEnrollmentCoursesEx(this.id).toPromise();
+
+    for (const enrollment of extensionEnrollments || []) {
+      if (enrollment.status === 'Enrolled') {
+        console.log('entre a cursos matriculados de extension')
+        console.log('Enrollment extensión:', enrollment);
+        const instanceIdEx = enrollment.extensionCourseInstanceId;
+        const horarioEx = await this.studentService.getHorarioByInstanceIdEx(instanceIdEx).toPromise();
+        if (!horarioEx || horarioEx.length === 0) continue;
+
+        const instanceEx = await this.studentService.getCourseInstancesActiveByStudentEx(instanceIdEx).toPromise();
+        if (!instanceEx || instanceEx.length === 0) continue;
+
+        const inst = instanceEx[0];
+        const materiaResponseEx = await this.studentService.getMateriaByIdEx(inst.extensionCourseId).toPromise();
+        if (!materiaResponseEx || materiaResponseEx.length === 0) continue;
+
+        const materiaEx = materiaResponseEx[0];
+
+        this.cursosExtension.push({
+          nombre: materiaEx.courseName,
+          codigo: materiaEx.courseCode,
+          grupo: inst.groupCode,
+          horario: horarioEx.map(h => ({
+            day: this.diasTraducidos[h.day] || h.day,
+            time: `${h.startTime} - ${h.endTime}`,
+            classroom: h.classroom
+          }))
+        });
+      }
+
+    }
+
+    this.sinHorario = this.cursosNormales.length === 0 && this.cursosExtension.length === 0;
+    this.horarioExtension = this.cursosExtension.length > 0;
   }
 
   async loadTeacherSchedule(): Promise<void> {
     const instances = await this.teacherService.getCourseInstancesActiveByTeacher(this.id).toPromise();
-    if (!instances || instances.length === 0) {
-      this.sinHorario = true;  
-      return;
-    }
-
-    for (const inst of instances) {
+    for (const inst of instances || []) {
       const materiaResponse = await this.teacherService.getMateriaById(inst.courseId).toPromise();
       if (!materiaResponse || materiaResponse.length === 0) continue;
 
@@ -93,7 +121,7 @@ export class HorarioUserComponent implements OnInit {
       const horario = await this.teacherService.getHorarioByInstanceId(inst.id).toPromise();
       if (!horario || horario.length === 0) continue;
 
-      this.cursos.push({
+      this.cursosNormales.push({
         nombre: materia.courseName,
         codigo: materia.courseCode,
         grupo: inst.groupCode,
@@ -104,6 +132,30 @@ export class HorarioUserComponent implements OnInit {
         }))
       });
     }
+
+    const extensionInstances = await this.teacherService.getCourseInstancesActiveByTeacherExtension(this.id).toPromise();
+    for (const inst of extensionInstances || []) {
+      const materiaResponse = await this.teacherService.getMateriaByIdExtension(inst.extensionCourseId).toPromise();
+      if (!materiaResponse || materiaResponse.length === 0) continue;
+
+      const materia = materiaResponse[0];
+      const horario = await this.teacherService.getHorarioByInstanceIdExtension(inst.id).toPromise();
+      if (!horario || horario.length === 0) continue;
+
+      this.cursosExtension.push({
+        nombre: materia.courseName,
+        codigo: materia.courseCode,
+        grupo: inst.groupCode,
+        horario: horario.map(h => ({
+          day: this.diasTraducidos[h.day] || h.day,
+          time: `${h.startTime} - ${h.endTime}`,
+          classroom: h.classroom
+        }))
+      });
+    }
+
+    this.sinHorario = this.cursosNormales.length === 0 && this.cursosExtension.length === 0;
+    this.horarioExtension = this.cursosExtension.length > 0;
   }
 
   back(): void {

@@ -4,8 +4,8 @@ export class CourseInstancia {
         public extensionCourseId: number,
         public teacherId: number,
         public groupCode: string,
-        public startDate: Date,
-        public endDate: Date,
+        public startDate: string,
+        public endDate: string,
         public maxStudents: string,
         public publicationStatus: string
     ) { }

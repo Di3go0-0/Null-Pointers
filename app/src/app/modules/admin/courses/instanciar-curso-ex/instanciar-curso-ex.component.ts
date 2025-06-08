@@ -56,11 +56,11 @@ export class InstanciarCursoExComponent implements OnInit {
     this.materiasService.getMateriaById(this.materiaId).subscribe({
       next: (materia) => {
         this.materia = materia
-        console.log("Materia loaded:", this.materia);
+        console.log("course loaded:", this.materia);
         this.isLoading = false
       },
       error: (error) => {
-        console.error("Error loading materia:", error)
+        console.error("Error loading course:", error)
         this.isLoading = false
       }
     })
@@ -75,6 +75,7 @@ export class InstanciarCursoExComponent implements OnInit {
 
         this.subjects = filtered;
         this.filteredSubjects = filtered;
+        console.log("instancias loaded:", this.subjects);
         this.isLoading = false;
       },
       error: (error) => {

@@ -52,8 +52,8 @@ subjectId: number | null = null;
       alert('Por favor, complete todos los campos obligatorios.');
       return;
     }
-    if (this.materia.durationHours >= 12) {
-      alert('La duración en horas no puede ser mayor que 12.');
+    if (this.materia.durationHours >= 80) {
+      alert('La duración en horas no puede ser mayor que 80.');
       return;
     }
     this.isLoading = true;
@@ -72,6 +72,6 @@ subjectId: number | null = null;
   }
 
   cancel(): void {
-    this.router.navigate(["/admin"]);
+    this.router.navigate(["/admin/courses"]);
   }
 }

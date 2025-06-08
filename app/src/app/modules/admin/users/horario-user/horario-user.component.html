@@ -14,35 +14,67 @@
           <small class="text-white">Consulta horarios ({{ tipo === 'teacher' ? 'Profesor' : 'Estudiante' }})</small>
         </div>
 
-        <!-- Cursos -->
-        <div class="courses-section">
-          <div class="course-card mb-4" *ngFor="let course of cursos">
+        <!-- Horarios normales -->
+        <div *ngIf="cursosNormales.length > 0">
+          <h4 class="text-white mb-4">Horarios Académicos</h4>
+          <div class="course-card mb-4" *ngFor="let course of cursosNormales">
             <div class="course-header d-flex align-items-center mb-3">
               <div class="course-icon me-3">
                 <i class="bi bi-journal-text fs-4 text-primary"></i>
               </div>
               <div>
                 <h5 class="text-black mb-2">{{ course.codigo }} - {{ course.nombre }}</h5>
-                <h6>grupo: {{course.grupo}} </h6>
+                <h6>Grupo: {{ course.grupo }}</h6>
               </div>
             </div>
-
             <div class="schedule-grid">
               <div class="row g-2">
                 <div class="col-4" *ngFor="let schedule of course.horario">
                   <div class="schedule-item bg-light p-2 rounded text-center">
                     <div class="fw-bold">{{ schedule.day }}</div>
                     <div>Hora: {{ schedule.time }}</div>
-                    <div class="text-black small">salon: {{ schedule.classroom }}</div>
+                    <div class="text-black small">Salón: {{ schedule.classroom }}</div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div *ngIf="sinHorario" class="alert alert-info text-center">
-            <i class="bi bi-info-circle-fill"></i>
-            Este Usuario no tiene horarios asignados actualmente.
+        </div>
+
+        <!-- Horarios de extensión -->
+        <div *ngIf="horarioExtension">
+          <hr style="height: 4px; color: rgb(0, 0, 0); border: rgb(0, 0, 0) 5px solid; border-radius: 10px;" />
+          <div class="courses-section">
+            <h4 class="text-white mb-4">Horarios de Extensión</h4>
+            <div class="course-card mb-4" *ngFor="let course of cursosExtension">
+              <div class="course-header d-flex align-items-center mb-3">
+                <div class="course-icon me-3">
+                  <i class="bi bi-journal-text fs-4 text-primary"></i>
+                </div>
+                <div>
+                  <h5 class="text-black mb-2">{{ course.codigo }} - {{ course.nombre }}</h5>
+                  <h6>Grupo: {{ course.grupo }}</h6>
+                </div>
+              </div>
+              <div class="schedule-grid">
+                <div class="row g-2">
+                  <div class="col-4" *ngFor="let schedule of course.horario">
+                    <div class="schedule-item bg-light p-2 rounded text-center">
+                      <div class="fw-bold">{{ schedule.day }}</div>
+                      <div>Hora: {{ schedule.time }}</div>
+                      <div class="text-black small">Salón: {{ schedule.classroom }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+        </div>
+
+        <!-- Sin horario -->
+        <div *ngIf="sinHorario" class="alert alert-info text-center mt-4">
+          <i class="bi bi-info-circle-fill"></i>
+          Este Usuario no tiene horarios asignados actualmente.
         </div>
 
         <!-- Botón Regresar -->

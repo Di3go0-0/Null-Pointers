@@ -1,1 +1,72 @@
-<p>modificar-instancia-ex works!</p>
+<main class="main-content">
+    <div class="content-header">
+        <button class="back-button" (click)="cancel()">
+            <i class="material-icons">arrow_back</i>
+            <span>Modificar Instancia</span>
+        </button>
+    </div>
+
+    <div class="form-container">
+        <form #form="ngForm" (ngSubmit)="onSubmit()" class="subject-form">
+
+            <div class="form-group">
+                <label for="groupCode">Código del Grupo*</label>
+                <input type="text" id="groupCode" [(ngModel)]="materia.groupCode" name="groupCode" required
+                    placeholder="G01">
+            </div>
+
+             <div class="form-group" [class.invalid]="teacherId.invalid && teacherId.touched">
+                <label for="teacher">Profesor*</label>
+                <select id="teacher" [(ngModel)]="materia.teacherId" name="teacherId" #teacherId="ngModel" required>
+                    <option value="">Seleccione un profesor</option>
+                    <option *ngFor="let t of teachers" [value]="t.id">{{ t.name }} - {{ t.specialty }}</option>
+                </select>
+                <small *ngIf="teacherId.invalid && teacherId.touched" class="error-text">
+                    Seleccione un profesor.
+                </small>
+            </div>
+
+            <div class="form-group">
+                <label for="startDate">Fecha de inicio*</label>
+                <input type="date" id="startDate" [(ngModel)]="materia.startDate" name="startDate" required>
+            </div>
+
+            <div class="form-group">
+                <label for="endDate">Fecha de fin*</label>
+                <input type="date" id="endDate" [(ngModel)]="materia.endDate" name="endDate" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="maxStudents">Máximo de estudiantes*</label>
+                    <input type="number" id="maxStudents" [(ngModel)]="materia.maxStudents" name="maxStudents" required
+                        min="1">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="status">Estado de la instancia*</label>
+                <select id="status" [(ngModel)]="materia.publicationStatus" name="status" required>
+                    <option value="">Seleccione un estado</option>
+                    <option *ngFor="let status of statusOptions" [value]="status">
+                        {{ status === 'Draft' ? 'Borrador' :
+                        status === 'Published' ? 'Publicado' :
+                        status === 'Cancelled' ? 'Cancelado' :
+                        status === 'Completed' ? 'Completado' : status }}
+                    </option>
+                </select>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="cancel-button" (click)="cancel()">
+                    <i class="material-icons">close</i> Cancelar
+                </button>
+
+                <button type="submit" class="submit-button" [disabled]="form.invalid || isLoading">
+                    <span *ngIf="!isLoading"><i class="material-icons">save</i> Guardar</span>
+                    <div class="spinner" *ngIf="isLoading"></div>
+                </button>
+            </div>
+
+        </form>
+    </div>
+</main>

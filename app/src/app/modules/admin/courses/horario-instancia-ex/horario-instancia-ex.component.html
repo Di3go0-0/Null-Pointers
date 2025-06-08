@@ -1,1 +1,54 @@
-<p>horario-instancia-ex works!</p>
+<main class="main-content">
+    <div class="content-header">
+        <div class="content-header">
+            <button class="back-button" (click)="cancel()">
+                <i class="material-icons">arrow_back</i>
+                <span class="page-title">Horario de: {{nombreDelCurso}}</span>
+            </button>
+        </div>
+        
+        <div class="actions-bar">
+            <button class="add-button" (click)="addSubject()">
+                <i class="material-icons">add</i>
+                Nuevo Horario
+            </button>
+        </div>
+    </div>
+
+    <div class="subjects-container" *ngIf="!isLoading">
+        <div class="subject-card" *ngFor="let subject of horarios">
+            <div class="subject-info">
+                <h3 class="subject-name">Horario numero:{{subject.id}}</h3>
+                <div class="subject-details">
+                    <span class="subject-code">Dia: {{ translateDayToSpanish(subject.day) }}</span>
+                    <span class="subject-semester">Hora Inicio: {{ formatHour(subject.startTime) }}</span>
+                    <span class="subject-semester">Hora Fin: {{ formatHour(subject.endTime) }}</span>
+                    <span class="subject-semester">Salon: {{ subject.classroom }}</span>
+                </div>
+            </div>
+
+            <div class="subject-actions">
+                <button class="action-btn btn-danger" (click)="deleteSubject(subject.id)" title="Eliminar">
+                    <i class="material-icons">delete</i>
+                    Eliminar
+                </button>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="loading-container" *ngIf="isLoading">
+        <div class="spinner"></div>
+        <p>Cargando Horarios...</p>
+    </div>
+
+    <div class="empty-state" *ngIf="!isLoading && horarios.length === 0">
+        <i class="material-icons">school</i>
+        <h3>No se encontraron Horarios</h3>
+        <p>Comience agregando una nuevo Horario</p>
+        <button class="add-button" (click)="addSubject()" *ngIf="!isLoading">
+            <i class="material-icons">add</i>
+            Crea un nuevo Horario
+        </button>
+    </div>
+</main>

@@ -7,6 +7,9 @@ import { TipoContrato } from '../models/tipo-contrato';
 import { MateriaInstanciada } from '../models/materia-instanciada';
 import { HorarioMateria } from '../models/horario-materia';
 import { Materia } from '../models/materia';
+import { CourseInstancia } from '../models/course-instancia';
+import { HorarioCourse } from '../models/horario-course';
+import { Course } from '../models/course';
 
 @Injectable({
   providedIn: 'root'
@@ -69,6 +72,17 @@ export class TeacherService {
 
   getMateriaById(id: number): Observable<Materia[]> {
     return this.apiService.get<Materia[]>(`/courses/${id}`);
+  }
+
+  //metodos para obtener el horario de los cursos de extension
+  getCourseInstancesActiveByTeacherExtension(id: number): Observable<CourseInstancia[]> {
+    return this.apiService.get<CourseInstancia[]>(`/extesnion-courses-instances/search?teacherId=${id}&publicationStatus=Published`);
+  }
+  getHorarioByInstanceIdExtension(id: number): Observable<HorarioCourse[]> {
+    return this.apiService.get<HorarioCourse[]>(`/schedules-extension-instances/search?extensionCourseInstanceId=${id}`);
+  }
+  getMateriaByIdExtension(id: number): Observable<Course[]> {
+    return this.apiService.get<Course[]>(`/extension-courses/${id}`);
   }
 }
 

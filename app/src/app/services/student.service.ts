@@ -12,6 +12,8 @@ import { HorarioMateria } from '../models/horario-materia';
 import { CourseInstancia } from '../models/course-instancia';
 import { Materia } from '../models/materia';
 import { MateriaInstanciada } from '../models/materia-instanciada';
+import { Course } from '../models/course';
+import { EnrollmentCourseEx } from '../models/enrollment-course-ex';
 
 @Injectable({
   providedIn: 'root'
@@ -71,7 +73,7 @@ export class StudentService {
   updateEnrollment(id: number, enrollmentProgram: any): Observable<any> {
     return this.apiService.patch<any>(`/enrollments-programs/${id}`, enrollmentProgram);
   }
-
+  //metodos para obtenter el horario de un estudiante
   // metodo para obtener los cursos en los que un estudiante esta inscrito
   getEnrollmentCourses(id: number): Observable<EnrollmentCourse[]> {
     return this.apiService.get<EnrollmentCourse[]>(`/enrollments-courses/search?studentId=${id}`);
@@ -88,6 +90,20 @@ export class StudentService {
   getMateriaById(id: number): Observable<Materia[]> {
       return this.apiService.get<Materia[]>(`/courses/${id}`);
     }
+
+  //metodos para obtener el horario de los cursos de extension
+  getEnrollmentCoursesEx(id: number): Observable<EnrollmentCourseEx[]> {
+    return this.apiService.get<EnrollmentCourseEx[]>(`/enrollments-extension/search?studentId=${id}`);
+  }
+  getHorarioByInstanceIdEx(id: number): Observable<HorarioMateria[]> {
+    return this.apiService.get<HorarioMateria[]>(`/schedules-extension-instances/search?extensionCourseInstanceId=${id}`);
+  }
+  getCourseInstancesActiveByStudentEx(id: number): Observable<CourseInstancia[]> {
+    return this.apiService.get<CourseInstancia[]>(`/extesnion-courses-instances/search?id=${id}`);
+  }
+  getMateriaByIdEx(id: number): Observable<Course[]> {
+    return this.apiService.get<Course[]>(`/extension-courses/${id}`);
+  }
 
 
 }

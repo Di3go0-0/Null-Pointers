@@ -31,9 +31,9 @@
                 <div class="form-group" [class.invalid]="credits.invalid && credits.touched">
                     <label for="credits">Duracion del Curso en horas*</label>
                     <input type="number" id="credits" [(ngModel)]="materia.durationHours" name="credits" #credits="ngModel"
-                        placeholder="maximo 12 horas." required min="1" max="12">
+                        placeholder="maximo 12 horas." required min="1" max="80">
                     <small *ngIf="credits.invalid && credits.touched" class="error-text">
-                        Mínimo 1 hora, máximo 12 horas.
+                        Mínimo 1 hora, máximo 80 horas.
                     </small>
                 </div>
             </div>
