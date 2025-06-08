@@ -57,6 +57,6 @@ export class PostExtensionCoursesDto {
   @IsNumber()
   @IsNotEmpty()
   @Min(1)
-  @Max(12)
+  @Max(80)
   durationHours: number;
 }
