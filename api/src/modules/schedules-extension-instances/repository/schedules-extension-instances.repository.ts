@@ -7,4 +7,5 @@ export abstract class SchedulesExtensionInstancesRepository {
   abstract save(body: PostScheduleType): Promise<number>;
   abstract update(id: number, body: PatchScheduleType): Promise<number>;
   abstract verifyExtensionInstance(extensionCourseInstanceId: number): Promise<void>;
+  abstract delete(id: number): Promise<number>;
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { SchedulesExtensionInstancesService } from './schedules-extension-instances.service';
 import { GetScheduleDto, PostScheduleDto, PatchScheduleDto } from './dtos';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
@@ -33,5 +33,9 @@ export class SchedulesExtensionInstancesController {
     return this.schedulesExtensionInstancesService.update(id, body)
   }
 
+  @Delete(':id')
+  async delete(@Param('id', ParseIntPipe) id: number, @Body() body: PatchScheduleDto) {
+    return this.schedulesExtensionInstancesService.delete(id);
+  }
 
 }

@@ -24,4 +24,8 @@ export class SchedulesExtensionInstancesService {
     if (body.extensionCourseInstanceId) await this.schedulesExtensionInstancesRepository.verifyExtensionInstance(body.extensionCourseInstanceId);
     return await this.schedulesExtensionInstancesRepository.update(id, body);
   }
+
+  async delete(id: number): Promise<number> {
+    return this.schedulesExtensionInstancesRepository.delete(id);
+  }
 }

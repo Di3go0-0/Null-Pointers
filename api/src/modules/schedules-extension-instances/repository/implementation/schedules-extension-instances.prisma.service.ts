@@ -95,4 +95,21 @@ export class SchedulesExtensionInstancesPrismaService implements SchedulesExtens
     }
   }
 
+  public async delete(id: number): Promise<number> {
+    try {
+      const scheduleCourse = await this.prisma.scheduleExtensionCourseInstance.delete({
+        where: { id }
+      })
+
+      return scheduleCourse.id;
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      this.logger.error(`Error deleting schedule: ${error.message}`);
+      throw new HttpException(SCHEDULES.ERROR.DELETE, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
 }
+
