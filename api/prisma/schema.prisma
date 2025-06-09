@@ -389,7 +389,7 @@ model ExtensionCourseEnrollment {
 }
 
 model ExtensionCourseGrade {
-  id                           Int      @id @default(autoincrement())
+  id                          Int      @id @default(autoincrement())
   extensionCourseEnrollmentId Int      @unique @map("extensionCourseEnrollmentId")
   term1_grade        Decimal? @db.Decimal(5, 2)
   term2_grade        Decimal? @db.Decimal(5, 2)
