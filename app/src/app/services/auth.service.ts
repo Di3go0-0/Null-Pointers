@@ -20,8 +20,8 @@ interface LoginResponse {
 
 export class AuthService {
  
-  private apiUrl = 'http://localhost:3001/auth/login';
-  private url = 'http://localhost:3001';
+  private apiUrl = 'https://null-pointers-quy4.onrender.com/auth/login';
+  private url = 'https://null-pointers-quy4.onrender.com';
   private token: string | null = null;
   public userData: Token | null = null;
   constructor(private http: HttpClient,
