@@ -1,0 +1,85 @@
+<main class="main-content">
+  <div class="content-header">
+    <h1 class="page-title">Notas del Estudiante</h1>
+  </div>
+
+  <div *ngIf="loading" class="text-center text-white mb-4">
+    <i class="material-icons md-36">hourglass_empty</i>
+    <p class="mt-2">Cargando notas...</p>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger text-center">
+    <i class="material-icons">error</i> {{ error }}
+  </div>
+
+  <div *ngIf="!loading && !error" class="container bg-white rounded shadow p-4">
+    <!-- Notas de Materias -->
+    <h3 class="text-dark mb-3">
+      <i class="material-icons">school</i> Notas de Materias
+    </h3>
+
+    <div *ngIf="notasMaterias.length > 0; else noMaterias">
+      <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+          <thead class="table-success">
+            <tr>
+              <th>Materia</th>
+              <th>Nota 1</th>
+              <th>Nota 2</th>
+              <th>Nota 3</th>
+              <th>Final</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let nota of notasMaterias">
+              <td>{{ materiaNombres[nota.courseInstanceId] || 'Cargando...' }}</td>
+              <td>{{ nota.term1_grade ?? '-' }}</td>
+              <td>{{ nota.term2_grade ?? '-' }}</td>
+              <td>{{ nota.term3_grade ?? '-' }}</td>
+              <td><strong>{{ nota.final ?? '-' }}</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <ng-template #noMaterias>
+      <p class="text-muted text-center">No hay notas registradas para materias.</p>
+    </ng-template>
+    <hr>
+
+    <!-- Notas de Cursos de Extensión -->
+    <h3 class="text-dark mt-5 mb-3">
+      <i class="material-icons">book</i> Notas de Cursos de Extensión
+    </h3>
+
+    <div *ngIf="notasCursos.length > 0; else noCursos">
+      <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+          <thead class="table-success">
+            <tr>
+              <th>Curso</th>
+              <th>Nota 1</th>
+              <th>Nota 2</th>
+              <th>Nota 3</th>
+              <th>Final</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let nota of notasCursos">
+              <td>{{ cursoNombres[nota.extensionCourseInstanceId] || 'Cargando...' }}</td>
+              <td>{{ nota.term1_grade ?? '-' }}</td>
+              <td>{{ nota.term2_grade ?? '-' }}</td>
+              <td>{{ nota.term3_grade ?? '-' }}</td>
+              <td><strong>{{ nota.final ?? '-' }}</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <ng-template #noCursos>
+      <p class="text-muted text-center">No hay notas registradas para cursos de extensión.</p>
+    </ng-template>
+  </div>
+</main>

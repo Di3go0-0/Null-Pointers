@@ -6,6 +6,7 @@ import { User } from '../models/user';
   providedIn: 'root'
 })
 export class UserService {
+
   private userInfoSubject = new BehaviorSubject<User | null>(null);
   public userInfo$: Observable<User | null> = this.userInfoSubject.asObservable();
 
@@ -37,6 +38,14 @@ export class UserService {
       const user = JSON.parse(data);
       this.userInfoSubject.next(user);
     }
+  }
+  getUserRole() {
+    // const userData = JSON.parse(localStorage.getItem('userInfo') || '{}');
+    const userData = this.getUserInfo();
+    if (!userData) {
+      return '';
+    }
+    return userData.role.roleName; // Asegúrate de que 'role' sea una propiedad válida en tu modelo User
   }
   clearUserInfo(): void {
     this.userInfoSubject.next(null);

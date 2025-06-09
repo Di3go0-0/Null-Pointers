@@ -15,9 +15,8 @@ import { MateriaInstanciada } from '../models/materia-instanciada';
 import { Course } from '../models/course';
 import { EnrollmentCourseEx } from '../models/enrollment-course-ex';
 import { ProgramaInscrito } from '../models/programa-inscrito';
-interface GradesCourses {
-  enrollmentCourseId: number;
-}
+import { NotasMaterias } from '../models/notas-materias';
+import { NotasCursos } from '../models/notas-cursos';
 @Injectable({
   providedIn: 'root'
 })
@@ -155,6 +154,14 @@ export class StudentService {
     return this.apiService.patch<number>(`/enrollments-extension/${id}`, data);
   }
 
+  //optener las notas de una materia
+  getGradesMateriasBystudentId(id: number): Observable<NotasMaterias[]> {
+    return this.apiService.get<NotasMaterias[]>(`/grades-courses?studentId=${id}`);
+  }
 
+  //optener las notas de un curso
+  getGradesCoursesBystudentId(id: number): Observable<NotasCursos[]> {
+    return this.apiService.get<NotasCursos[]>(`/grades-extesnion-courses?studentId=${id}`);
+  }
 
 }

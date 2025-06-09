@@ -1,0 +1,52 @@
+<header class="bg-dark py-3 px-4">
+    <div class="container">
+        <div class="d-flex align-items-center">
+            <div class="bg-primary text-white p-2 rounded me-2 fw-bold">CC</div>
+            <span class="text-white h4 mb-0">Campus Connect</span>
+            <div class="text-end px-4 py-2">
+                <button routerLink="/login" class="btn btn-sm btn-secondary">
+                    <i class="bi bi-arrow-left-circle me-1"></i>
+                    Volver al login
+                </button>
+            </div>
+        </div>
+    </div>
+</header>
+<main class="flex-grow-1 d-flex align-items-center justify-content-center p-4"
+    style="background: rgba(2, 150, 155, 0.575)">
+    <div class="chat-container">
+        <h5>🤖 Chatbot</h5>
+
+        <!-- Mensajes del chat -->
+        <div class="chat-box">
+            <div *ngFor="let msg of messages"
+                [ngClass]="{'user-message': msg.sender === 'user', 'bot-message': msg.sender === 'bot'}"
+                class="chat-bubble">
+                <p>{{ msg.message }}</p>
+                <small>{{ msg.time }}</small>
+            </div>
+        </div>
+
+        <!-- Área de entrada -->
+        <div class="input-area">
+            <input [(ngModel)]="userInput" (keyup.enter)="sendMessage()" placeholder="Escribe tu pregunta aquí..." />
+            <button (click)="sendMessage()">Enviar</button>
+        </div>
+
+        <!-- Botón para mostrar FAQs -->
+        <div class="text-center mt-3">
+            <button (click)="toggleFAQ()" class="btn btn-outline-primary text-dark">
+                {{ showFAQs ? 'Ocultar preguntas frecuentes' : 'Mostrar preguntas frecuentes' }}
+            </button>
+        </div>
+
+        <!-- Lista de FAQs -->
+        <div *ngIf="showFAQs" class="faq-list mt-2">
+            <ul class="list-group">
+                <li *ngFor="let faq of FAQS" (click)="askFAQ(faq)" class="list-group-item list-group-item-action">
+                    {{ faq.question }}
+                </li>
+            </ul>
+        </div>
+    </div>
+</main>

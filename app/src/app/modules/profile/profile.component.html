@@ -20,7 +20,7 @@
   </header>
 
   <!-- Main Content -->
-  <main class="flex-grow-1 p-4" style="background: linear-gradient(to bottom, #5eead4, #14b8a6);">
+  <main class="flex-grow-1 p-4" style="background: linear-gradient(to bottom, #3f9e90, #0c7065);">
     <div class="container">
       <div class="row g-4">
         <!-- Profile Sidebar -->
@@ -55,15 +55,13 @@
                   }
                   @else{
                     <h6 class="text-muted mb-1">Programa</h6>
-                    <p class="mb-0">programa</p>
+                    <p class="mb-0">{{studentProgramName}}</p>
                   }
                 </div>
                 <div class="mb-3">
-                  <h6 class="text-muted mb-1">Semestre</h6>
-                  @if (rol === 'ADMIN' || rol === 'TEACHER') {
-                    <p class="mb-0">No aplica</p>
-                  }@else{
-                    <p class="mb-0">semestre</p>
+                  @if (rol === 'STUDENT') {
+                    <h6 class="text-muted mb-1">Fecha de inscripcion</h6>
+                    <p class="mb-0">{{studentEnrollmentDate | date:'longDate'}}</p>
                   }
                 </div>
                 <div class="mb-3">

@@ -31,7 +31,6 @@ import { TeacherComponent } from './modules/teacher/teacher.component';
 import { HomeTeacherComponent } from './modules/teacher/home-teacher/home-teacher.component';
 import { HorarioTeacerComponent } from './modules/teacher/horario-teacer/horario-teacer.component';
 import { MateriasComponent } from './modules/teacher/materias/materias.component';
-import { NotasMaterias } from './models/notas-materias';
 import { NotasMateriasComponent } from './modules/teacher/materias/notas-materias/notas-materias.component';
 import { CursosComponent } from './modules/teacher/cursos/cursos.component';
 import { NotasCursosComponent } from './modules/teacher/cursos/notas-cursos/notas-cursos.component';
@@ -42,6 +41,10 @@ import { CursosStudentComponent } from './modules/student/cursos-student/cursos-
 import { StudentComponent } from './modules/student/student.component';
 import { InscribirMateriaComponent } from './modules/student/inscribir-materia/inscribir-materia.component';
 import { InscribirCursoComponent } from './modules/student/inscribir-curso/inscribir-curso.component';
+import { VerNotasComponent } from './modules/student/ver-notas/ver-notas.component';
+import { ForgotPasswordComponent } from './modules/forgot-password/forgot-password.component';
+import { ChatbotComponent } from './modules/chatbot/chatbot.component';
+import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -49,6 +52,8 @@ export const routes: Routes = [
     {
         path: 'admin',
         component: HomeComponent,
+        canActivate: [AuthGuard],
+        data: { roles: ['ADMIN'] },
         children: [
             { path: '', component: DashboardComponent }, // /admin
             { path: 'users', component: UsersComponent },   // /admin/users
@@ -65,7 +70,7 @@ export const routes: Routes = [
             { path: 'asignatures/instancias/modificar/:id', component: ModificarInstanciaComponent },
             { path: 'asignatures/instancias/Horario/:id', component: HorarioInstanciaComponent },
             { path: 'asignatures/instancias/Horario/crear/:id', component: AgregarHorarioComponent },
-            { path: 'courses', component: CoursesComponent  },
+            { path: 'courses', component: CoursesComponent },
             { path: 'courses/modificar/:id', component: ModificarCursoExComponent },
             { path: 'courses/new', component: NuevoCursoExComponent },
             { path: 'courses/instancias/:id', component: InstanciarCursoExComponent },
@@ -74,34 +79,46 @@ export const routes: Routes = [
             { path: 'courses/instancias/Horario/:id', component: HorarioInstanciaExComponent },
             { path: 'courses/instancias/Horario/crear/:id', component: AgregarHorarioExComponent },
             { path: 'reports', component: ReportsComponent }
-          
+
         ]
     },
     {
         path: 'teacher',
         component: TeacherComponent,
+        canActivate: [AuthGuard],
+        data: { roles: ['TEACHER'] },
         children: [
             { path: '', component: HomeTeacherComponent }, // /teacher
-            { path: 'horario', component: HorarioTeacerComponent},
-            { path: 'asignaturas', component: MateriasComponent},
-            { path: 'asignaturas/notas/:id', component: NotasMateriasComponent},
-            { path: 'cursos', component: CursosComponent},
-            { path: 'cursos/notas/:id', component: NotasCursosComponent}
+            { path: 'horario', component: HorarioTeacerComponent },
+            { path: 'asignaturas', component: MateriasComponent },
+            { path: 'asignaturas/notas/:id', component: NotasMateriasComponent },
+            { path: 'cursos', component: CursosComponent },
+            { path: 'cursos/notas/:id', component: NotasCursosComponent }
         ]
     },
     {
         path: 'student',
         component: StudentComponent,
+        canActivate: [AuthGuard],
+        data: { roles: ['STUDENT'] },
         children: [
             { path: '', component: HomeStudentComponent }, // /teacher
-            { path: 'horario', component: HorarioStudentComponent},
-            { path: 'asignaturas', component: MateriasStudentComponent},
-            { path: 'asignaturas/inscribir/:id', component: InscribirMateriaComponent},
-            { path: 'cursos', component: CursosStudentComponent},
-            { path: 'cursos/inscribir/:id', component: InscribirCursoComponent}
+            { path: 'horario', component: HorarioStudentComponent },
+            { path: 'asignaturas', component: MateriasStudentComponent },
+            { path: 'asignaturas/inscribir/:id', component: InscribirMateriaComponent },
+            { path: 'cursos', component: CursosStudentComponent },
+            { path: 'cursos/inscribir/:id', component: InscribirCursoComponent },
+            { path: 'notas', component: VerNotasComponent }
         ]
     },
-    { path: 'profile', component: ProfileComponent },
+    { path: 'forgot-password', component: ForgotPasswordComponent },
+    { path: 'chatbot', component: ChatbotComponent },
+    {
+        path: 'profile',
+        component: ProfileComponent,
+        canActivate: [AuthGuard],
+        data: { roles: ['STUDENT', 'TEACHER', 'ADMIN'] }
+    },
 
     // Para rutas no registradas
     { path: '**', component: ErrorComponent }

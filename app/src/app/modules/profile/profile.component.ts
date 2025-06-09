@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { UserService } from '../../services/user.service';
 import { PersonalInfo } from '../../models/personal-info';
 import { ApiService } from '../../services/solicitudes.service';
+import { StudentService } from '../../services/student.service';
 
 @Component({
   selector: 'app-profile',
@@ -17,6 +18,8 @@ import { ApiService } from '../../services/solicitudes.service';
 })
 export class ProfileComponent {
   activeTab = 'personal';
+  studentProgramName: string = '';
+  studentEnrollmentDate: string = '';
 
   // Password change form
   currentPassword = '';
@@ -31,6 +34,7 @@ export class ProfileComponent {
     private authService: AuthService,
     private userService: UserService,
     private apiService: ApiService,
+    private studentService: StudentService,
     private location: Location,
     private router: Router
   ) { }
@@ -40,16 +44,28 @@ export class ProfileComponent {
   personalInfo: PersonalInfo | null = null;
 
   ngOnInit() {
-    this.subscription = this.userService.userInfo$.subscribe(info => {
-      this.currentUser = info;
-      this.rol = info?.role.roleName || '';
-      this.personalInfo = info?.personalInfo || null;
+  this.subscription = this.userService.userInfo$.subscribe(info => {
+    this.currentUser = info;
+    this.rol = info?.role.roleName || '';
+    this.personalInfo = info?.personalInfo || null;
 
-      if (info) {
-        console.log('Usuario actual:', info.name, info.email, info.role.roleName);
-      }
-    });
-  }
+    if (info) {
+      console.log('Usuario actual:', info.name, info.email, info.role.roleName);
+    }
+
+    if (this.rol === 'STUDENT') {
+      this.studentService.getId().subscribe(userId => {
+        this.studentService.getEnrollmentProgramByIdStudent(userId).subscribe(enrollments => {
+          if (enrollments && enrollments.length > 0) {
+            const enrollment = enrollments[0];
+            this.studentProgramName = enrollment.academicProgramName || 'No disponible';
+            this.studentEnrollmentDate = enrollment.enrollmentDate || 'No disponible';
+          }
+        });
+      });
+    }
+  });
+}
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }

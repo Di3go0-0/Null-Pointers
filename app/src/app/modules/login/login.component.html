@@ -22,7 +22,7 @@
       </div>
       <!-- formulario de inicio de sesion -->
       <div class="card-body">
-        <form  #loginForm="ngForm">
+        <form #loginForm="ngForm">
           <!-- correo -->
           <div class="mb-3">
             <label for="email" class="form-label">Correo Electrónico</label>
@@ -44,18 +44,18 @@
 
         <!-- contraseña olvidada -->
         <div class="text-center mt-3">
-          <button type="button" class="btn btn-warning text-decoration-none" >
+          <a routerLink="/forgot-password" class="btn btn-warning text-decoration-none">
             ¿Olvidaste tu contraseña?
-          </button>
+          </a>
         </div>
       </div>
 
       <!-- acceso al chatbot -->
       <div class="card-footer text-center">
-        <button type="button" class="btn btn-outline-primary text-dark">
+        <a routerLink="/chatbot" class="btn btn-outline-primary text-dark">
           <i class="bi bi-question-circle me-2"></i>
           Preguntas Frecuentes
-        </button>
+        </a>
       </div>
 
     </div>

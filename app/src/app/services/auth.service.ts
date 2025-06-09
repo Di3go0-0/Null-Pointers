@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
-import { jwtDecode } from 'jwt-decode';
 import { Token } from '../models/token';
 import { Router } from '@angular/router';
 
@@ -20,7 +19,9 @@ interface LoginResponse {
 })
 
 export class AuthService {
+ 
   private apiUrl = 'http://localhost:3001/auth/login';
+  private url = 'http://localhost:3001';
   private token: string | null = null;
   public userData: Token | null = null;
   constructor(private http: HttpClient,
@@ -29,7 +30,7 @@ export class AuthService {
     const token = localStorage.getItem('auth_token');
     if (token) {
       this.token = token;
-      this.userData = this.decodeToken(token);
+      // this.userData = this.decodeToken(token);
     }
   }
 
@@ -38,9 +39,20 @@ export class AuthService {
       tap((res) => {
         this.token = res.token;
         localStorage.setItem('auth_token', res.token); // opcional
-        this.userData = this.decodeToken(res.token); // 👈 decodificás y guardás el user
+        // this.userData = this.decodeToken(res.token); // 👈 decodificás y guardás el user
       })
     );
+  }
+
+  sendCodeForgetPassword(email: string): Observable<any> {
+    const encodedEmail = encodeURIComponent(email)
+    return this.http.get<any>(`${this.url}/passwords/requestPasswordToken?email=${encodedEmail}`, );
+  }
+
+  changePassword(token: string, email: string, newpassword: any): Observable<any> {
+    const encodedEmail = encodeURIComponent(email)
+    const enToken = encodeURIComponent(token)
+    return this.http.patch<any>(`${this.url}/passwords/changePasswordWithToken?token=${enToken}&email=${encodedEmail}`, newpassword);
   }
 
   getToken(): string | null {
@@ -60,23 +72,12 @@ export class AuthService {
     // Devuelve true si hay token almacenado
     return !!this.token;
   }
+  isLoggedIn(): boolean {
+   return !!localStorage.getItem('auth_token'); 
+  }
 
   setToken(token: string): void {
     this.token = token;
   }
-
-
-  decodeToken(token: string): Token | null {
-    try {
-      const DecodeData = jwtDecode<Token>(token);
-      console.log('Token decodificado:', DecodeData);
-      return DecodeData;
-    } catch (e) {
-      console.error('No se pudo decodificar el token:', e);
-      return null;
-    }
-  }
-
-
 }
 
