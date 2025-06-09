@@ -15,7 +15,7 @@ import { Router } from '@angular/router';
 })
 export class UsersComponent implements OnInit {
 
-  currentView: 'students' | 'teachers' = 'students';
+  currentView: 'students' | 'teachers' = 'teachers';
   searchTerm = '';
   isLoading = false;
 

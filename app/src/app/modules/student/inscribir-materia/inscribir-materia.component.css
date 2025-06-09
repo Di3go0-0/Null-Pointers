@@ -1,17 +1,7 @@
 
 
 
-.admin-layout {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  font-family: 'Roboto', sans-serif;
-}
 
-.layout-container {
-  display: flex;
-  flex: 1;
-}
 
 .main-content {
   flex: 1;
