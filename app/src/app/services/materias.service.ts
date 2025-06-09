@@ -7,6 +7,7 @@ import { Programa } from '../models/programa';
 import { MateriaInstanciada } from '../models/materia-instanciada';
 import { HorarioMateria } from '../models/horario-materia';
 import { NotasMaterias } from '../models/notas-materias';
+import { EnrollmentCourse } from '../models/enrollment-course';
 
 @Injectable({
   providedIn: "root",
@@ -29,7 +30,7 @@ export class MateriasService {
   /**
    * funcion para saber cual es el programa academico de una materia.
    * @param id el id del programa academico.
-   * @returns nos devuelve un observable con la informacionde la materia.
+   * @returns nos devuelve un observable con la informacionde del programa academico.
    */
   getProgramNameById(id: number): Observable<Programa> {
     return this.apiService.get<Programa>(`/academic-programs/${id}`);
@@ -64,9 +65,7 @@ export class MateriasService {
   getAllInstancias(): Observable<MateriaInstanciada[]> {
     return this.apiService.get<MateriaInstanciada[]>('/courses-instances');
   }
-  getInstanciasById(id: number): Observable<MateriaInstanciada[]> {
-    return this.apiService.get<MateriaInstanciada[]>(`/courses-instances/search?courseId=${id}`);
-  }
+  
   updateInstanciaMateria(id: number, materia: MateriaInstanciada): Observable<number> {
     return this.apiService.patch<number>(`/courses-instances/${id}`, materia);
   }
@@ -121,7 +120,14 @@ export class MateriasService {
   }
 
   actualizarNotas(notaId: number, notas: NotasMaterias): Observable<any> {
-  return this.apiService.patch(`/grades-courses/${notaId}`, notas);
-}
+    return this.apiService.patch(`/grades-courses/${notaId}`, notas);
+  }
+  
+  getEnrollmentMAteriasByStudentId(studentId: number): Observable<EnrollmentCourse[]> {
+    return this.apiService.get<EnrollmentCourse[]>(`/enrollments-courses/search?studentId=${studentId}`);
+  }
+  getInstanciasById(id: number): Observable<MateriaInstanciada[]> {
+    return this.apiService.get<MateriaInstanciada[]>(`/courses-instances/search?courseId=${id}`);
+  }
 }
 

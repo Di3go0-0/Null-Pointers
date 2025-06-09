@@ -6,6 +6,7 @@ import { Course } from '../models/course';
 import { CourseInstancia } from '../models/course-instancia';
 import { HorarioCourse } from '../models/horario-course';
 import { NotasCursos } from '../models/notas-cursos';
+import { EnrollmentCourseEx } from '../models/enrollment-course-ex';
 
 @Injectable({
   providedIn: 'root'
@@ -63,9 +64,7 @@ export class CursosExtensionService {
   getAllInstancias(): Observable<CourseInstancia[]> {
     return this.apiService.get<CourseInstancia[]>('/extesnion-courses-instances');
   }
-  getInstanciasById(id: number): Observable<CourseInstancia[]> {
-    return this.apiService.get<CourseInstancia[]>(`/extesnion-courses-instances/search?extensionCourseId=${id}`);
-  }
+
   updateInstanciaMateria(id: number, materia: CourseInstancia): Observable<number> {
     return this.apiService.patch<number>(`/extesnion-courses-instances/${id}`, materia);
   }
@@ -120,5 +119,12 @@ export class CursosExtensionService {
 
   actualizarNotas(notaId: number, notas: NotasCursos): Observable<any> {
     return this.apiService.patch(`/grades-extesnion-courses/${notaId}`, notas);
+  }
+  //nuevo
+  getEnrollmentMAteriasByStudentId(studentId: number): Observable<EnrollmentCourseEx[]> {
+    return this.apiService.get<EnrollmentCourseEx[]>(`/enrollments-extension/search?studentId=${studentId}`);
+  }
+  getInstanciasById(id: number): Observable<CourseInstancia[]> {
+    return this.apiService.get<CourseInstancia[]>(`/extesnion-courses-instances/search?extensionCourseId=${id}`);
   }
 }

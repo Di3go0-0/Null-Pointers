@@ -15,7 +15,7 @@
 
 .main-content {
   flex: 1;
-  background: linear-gradient(180deg,#003303 0%, #43e748 100%);
+  background: linear-gradient(135deg,  #003303 0%, #43e748 100%);
   padding: 2rem;
   min-height: 100vh;
   
@@ -27,6 +27,28 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
+}
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.3s;
+  
+  &:hover {
+    opacity: 0.8;
+    transform: translateX(-5px);
+  }
+  
+  i {
+    font-size: 1.5rem;
+  }
 }
 
 .page-title {
@@ -253,27 +275,6 @@
   margin-bottom: 1rem;
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-.empty-state i {
-  font-size: 4rem;
-  margin-bottom: 1rem;
-  opacity: 0.7;
-}
-
-.empty-state h3 {
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.empty-state p {
-  font-size: 1rem;
-  opacity: 0.8;
-  margin-bottom: 1.5rem;
-}
-
 .custom-modal {
   position: fixed;
   top: 0;
@@ -303,7 +304,6 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
   z-index: 1060;
 }
-
 .close-btn {
   margin-top: 1rem;
   background-color: #2196F3;
@@ -318,6 +318,27 @@
     box-shadow: 0 2px 8px rgba(29, 141, 1, 0.3);
   }
   
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.empty-state i {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  opacity: 0.7;
+}
+
+.empty-state h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+  font-size: 1rem;
+  opacity: 0.8;
+  margin-bottom: 1.5rem;
 }
 
 

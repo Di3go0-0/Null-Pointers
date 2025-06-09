@@ -1,1 +1,71 @@
-<p>materias-student works!</p>
+<main class="main-content">
+    <div class="content-header">
+
+        <h1 class="page-title">Asignaturas Estudiantes</h1>
+
+        <div class="actions-bar">
+            <div class="search-container">
+                <div class="search-input-wrapper">
+                    <i class="material-icons">search</i>
+                    <input type="text" placeholder="Buscar asignaturas..." [(ngModel)]="searchTerm" (input)="onSearch()"
+                        class="search-input">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="subjects-container" *ngIf="!isLoading">
+        <div class="subject-card" *ngFor="let subject of filteredSubjects">
+            <div class="subject-info">
+                <h3 class="subject-name">{{ subject.courseName }}</h3>
+                <div class="subject-details">
+                    <span class="subject-code">Código: {{ subject.courseCode }}</span>
+                    <span class="subject-semester">Creditos: {{ subject.credits }}</span>
+                    <span class="subject-semester">Programa: {{ programasMap[subject.programId] || 'Desconocido'
+                        }}</span>
+                </div>
+            </div>
+
+            <div class="subject-actions">
+                <button *ngIf="!inscripcionesMap[subject.id]" class="action-btn assign-btn" (click)="inscribirse(subject.id)" title="Editar">
+                    <i class="material-icons">add_circle</i>
+                    Inscribirse
+                </button>
+
+                <button *ngIf="inscripcionesMap[subject.id]" class="action-btn btn-danger" (click)="cancelar(subject.id)" title="Eliminar">
+                    <i class="material-icons">cancel</i>
+                    Cancelar Inscripción
+                </button>
+
+                <button class="action-btn edit-btn" (click)="showInfoModal(subject)" title="Ver detalles">
+                    <i class="material-icons">info</i>
+                    Info
+                </button>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="loading-container" *ngIf="isLoading">
+        <div class="spinner"></div>
+        <p>Cargando asignaturas...</p>
+    </div>
+
+    <div class="empty-state" *ngIf="!isLoading && filteredSubjects.length === 0">
+        <i class="material-icons">school</i>
+        <h3>No se encontraron asignaturas</h3>
+    </div>
+    <!-- Modal -->
+    <div class="custom-modal" *ngIf="selectedSubject">
+        <div class="modal-backdrop" (click)="closeModal()"></div>
+        <div class="modal-content">
+            <h2>{{ selectedSubject.courseName }}</h2>
+            <p><strong>Código:</strong> {{ selectedSubject.courseCode }}</p>
+            <p><strong>Descripción:</strong> {{ selectedSubject.description }}</p>
+            <p><strong>Créditos:</strong> {{ selectedSubject.credits }}</p>
+            <p><strong>Programa:</strong> {{ programasMap[selectedSubject.programId] || 'Desconocido' }}</p>
+
+            <button (click)="closeModal()" class="close-btn">Cerrar</button>
+        </div>
+    </div>
+</main>

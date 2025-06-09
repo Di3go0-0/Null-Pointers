@@ -49,6 +49,7 @@ export class HorarioUserComponent implements OnInit {
   async loadStudentSchedule(): Promise<void> {
     const enrollmentCourses = await this.studentService.getEnrollmentCourses(this.id).toPromise();
     for (const enrollment of enrollmentCourses || []) {
+      if (enrollment.status !== 'Enrolled') continue;  // 👈 Solo continúa si está inscrito
       const instanceId = enrollment.courseInstanceId;
       const horario = await this.studentService.getHorarioByInstanceId(instanceId).toPromise();
       if (!horario || horario.length === 0) continue;

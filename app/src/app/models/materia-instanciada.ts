@@ -10,6 +10,5 @@ export class MateriaInstanciada {
         public minStudents: number,
         public maxStudents: number,
         public status: string
-
     ) { }
 }

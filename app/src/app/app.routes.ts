@@ -40,6 +40,8 @@ import { HorarioStudentComponent } from './modules/student/horario-student/horar
 import { MateriasStudentComponent } from './modules/student/materias-student/materias-student.component';
 import { CursosStudentComponent } from './modules/student/cursos-student/cursos-student.component';
 import { StudentComponent } from './modules/student/student.component';
+import { InscribirMateriaComponent } from './modules/student/inscribir-materia/inscribir-materia.component';
+import { InscribirCursoComponent } from './modules/student/inscribir-curso/inscribir-curso.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -94,7 +96,9 @@ export const routes: Routes = [
             { path: '', component: HomeStudentComponent }, // /teacher
             { path: 'horario', component: HorarioStudentComponent},
             { path: 'asignaturas', component: MateriasStudentComponent},
+            { path: 'asignaturas/inscribir/:id', component: InscribirMateriaComponent},
             { path: 'cursos', component: CursosStudentComponent},
+            { path: 'cursos/inscribir/:id', component: InscribirCursoComponent}
         ]
     },
     { path: 'profile', component: ProfileComponent },

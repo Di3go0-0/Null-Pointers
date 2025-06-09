@@ -14,7 +14,10 @@ import { Materia } from '../models/materia';
 import { MateriaInstanciada } from '../models/materia-instanciada';
 import { Course } from '../models/course';
 import { EnrollmentCourseEx } from '../models/enrollment-course-ex';
-
+import { ProgramaInscrito } from '../models/programa-inscrito';
+interface GradesCourses {
+  enrollmentCourseId: number;
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -107,6 +110,51 @@ export class StudentService {
   getId(): Observable<number> {
     return this.apiService.get<number>('/auth/user-id');
   }
+
+  //metodos para inscribir a un estudiante en una asignatura
+  getEnrollmentProgramByIdStudent(id: number): Observable<ProgramaInscrito[]> {
+    return this.apiService.get<ProgramaInscrito[]>(`/enrollments-programs/search?studentId=${id}`);
+  }
+  
+  getMateriasByProgramId(programId: number): Observable<Materia[]> {
+    return this.apiService.get<Materia[]>(`/courses/academic-program/${programId}`);
+  }
+
+  enrollmentStudentInMateria(data: any): Observable<number> {
+    return this.apiService.post<number>('/enrollments-courses', data);
+  }
+  ingresaANotas(id: number): Observable<any> {
+    // Este método parece ser para ingresar notas de un curso específico
+    const esta = {
+      enrollmentCourseId: id
+    };
+    return this.apiService.post<any>(`/grades-courses`, esta);
+  }
+
+  cancelarMateria(id: number, data: EnrollmentCourse): Observable<number> {
+    return this.apiService.patch<number>(`/enrollments-courses/${id}`, data);
+  }
+
+  //metodos para inscribir a un estudiante en un curso
+
+  getCoursesByProgramId(programId: number): Observable<Course[]> {
+    return this.apiService.get<Course[]>(`/extension-courses/academic-program/${programId}`);
+  }
+  enrollmentStudentInCourse(data: any): Observable<number> {
+    return this.apiService.post<number>('/enrollments-extension', data);
+  }
+  ingresaANotasCourse(id: number): Observable<any> {
+    // Este método parece ser para ingresar notas de un curso específico
+    const esta = {
+      extensionCourseEnrollmentId: id
+    };
+    return this.apiService.post<any>(`/grades-extesnion-courses`, esta);
+  }
+
+  cancelarCourse(id: number, data: EnrollmentCourseEx): Observable<number> {
+    return this.apiService.patch<number>(`/enrollments-extension/${id}`, data);
+  }
+
 
 
 }

@@ -26,7 +26,7 @@ export class HorarioStudentComponent implements OnInit {
     'Saturday': 'Sábado',
     'Sunday': 'Domingo'
   };
-isLoading: boolean = true;
+  isLoading: boolean = true;
 
   constructor(
     private router: Router,
@@ -34,19 +34,22 @@ isLoading: boolean = true;
   ) { }
 
   ngOnInit(): void {
-  this.studentService.getId().subscribe(id => {
-    this.isLoading = true
-    this.id = id;
-    console.log('ID del estudiante:', this.id);
-    this.loadStudentSchedule(); // ← ahora sí con el `id` definido
-  });
-}
-  
-  
+    this.studentService.getId().subscribe(id => {
+      this.isLoading = true
+      this.id = id;
+      console.log('ID del estudiante:', this.id);
+      this.loadStudentSchedule(); // ← ahora sí con el `id` definido
+    });
+  }
+
+
 
   async loadStudentSchedule(): Promise<void> {
     const enrollmentCourses = await this.studentService.getEnrollmentCourses(this.id).toPromise();
+
     for (const enrollment of enrollmentCourses || []) {
+      if (enrollment.status !== 'Enrolled') continue;  // 👈 Solo continúa si está inscrito
+
       const instanceId = enrollment.courseInstanceId;
       const horario = await this.studentService.getHorarioByInstanceId(instanceId).toPromise();
       if (!horario || horario.length === 0) continue;
@@ -111,6 +114,6 @@ isLoading: boolean = true;
   }
 
   back(): void {
-    this.router.navigate(['/teacher']);
+    this.router.navigate(['/student']);
   }
 }

@@ -52,7 +52,7 @@ export class NewStudentComponent {student: Student = new Student('', '', '', '')
         this.studentService.registrarEstudiantePrograma(this.enrollmentProgram).subscribe({
           next: () => {
             alert('Estudiante registrado correctamente');
-            this.router.navigate(['/admin/estudiantes']);
+            this.router.navigate(['/admin']);
           },
           error: () => {
             alert('Error registrando la inscripción');

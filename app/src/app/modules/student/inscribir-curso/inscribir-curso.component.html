@@ -1,0 +1,61 @@
+<main class="main-content">
+    <div class="content-header">
+        <div class="content-header">
+            <button class="back-button" (click)="cancel()">
+                <i class="material-icons">arrow_back</i>
+                <span class="page-title">Instancias del Curso</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="subjects-container" *ngIf="!isLoading">
+        
+        <div class="subject-card" *ngFor="let subject of filteredSubjects">
+            <div class="subject-info">
+                <h3 class="subject-name">{{materia[0].courseName}} ID:{{ subject.id }}</h3>
+                <div class="subject-details">
+                    <span class="subject-code">Código: {{ subject.groupCode }}</span>
+                    <span class="subject-semester">Status: {{ subject.publicationStatus }}</span>
+                    <span class="subject-semester">Profesor: {{ teachersMap[subject.teacherId] || 'Desconocido'
+                        }}</span>
+                </div>
+            </div>
+
+            <div class="subject-actions">
+                <button class="action-btn edit-btn" (click)="inscribirse(subject.id)" title="Editar">
+                    <i class="material-icons">edit</i>
+                    Inscribirse
+                </button>
+                <button class="action-btn schedule-btn" (click)="defineSchedule(subject.id)" title="Definir horario">
+                    <i class="material-icons">schedule</i>
+                    Horario
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="custom-modal" *ngIf="selectedSubject">
+        <div class="modal-backdrop" (click)="closeModal()"></div>
+        <div class="modal-content">
+        <div class="subject-card" *ngFor="let subject of horarios">
+            <div class="subject-info">
+                <h3 class="subject-name">{{ translateDayToSpanish(subject.day) }}, de {{ formatHour(subject.startTime) }} - {{ formatHour(subject.endTime) }}
+                    , Salon: {{ subject.classroom }}
+                </h3>
+                <hr>
+            </div>
+        </div>
+        <button (click)="closeModal()" class="close-btn">Cerrar</button>
+        </div>
+        
+    </div>
+
+    <div class="loading-container" *ngIf="isLoading">
+        <div class="spinner"></div>
+        <p>Cargando Cursos...</p>
+    </div>
+
+    <div class="empty-state" *ngIf="!isLoading && filteredSubjects.length === 0">
+        <i class="material-icons">school</i>
+        <h3>No se encontraron Cursos</h3>
+    </div>
+</main>
