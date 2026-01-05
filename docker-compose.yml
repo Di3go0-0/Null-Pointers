@@ -1,0 +1,78 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  database:
+    image: postgres:15-alpine
+    container_name: null-pointers-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME:-escuela}
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./api/prisma/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - null-pointers-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-escuela}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # NestJS API Backend
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: null-pointers-api
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://${DB_USER:-postgres}:${DB_PASSWORD:-password}@database:5432/${DB_NAME:-escuela}
+      JWT_SECRET: ${JWT_SECRET:-your-super-secret-jwt-key}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-24h}
+      API_PORT: 3000
+      FRONTEND_URL: http://localhost:4200
+    depends_on:
+      database:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    networks:
+      - null-pointers-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Angular Frontend
+  app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: null-pointers-app
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "80:80"
+    networks:
+      - null-pointers-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  postgres_data:
+
+networks:
+  null-pointers-network:
+    driver: bridge
