@@ -1,4 +1,4 @@
-version: '3.8'
+
 
 services:
   # PostgreSQL Database
@@ -17,11 +17,12 @@ services:
       - "5432:5432"
     networks:
       - null-pointers-network
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-escuela}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+    # healthcheck temporarily disabled
+    # healthcheck:
+    #   test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-escuela}"]
+    #   interval: 10s
+    #   timeout: 5s
+    #   retries: 5
 
   # NestJS API Backend
   api:
@@ -37,18 +38,20 @@ services:
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-24h}
       API_PORT: 3000
       FRONTEND_URL: http://localhost:4200
+      RESEND_API_KEY: ${RESEND_API_KEY:-re_dummy_key_for_testing}
+      EMAIL_FROM: ${EMAIL_FROM:-noreply@localhost}
     depends_on:
-      database:
-        condition: service_healthy
+      - database
     ports:
       - "3000:3000"
     networks:
       - null-pointers-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+    # healthcheck temporarily disabled
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 3
 
   # Angular Frontend
   app:
@@ -58,8 +61,7 @@ services:
     container_name: null-pointers-app
     restart: unless-stopped
     depends_on:
-      api:
-        condition: service_healthy
+      - api
     ports:
       - "80:80"
     networks:

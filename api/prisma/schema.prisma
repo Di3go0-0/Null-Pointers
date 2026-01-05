@@ -7,7 +7,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -71,7 +71,7 @@ model Role {
   roleName  RoleName  @unique
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  active    Boolean   @default(true) @db.TinyInt
+  active    Boolean   @default(true)
 
   users     User[] // Back-relation to Users
 
@@ -82,12 +82,12 @@ model Role {
 model User {
   id           Int    @id @default(autoincrement())
   roleId       Int    
-  name         String @db.VarChar(255)
-  email        String @unique @db.VarChar(255)
-  password     String @db.VarChar(255)
+  name         String 
+  email        String @unique 
+  password     String 
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-  active       Boolean  @default(true) @db.TinyInt
+  active       Boolean  @default(true)
 
   role                Role?                  @relation(fields: [roleId], references: [id], onDelete: Restrict, onUpdate: Cascade) // Relation to Role
 
@@ -104,10 +104,10 @@ model User {
 model PasswordResetToken {
   id        Int      @id @default(autoincrement())
   userId    Int
-  token     String   @unique @db.VarChar(255)
-  expiresAt DateTime @db.DateTime
+  token     String   @unique 
+  expiresAt DateTime
   createdAt DateTime @default(now())
-  active       Boolean  @default(true) @db.TinyInt
+  active       Boolean  @default(true)
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade) // Relation to User
 
@@ -117,7 +117,7 @@ model PasswordResetToken {
 model PasswordHistory {
   id           Int      @id @default(autoincrement())
   userId       Int
-  passwordHash String   @db.VarChar(255)
+  passwordHash String   
   createdAt    DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade) // Relation to User
@@ -128,10 +128,10 @@ model PasswordHistory {
 
 model PersonalInfo {
   id                   Int       @id // This is both PK and FK referencing User.id
-  identificationNumber String    @unique @db.VarChar(255)
+  identificationNumber String    @unique 
   birthdate            DateTime? @db.Date
-  address              String?   @db.VarChar(255)
-  phoneNumber          String?   @db.VarChar(255)
+  address              String?   
+  phoneNumber          String?   
 
   user User @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade) // 1-to-1 relation with User
 
@@ -155,9 +155,9 @@ model Student {
 model ParentsInfo {
   id           Int    @id @default(autoincrement())
   studentId    Int?   // Made optional to align with potential SET NULL/RESTRICT, though SQL implies NOT NULL via FK. Adjust if needed.
-  relationship String @db.VarChar(255)
-  name         String @db.VarChar(255)
-  phoneNumber  String @db.VarChar(255)
+  relationship String 
+  name         String 
+  phoneNumber  String 
 
   student Student? @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade) // Relation to Student
 
@@ -167,12 +167,12 @@ model ParentsInfo {
 model ContractType {
   id                    Int       @id @default(autoincrement())
   typeName              String    @unique @db.VarChar(100)
-  description           String?   @db.Text
-  allowsExtensionCourse Boolean   @default(true) @map("allowsExtensionCourse") @db.TinyInt
-  affectsSalary         Boolean   @default(false) @map("affectsSalary") @db.TinyInt
+  description           String?   
+  allowsExtensionCourse Boolean   @default(true) @map("allowsExtensionCourse")
+  affectsSalary         Boolean   @default(false) @map("affectsSalary")
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
-  active                Boolean   @default(true) @db.TinyInt
+  active                Boolean   @default(true) 
 
   teachers Teacher[] // Back-relation to Teachers
 
@@ -182,8 +182,8 @@ model ContractType {
 model Teacher {
   id             Int      @id // This is the PK and FK referencing User.id
   contractTypeId Int?     // Optional based on potential RESTRICT/SET NULL on FK
-  specialty      String   @db.VarChar(255)
-  experience     String   @db.Text
+  specialty      String   
+  experience     String   
   baseSalary     Decimal  @map("baseSalary") @db.Decimal(10, 2)
 
   user         User          @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade) // Relation to User (1-to-1)
@@ -198,12 +198,12 @@ model Teacher {
 
 model AcademicProgram {
   id          Int     @id @default(autoincrement())
-  programName String  @unique @db.VarChar(255) @map("programName")
+  programName String  @unique  @map("programName")
   programCode String  @unique @db.VarChar(50) @map("programCode")
-  description String  @db.Text
+  description String  
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  active      Boolean  @default(true) @db.TinyInt
+  active      Boolean  @default(true) 
 
   // Back-relations
   courses             Course[]
@@ -216,13 +216,13 @@ model AcademicProgram {
 model Course {
   id          Int     @id @default(autoincrement())
   programId   Int
-  courseName  String  @db.VarChar(255) @map("courseName")
+  courseName  String   @map("courseName")
   courseCode  String  @unique @db.VarChar(50) @map("courseCode") // Unique constraint on the column itself
-  description String @db.Text
+  description String 
   credits     Int
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  active      Boolean  @default(true) @db.TinyInt
+  active      Boolean  @default(true) 
 
   program AcademicProgram @relation(fields: [programId], references: [id], onDelete: Cascade, onUpdate: Cascade) // Relation to AcademicPrograms
 
@@ -236,13 +236,13 @@ model Course {
 model ExtensionCourse {
   id            Int       @id @default(autoincrement())
   programId     Int      // Required - a course must belong to a program
-  courseName    String    @db.VarChar(255) @map("courseName")
+  courseName    String     @map("courseName")
   courseCode    String    @unique @db.VarChar(50) @map("courseCode")
-  description   String    @db.Text
+  description   String    
   durationHours Int       @map("durationHours")
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  active        Boolean   @default(true) @db.TinyInt
+  active        Boolean   @default(true) 
 
   program AcademicProgram @relation(fields: [programId], references: [id], onDelete: Restrict, onUpdate: Cascade) // Relation to AcademicPrograms
 
@@ -265,7 +265,7 @@ model CourseInstance {
   status      CourseInstanceStatus @default(Planned)
   createdAt   DateTime             @default(now())
   updatedAt   DateTime             @updatedAt
-  active      Boolean              @default(true) @db.TinyInt
+  active      Boolean              @default(true) 
 
   course  Course   @relation(fields: [courseId], references: [id], onDelete: Restrict, onUpdate: Cascade) // Relation to Courses
   teacher Teacher @relation("TeacherCourseInstances", fields: [teacherId], references: [id], onDelete: Restrict, onUpdate: Cascade) // Relation to Teachers
@@ -347,7 +347,7 @@ model ExtensionCourseInstance {
   publicationStatus   ExtensionPublicationStatus @default(Draft) @map("publicationStatus")
   createdAt           DateTime                   @default(now())
   updatedAt           DateTime                   @updatedAt
-  active              Boolean                    @default(true) @db.TinyInt
+  active              Boolean                    @default(true) 
 
   extensionCourse ExtensionCourse @relation(fields: [extensionCourseId], references: [id], onDelete: Restrict, onUpdate: Cascade) // Relation to ExtensionCourses
   teacher         Teacher         @relation("TeacherExtensionCourseInstances", fields: [teacherId], references: [id], onDelete: Restrict, onUpdate: Cascade) // Relation to Teachers
@@ -405,12 +405,12 @@ model ExtensionCourseGrade {
 
 model Faq {
   id        Int      @id @default(autoincrement())
-  question  String   @db.Text
-  answer    String   @db.Text
+  question  String   
+  answer    String   
   category  String?  @db.VarChar(100)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  active    Boolean  @default(true) @db.TinyInt
+  active    Boolean  @default(true) 
 
   @@map("Faqs")
 }

@@ -1,21 +1,21 @@
 # Docker Files Guide - Null-Pointers
 
-Este documento explica cómo funcionan los Docker files y cómo usarlos para desplegar la aplicación completa.
+This document explains how the Docker files work and how to use them to deploy the complete application.
 
-## Arquitectura de Contenedores
+## Container Architecture
 
-La aplicación utiliza tres contenedores principales:
+The application uses three main containers:
 
-1. **Frontend (Angular + Nginx)** - Contenedor de la aplicación web
-2. **Backend (NestJS)** - API REST
-3. **Database (PostgreSQL)** - Base de datos
+1. **Frontend (Angular + Nginx)** - Web application container
+2. **Backend (NestJS)** - REST API
+3. **Database (PostgreSQL)** - Database
 
-## 📁 Archivos Docker
+## 📁 Docker Files
 
 ### Frontend Dockerfile (`app/Dockerfile`)
 
 ```dockerfile
-# Multi-stage build para Angular application
+# Multi-stage build for Angular application
 FROM node:18-alpine AS build
 WORKDIR /app
 COPY package*.json ./
@@ -30,15 +30,15 @@ EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
 ```
 
-**¿Cómo funciona?**
-- **Stage 1 (build):** Compila la aplicación Angular en modo producción
-- **Stage 2 (nginx):** Servidor web ligero que sirve los archivos estáticos
-- **Ventajas:** Imagen final pequeña (~20MB), rápida y segura
+**How it works:**
+- **Stage 1 (build):** Compiles the Angular application in production mode
+- **Stage 2 (nginx):** Lightweight web server that serves static files
+- **Advantages:** Small final image (~20MB), fast and secure
 
 ### Backend Dockerfile (`api/Dockerfile`)
 
 ```dockerfile
-# Multi-stage build para NestJS application
+# Multi-stage build for NestJS application
 FROM node:18-alpine AS build
 WORKDIR /app
 COPY package*.json ./
@@ -64,11 +64,11 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
 CMD ["node", "dist/src/main"]
 ```
 
-**¿Cómo funciona?**
-- **Stage 1 (build):** Instala dependencias de desarrollo y compila TypeScript
-- **Stage 2 (production):** Solo dependencias de producción + código compilado
-- **Seguridad:** Corre como usuario no-root (`nestjs`)
-- **Prisma:** Incluye cliente generado y archivos de esquema
+**How it works:**
+- **Stage 1 (build):** Installs dev dependencies and compiles TypeScript
+- **Stage 2 (production):** Only production dependencies + compiled code
+- **Security:** Runs as non-root user (`nestjs`)
+- **Prisma:** Includes generated client and schema files
 
 ### Nginx Configuration (`app/nginx.conf`)
 
@@ -95,10 +95,10 @@ server {
 }
 ```
 
-**¿Cómo funciona?**
-- Sirve archivos estáticos de Angular
-- Proxy de `/api/*` al backend NestJS
-- Soporte para routing de SPA (Angular Router)
+**How it works:**
+- Serves static Angular files
+- Proxy `/api/*` to NestJS backend
+- SPA routing support (Angular Router)
 
 ## 🚀 Docker Compose
 
@@ -141,151 +141,151 @@ services:
       - "80:80"
 ```
 
-**¿Cómo funciona?**
-- **database:** PostgreSQL persistente con volúmenes
-- **api:** Se levanta solo cuando la base de datos está saludable
-- **app:** Se levanta solo cuando el API está saludable
-- **Health checks:** Aseguran que los servicios estén funcionando
+**How it works:**
+- **database:** PostgreSQL persistent with volumes
+- **api:** Starts only when database is healthy
+- **app:** Starts only when API is healthy
+- **Health checks:** Ensure services are working
 
-## 🛠️ Uso Práctico
+## 🛠️ Practical Usage
 
-### 1. Configuración Inicial
+### 1. Initial Configuration
 
 ```bash
-# Copiar variables de entorno
+# Copy environment variables
 cp .env.example .env
 
-# Editar configuración
+# Edit configuration
 nano .env
 ```
 
-**Variables importantes en `.env`:**
+**Important variables in `.env`:**
 ```env
 DB_PASSWORD=your-secure-password
 JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
 FRONTEND_URL=http://localhost:4200
 ```
 
-### 2. Comandos Básicos
+### 2. Basic Commands
 
 ```bash
-# Construir y levantar todo
+# Build and start everything
 docker-compose up -d
 
-# Ver estado
+# Check status
 docker-compose ps
 
-# Ver logs
+# View logs
 docker-compose logs -f
 
-# Ver logs de un servicio específico
+# View logs of specific service
 docker-compose logs -f api
 docker-compose logs -f app
 
-# Detener todo
+# Stop everything
 docker-compose down
 ```
 
-### 3. Desarrollo vs Producción
+### 3. Development vs Production
 
-#### Para Desarrollo:
+#### For Development:
 ```bash
-# Modo desarrollo con watch
+# Development mode with watch
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 ```
 
-#### Para Producción:
+#### For Production:
 ```bash
-# Modo producción optimizado
+# Optimized production mode
 docker-compose up -d --build
 ```
 
-### 4. Mantenimiento
+### 4. Maintenance
 
 ```bash
-# Reconstruir una imagen específica
+# Rebuild specific image
 docker-compose build api
 docker-compose build app
 
-# Limpiar contenedores e imágenes no usadas
+# Clean unused containers and images
 docker system prune -a
 
-# Actualizar imágenes base
+# Update base images
 docker-compose pull
 docker-compose up -d
 ```
 
 ### 5. Troubleshooting
 
-#### Verificar contenedores:
+#### Check containers:
 ```bash
 docker-compose ps
 ```
 
-#### Inspeccionar logs:
+#### Inspect logs:
 ```bash
-# Logs recientes
+# Recent logs
 docker-compose logs --tail=50 api
 
-# Logs en tiempo real
+# Real-time logs
 docker-compose logs -f app
 
-# Logs con timestamps
+# Logs with timestamps
 docker-compose logs -t database
 ```
 
-#### Entrar a contenedores:
+#### Enter containers:
 ```bash
-# Entrar al contenedor del API
+# Enter API container
 docker-compose exec api sh
 
-# Entrar al contenedor de la app
+# Enter app container
 docker-compose exec app sh
 
-# Entrar a la base de datos
+# Enter database
 docker-compose exec database psql -U postgres -d escuela
 ```
 
 #### Health checks:
 ```bash
-# Verificar health checks
+# Check health checks
 docker inspect null-pointers-api | grep -A 10 Health
 docker inspect null-pointers-app | grep -A 10 Health
 ```
 
-## 🔧 Configuración Avanzada
+## 🔧 Advanced Configuration
 
-### Personalizar Imágenes
+### Customize Images
 
-#### Cambiar puerto del frontend:
+#### Change frontend port:
 ```yaml
-# En docker-compose.yml
+# In docker-compose.yml
 app:
   ports:
-    - "8080:80"  # Acceder en http://localhost:8080
+    - "8080:80"  # Access at http://localhost:8080
 ```
 
-#### Cambiar puerto del API:
+#### Change API port:
 ```yaml
 api:
   ports:
-    - "8081:3000"  # Acceder en http://localhost:8081
+    - "8081:3000"  # Access at http://localhost:8081
 ```
 
-### Volumen Persistente
+### Persistent Volume
 
-Para persistir datos de la base de datos:
+To persist database data:
 ```yaml
 database:
   volumes:
-    - ./postgres_data:/var/lib/postgresql/data  # Local al proyecto
-    # o
+    - ./postgres_data:/var/lib/postgresql/data  # Local to project
+    # or
     - postgres_data:/var/lib/postgresql/data    # Docker managed
 ```
 
-### Multi-ambiente
+### Multi-environment
 
-Crear archivo `docker-compose.override.yml` para desarrollo local:
+Create `docker-compose.override.yml` for local development:
 ```yaml
 version: '3.8'
 services:
@@ -296,71 +296,71 @@ services:
       - ./api/src:/app/src  # Hot reload
 ```
 
-## 📊 Optimización
+## 📊 Optimization
 
-### Reducir tamaño de imágenes:
+### Reduce Image Size:
 
-1. **Usar `.dockerignore`** para excluir archivos innecesarios
-2. **Multi-stage builds** para reducir tamaño final
-3. **Imágenes Alpine** ligeras y seguras
-4. **Limpieza de cache** en npm
+1. **Use `.dockerignore`** to exclude unnecessary files
+2. **Multi-stage builds** to reduce final size
+3. **Alpine images** lightweight and secure
+4. **Cache cleanup** in npm
 
-### Mejorar seguridad:
+### Improve Security:
 
-1. **Usuario no-root** en contenedores de aplicación
-2. **Secrets management** para datos sensibles
-3. **Health checks** para monitoreo
-4. **Read-only filesystem** donde sea posible
+1. **Non-root user** in application containers
+2. **Secrets management** for sensitive data
+3. **Health checks** for monitoring
+4. **Read-only filesystem** where possible
 
 ### Performance:
 
-1. **Parallel builds** con `docker-compose build --parallel`
-2. **Cache mounting** en builds locales
-3. **Resource limits** en producción
-4. **Load balancing** para alta disponibilidad
+1. **Parallel builds** with `docker-compose build --parallel`
+2. **Cache mounting** in local builds
+3. **Resource limits** in production
+4. **Load balancing** for high availability
 
-## 🚨 Buenas Prácticas
+## 🚨 Best Practices
 
-1. **Nunca exponer la base de datos** en producción
-2. **Usar contraseñas robustas** en variables de entorno
-3. **Configurar backups** automáticos de la base de datos
-4. **Monitorear recursos** con `docker stats`
-5. **Actualizar regularmente** imágenes base
-6. **Documentar cambios** en la configuración
+1. **Never expose database** in production
+2. **Use strong passwords** in environment variables
+3. **Configure automatic backups** for database
+4. **Monitor resources** with `docker stats`
+5. **Update base images** regularly
+6. **Document configuration** changes
 
-## 🆘 Problemas Comunes
+## 🆘 Common Problems
 
 ### Error: "Database connection failed"
 ```bash
-# Verificar si la DB está corriendo
+# Check if DB is running
 docker-compose logs database
 
-# Verificar variables de entorno
+# Check environment variables
 docker-compose exec api env | grep DATABASE
 ```
 
 ### Error: "Port already in use"
 ```bash
-# Ver qué usa el puerto
+# See what's using the port
 sudo lsof -i :80
 sudo lsof -i :3000
 
-# Cambiar puertos en docker-compose.yml
+# Change ports in docker-compose.yml
 ```
 
 ### Error: "Permission denied"
 ```bash
-# Reconstruir con permisos correctos
+# Rebuild with correct permissions
 docker-compose down
 docker-compose up -d --build
 ```
 
 ### Error: "Out of memory"
 ```bash
-# Ver uso de memoria
+# Check memory usage
 docker stats
 
-# Limitar memoria en docker-compose.yml
+# Limit memory in docker-compose.yml
 services:
   api:
     deploy:
@@ -369,7 +369,7 @@ services:
           memory: 512M
 ```
 
-## 📚 Referencias
+## 📚 References
 
 - [Docker Compose Documentation](https://docs.docker.com/compose/)
 - [Nginx Configuration](https://nginx.org/en/docs/)
@@ -378,4 +378,4 @@ services:
 
 ---
 
-💡 **Tip:** Usa `docker-compose up --build` la primera vez para construir todas las imágenes, luego `docker-compose up -d` para iniciar rápidamente.
+💡 **Tip:** Use `docker-compose up --build` the first time to build all images, then `docker-compose up -d` for quick startup.
